@@ -32,7 +32,7 @@ import org.betonquest.betonquest.api.QuestEvent;
 import org.betonquest.betonquest.api.profiles.Profile;
 import org.betonquest.betonquest.config.Config;
 import org.betonquest.betonquest.exceptions.QuestRuntimeException;
-import org.betonquest.betonquest.quest.event.legacy.QuestEventFactory;
+import org.betonquest.betonquest.quest.legacy.LegacyTypeFactory;
 import org.betonquest.betonquest.utils.PlayerConverter;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
@@ -103,7 +103,7 @@ public class BetonQuestFireInlineEventAction extends Action {
                         }
                       } else {
                         final String eventClassName = curInputSplit[0];
-                        final QuestEventFactory questEventFactory =
+                        final LegacyTypeFactory<QuestEvent> questEventFactory =
                             BetonQuest.getInstance().getEventFactory(eventClassName);
                         if (questEventFactory == null) {
                           return null;
@@ -180,7 +180,7 @@ public class BetonQuestFireInlineEventAction extends Action {
 
   public final QuestEvent getQuestEvent() {
     if (cachedEvent == null) {
-      final QuestEventFactory questEventFactory =
+      final LegacyTypeFactory<QuestEvent> questEventFactory =
           BetonQuest.getInstance().getEventFactory(getEvent().split(" ")[0]);
       if (questEventFactory == null) {
         // if it's null then there is no such type registered, log
@@ -208,7 +208,7 @@ public class BetonQuestFireInlineEventAction extends Action {
               instruction); // TODO: 1.19 check
 
       try {
-        cachedEvent = questEventFactory.parseEventInstruction(instructionObject);
+        cachedEvent = questEventFactory.parseInstruction(instructionObject);
       } catch (Exception e) {
         main.getLogManager()
             .warn("Something went wrong creating BetonQuest Event from: " + getEvent());

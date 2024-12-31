@@ -29,6 +29,7 @@ import cloud.commandframework.bukkit.parsers.WorldArgument;
 import cloud.commandframework.bukkit.parsers.selector.SinglePlayerSelectorArgument;
 import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.paper.PaperCommandManager;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -219,12 +220,15 @@ public class AdminCommands {
                 .argument(SinglePlayerSelectorArgument.of("player"), ArgumentDescription.of("Player whose completed quests you want to see."))
                 .meta(CommandMeta.DESCRIPTION, "Shows the completed quests of a player.")
                 .handler((context) -> {
+                    Bukkit.getConsoleSender().sendMessage("CompletedQuests command executed");
                     context.getSender().sendMessage(Component.empty());
                     final SinglePlayerSelector singlePlayerSelector = context.get("player");
                     final Player player = singlePlayerSelector.getPlayer();
                     if (singlePlayerSelector.hasAny() && player != null) {
+                        Bukkit.getConsoleSender().sendMessage("Single Selector works?");
                         QuestPlayer questPlayer = main.getQuestPlayerManager().getActiveQuestPlayer(player.getUniqueId());
                         if (questPlayer != null) {
+                            Bukkit.getConsoleSender().sendMessage("Quest player works?");
                             context.getSender().sendMessage(main.parse("<main>Completed quests of player <highlight>" + player.getName() + "</highlight> <green>(online)</green>:"));
                             int counter = 1;
                             for (CompletedQuest completedQuest : questPlayer.getCompletedQuests()) {
