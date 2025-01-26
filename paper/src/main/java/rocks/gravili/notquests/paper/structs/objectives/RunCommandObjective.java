@@ -67,8 +67,7 @@ public class RunCommandObjective extends Objective {
 
                           ArrayList<String> completions = new ArrayList<>();
 
-                          completions.add(
-                              "<Enter command (put between \" \" if you want to use spaces)>");
+                          completions.add(Suggestion.suggestion("<Enter command (put between \" \" if you want to use spaces)>"));
                           return completions;
                         })
                     .quoted()

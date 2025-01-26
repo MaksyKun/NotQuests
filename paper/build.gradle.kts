@@ -122,7 +122,7 @@ repositories {
     maven("https://oss.sonatype.org/content/repositories/snapshots") {
         content {
             includeGroup("org.incendo.interfaces")
-            includeGroup("cloud.commandframework")
+            includeGroup("org.incendo")
         }
     }
 
@@ -208,11 +208,10 @@ dependencies {
     }
 
     //CloudCommands
-    implementation("cloud.commandframework:cloud-bukkit:1.9.0-SNAPSHOT")
-    implementation("cloud.commandframework:cloud-paper:1.9.0-SNAPSHOT") {
+    implementation("org.incendo:cloud-paper:2.0.0-beta.10") {
         exclude(group = "net.kyori", module = "adventure-api")
     }
-    implementation("cloud.commandframework:cloud-minecraft-extras:1.9.0-SNAPSHOT") {
+    implementation("org.incendo:cloud-minecraft-extras:2.0.0-beta.10") {
         exclude(group = "net.kyori", module = "adventure-api")
     }
     //Else it errors:
@@ -313,8 +312,7 @@ tasks {
 
             //include(dependency('io.papermc:paperlib')
             //include(dependency("de.themoep:inventorygui:1.5-SNAPSHOT"))
-            include(dependency("cloud.commandframework:"))
-            include(dependency("cloud.commandframework:cloud-bukkit"))
+            include(dependency("org.incendo:"))
             include(dependency("io.leangen.geantyref:"))
             include(dependency("me.lucko:"))
 
@@ -382,5 +380,3 @@ tasks {
         minecraftVersion("1.21.1")
     }
 }
-
-

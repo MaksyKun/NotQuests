@@ -71,7 +71,7 @@ public class PlaySoundAction extends Action {
                   final ArrayList<String> completions = new ArrayList<>();
 
                   for (final SoundCategory soundCategory : SoundCategory.values()) {
-                    completions.add("" + soundCategory.name().toLowerCase());
+                    completions.add(Suggestion.suggestion("" + soundCategory.name().toLowerCase()));
                   }
                   return completions;
                 }
@@ -88,7 +88,7 @@ public class PlaySoundAction extends Action {
                   final ArrayList<String> completions = new ArrayList<>();
 
                   for (final Sound sound : Sound.values()) {
-                    completions.add("" + sound.getKey().asString());
+                    completions.add(Suggestion.suggestion("" + sound.getKey().asString()));
                   }
                   return completions;
                 }

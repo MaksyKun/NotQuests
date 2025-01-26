@@ -18,15 +18,6 @@
 
 package rocks.gravili.notquests.paper.commands.arguments;
 
-import cloud.commandframework.ArgumentDescription;
-import cloud.commandframework.arguments.CommandArgument;
-import cloud.commandframework.arguments.parser.ArgumentParseResult;
-import cloud.commandframework.arguments.parser.ArgumentParser;
-import cloud.commandframework.bukkit.BukkitCaptionKeys;
-import cloud.commandframework.captions.CaptionVariable;
-import cloud.commandframework.context.CommandContext;
-import cloud.commandframework.exceptions.parsing.NoInputProvidedException;
-import cloud.commandframework.exceptions.parsing.ParserException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -191,15 +182,15 @@ public class MaterialOrHandStringArgument<C> extends CommandArgument<C, String> 
         final @NonNull CommandContext<C> context, final @NonNull String input) {
       final List<String> completions = new ArrayList<>();
       for (Material value : Material.values()) {
-        completions.add(value.name().toLowerCase());
+        completions.add(Suggestion.suggestion(value.name().toLowerCase()));
       }
 
       for (NQItem nqItem : main.getItemsManager().getItems()) {
-        completions.add(nqItem.getItemName());
+        completions.add(Suggestion.suggestion(nqItem.getItemName()));
       }
 
-      completions.add("hand");
-      completions.add("any");
+      completions.add(Suggestion.suggestion("hand"));
+      completions.add(Suggestion.suggestion("any"));
 
       final List<String> allArgs = context.getRawInput();
 

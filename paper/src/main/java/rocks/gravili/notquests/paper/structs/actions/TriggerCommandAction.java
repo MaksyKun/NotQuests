@@ -55,7 +55,7 @@ public class TriggerCommandAction extends Action {
                             for (final Quest quest : main.getQuestManager().getAllQuests()) {
                                 for (final Objective objective : quest.getObjectives()) {
                                     if (objective instanceof final TriggerCommandObjective triggerCommandObjective) {
-                                        completions.add(triggerCommandObjective.getTriggerName());
+                                        completions.add(Suggestion.suggestion(triggerCommandObjective.getTriggerName()));
                                     }
                                 }
                             }

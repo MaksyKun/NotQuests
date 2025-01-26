@@ -67,7 +67,7 @@ public class ReachLocationObjective extends Objective {
                               "<Location Name>",
                               "");
                       ArrayList<String> completions = new ArrayList<>();
-                      completions.add("<Enter new Location name>");
+                      completions.add(Suggestion.suggestion("<Enter new Location name>"));
                       return completions;
                     }),
                 ArgumentDescription.of("Location name"))

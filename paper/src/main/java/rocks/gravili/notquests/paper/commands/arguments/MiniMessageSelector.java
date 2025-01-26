@@ -18,11 +18,6 @@
 
 package rocks.gravili.notquests.paper.commands.arguments;
 
-import cloud.commandframework.ArgumentDescription;
-import cloud.commandframework.arguments.CommandArgument;
-import cloud.commandframework.arguments.parser.ArgumentParseResult;
-import cloud.commandframework.arguments.parser.ArgumentParser;
-import cloud.commandframework.context.CommandContext;
 import io.leangen.geantyref.TypeToken;
 import java.util.List;
 import java.util.Queue;
@@ -130,18 +125,18 @@ public class MiniMessageSelector<C> extends CommandArgument<C, String[]> {
       } else {
         if (input.startsWith("<")) {
           for (String color : main.getUtilManager().getMiniMessageTokens()) {
-            completions.add("<" + color + ">");
+            completions.add(Suggestion.suggestion("<" + color + ">"));
             // Now the closings. First we search IF it contains an opening and IF it doesnt contain
             // more closings than the opening
             if (rawInput.contains("<" + color + ">")) {
               if (StringUtils.countMatches(rawInput, "<" + color + ">")
                   > StringUtils.countMatches(rawInput, "</" + color + ">")) {
-                completions.add("</" + color + ">");
+                completions.add(Suggestion.suggestion("</" + color + ">"));
               }
             }
           }
         } else {
-          completions.add("<Enter Message>");
+          completions.add(Suggestion.suggestion("<Enter Message>"));
         }
       }
 

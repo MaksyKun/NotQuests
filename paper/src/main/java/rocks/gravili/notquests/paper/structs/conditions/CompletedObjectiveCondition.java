@@ -68,7 +68,7 @@ public class CompletedObjectiveCondition extends Condition {
                             final Quest quest = context.get("quest");
                             for (final Objective objective : quest.getObjectives()) {
                               if (objective.getObjectiveID() != ((Objective)context.get("Objective ID")).getObjectiveID() ) { //TODO: Support nested objectives
-                                completions.add("" + objective.getObjectiveID());
+                                completions.add(Suggestion.suggestion("" + objective.getObjectiveID()));
                               }
                             }
                             return completions;

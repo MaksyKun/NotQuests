@@ -112,44 +112,44 @@ public class BetonQuestFireInlineEventAction extends Action {
                         switch (eventClassName) {
                           case "cancel":
                             if (length == 2) {
-                              completions.add("<name of a quest canceler, as defined in main.yml>");
+                              completions.add(Suggestion.suggestion("<name of a quest canceler, as defined in main.yml>"));
                             }
                             break;
                           case "chat":
-                            completions.add("<enter chat message>");
+                            completions.add(Suggestion.suggestion("<enter chat message>"));
                             break;
                           case "chestclear":
                             if (length == 2) {
-                              completions.add("<location>");
+                              completions.add(Suggestion.suggestion("<location>"));
                             }
                             break;
                           case "chestgive":
                             if (length == 2) {
-                              completions.add("<location>");
+                              completions.add(Suggestion.suggestion("<location>"));
                             } else if (length == 3) {
-                              completions.add("<items>");
+                              completions.add(Suggestion.suggestion("<items>"));
                             }
                             break;
                           case "chesttake":
                             if (length == 2) {
-                              completions.add("<location>");
+                              completions.add(Suggestion.suggestion("<location>"));
                             } else if (length == 3) {
-                              completions.add("<items>");
+                              completions.add(Suggestion.suggestion("<items>"));
                             }
                             break;
                           case "clear":
                             if (length == 2) {
-                              completions.add("<mobs>");
+                              completions.add(Suggestion.suggestion("<mobs>"));
                             } else if (length == 3) {
-                              completions.add("<location>");
+                              completions.add(Suggestion.suggestion("<location>"));
                             } else if (length == 4) {
-                              completions.add("<radius around location>");
+                              completions.add(Suggestion.suggestion("<radius around location>"));
                             } else if (length == 5) {
-                              completions.add("<Optional arguments>");
+                              completions.add(Suggestion.suggestion("<Optional arguments>"));
                             }
                             break;
                           default:
-                            completions.add("<arguments>");
+                            completions.add(Suggestion.suggestion("<arguments>"));
                         }
                       }
 

@@ -75,10 +75,10 @@ public class ListCondition extends Condition {
             manager.command(main.getVariablesManager().registerVariableCommands(variableString, builder)
                     .argument(StringArgument.<CommandSender>newBuilder("operator").withSuggestionsProvider((context, lastString) -> {
                         ArrayList<String> completions = new ArrayList<>();
-                        completions.add("equals");
-                        completions.add("equalsIgnoreCase");
-                        completions.add("contains");
-                        completions.add("containsIgnoreCase");
+                        completions.add(Suggestion.suggestion("equals"));
+                        completions.add(Suggestion.suggestion("equalsIgnoreCase"));
+                        completions.add(Suggestion.suggestion("contains"));
+                        completions.add(Suggestion.suggestion("containsIgnoreCase"));
 
 
                         final List<String> allArgs = context.getRawInput();

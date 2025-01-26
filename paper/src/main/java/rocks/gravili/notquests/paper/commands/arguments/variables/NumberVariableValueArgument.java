@@ -25,10 +25,8 @@ import cloud.commandframework.arguments.parser.ArgumentParser;
 import cloud.commandframework.arguments.standard.StringArgument;
 import cloud.commandframework.context.CommandContext;
 import cloud.commandframework.exceptions.parsing.NoInputProvidedException;
-import java.util.List;
-import java.util.Queue;
-import java.util.Set;
-import java.util.TreeSet;
+
+import java.util.*;
 import java.util.function.BiFunction;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -209,8 +207,8 @@ public final class NumberVariableValueArgument<C> extends CommandArgument<C, Str
             final CommandContext<CommandSender> commandSenderCommandContext = (CommandContext<CommandSender>) context;
             final CommandSender sender = commandSenderCommandContext.getSender();
 
-            final List<String> completions = new java.util.ArrayList<>();
-            completions.add("<Enter Variable or Number>");
+            final List<String> completions = new ArrayList<>();
+            completions.add(Suggestion.suggestion("<Enter Variable or Number>"));
 
             for(final String variableString : main.getVariablesManager().getVariableIdentifiers()) {
                 final Variable<?> variable = main.getVariablesManager().getVariableFromString(variableString);
@@ -218,28 +216,28 @@ public final class NumberVariableValueArgument<C> extends CommandArgument<C, Str
                     continue;
                 }
                 if(variable.getRequiredStrings().isEmpty() && variable.getRequiredNumbers().isEmpty() && variable.getRequiredBooleans().isEmpty() && variable.getRequiredBooleanFlags().isEmpty()){
-                    completions.add(variableString);
+                    completions.add(Suggestion.suggestion(variableString));
                 }else{
                     if(!input.endsWith(variableString+"(")){
                         if(input.endsWith(",") && input.contains(variableString+"(")){
                             for(StringArgument<CommandSender> stringArgument : variable.getRequiredStrings()){
                                 if(!input.contains(stringArgument.getName())){
-                                    completions.add(input + stringArgument.getName() + ":");
+                                    completions.add(Suggestion.suggestion(input + stringArgument.getName() + ":"));
                                 }
                             }
                             for(NumberVariableValueArgument<CommandSender> numberVariableValueArgument : variable.getRequiredNumbers()){
                                 if(!input.contains(numberVariableValueArgument.getName())){
-                                    completions.add(input + numberVariableValueArgument.getName() + ":");
+                                    completions.add(Suggestion.suggestion(input + numberVariableValueArgument.getName() + ":"));
                                 }
                             }
                             for(BooleanVariableValueArgument<CommandSender> booleanArgument : variable.getRequiredBooleans()){
                                 if(!input.contains(booleanArgument.getName())){
-                                    completions.add(input + booleanArgument.getName() + ":");
+                                    completions.add(Suggestion.suggestion(input + booleanArgument.getName() + ":"));
                                 }
                             }
                             for(CommandFlag<Void> flag : variable.getRequiredBooleanFlags()){
                                 if(!input.contains(flag.getName())){
-                                    completions.add(input + "--" + flag.getName() + "");
+                                    completions.add(Suggestion.suggestion(input + "--" + flag.getName() + ""));
                                 }
                             }
                         }else if(!input.endsWith(")")){
@@ -252,7 +250,7 @@ public final class NumberVariableValueArgument<C> extends CommandArgument<C, Str
                                             final List<String> suggestions = stringArgument.getSuggestionsProvider().apply(commandSenderCommandContext, "");
 
                                             for(final String suggestion : suggestions){
-                                                completions.add(input + suggestion);
+                                                completions.add(Suggestion.suggestion(input + suggestion));
                                             }
                                         }else{
                                             final String[] splitDoubleDots = subStringAfter.split(":");
@@ -263,11 +261,11 @@ public final class NumberVariableValueArgument<C> extends CommandArgument<C, Str
 
                                             for(final String suggestion : suggestions){
 
-                                                completions.add(input.substring(0, input.length()-stringAfterLastDoubleDot.length()-1) + ":" + suggestion);
+                                                completions.add(Suggestion.suggestion(input.substring(0, input.length()-stringAfterLastDoubleDot.length()-1) + ":" + suggestion));
                                             }
                                         }
                                     }else{
-                                        completions.add(variableString+"(" + stringArgument.getName() + ":");
+                                        completions.add(Suggestion.suggestion(variableString+"(" + stringArgument.getName() + ":"));
                                     }
                                 }
                                 for(final NumberVariableValueArgument<CommandSender> numberVariableValueArgument : variable.getRequiredNumbers()) {
@@ -276,7 +274,7 @@ public final class NumberVariableValueArgument<C> extends CommandArgument<C, Str
                                             final List<String> suggestions = numberVariableValueArgument.getSuggestionsProvider().apply(commandSenderCommandContext, "");
 
                                             for(final String suggestion : suggestions){
-                                                completions.add(input + suggestion);
+                                                completions.add(Suggestion.suggestion(input + suggestion));
                                             }
                                         }else{
 
@@ -288,11 +286,11 @@ public final class NumberVariableValueArgument<C> extends CommandArgument<C, Str
 
                                             for(final String suggestion : suggestions){
 
-                                                completions.add(input.substring(0, input.length()-stringAfterLastDoubleDot.length()-1) + ":" + suggestion);
+                                                completions.add(Suggestion.suggestion(input.substring(0, input.length()-stringAfterLastDoubleDot.length()-1) + ":" + suggestion));
                                             }
                                         }
                                     } else {
-                                        completions.add(variableString+"(" + numberVariableValueArgument.getName() + ":");
+                                        completions.add(Suggestion.suggestion(variableString+"(" + numberVariableValueArgument.getName() + ":"));
                                     }
                                 }for(BooleanVariableValueArgument<CommandSender> booleanArgument : variable.getRequiredBooleans()) {
                                     if (subStringAfter.contains(":")) {
@@ -300,7 +298,7 @@ public final class NumberVariableValueArgument<C> extends CommandArgument<C, Str
                                             final List<String> suggestions = booleanArgument.getSuggestionsProvider().apply(commandSenderCommandContext, "");
 
                                             for(final String suggestion : suggestions){
-                                                completions.add(input + suggestion);
+                                                completions.add(Suggestion.suggestion(input + suggestion));
                                             }
                                         }else{
 
@@ -312,31 +310,31 @@ public final class NumberVariableValueArgument<C> extends CommandArgument<C, Str
 
                                             for(final String suggestion : suggestions){
 
-                                                completions.add(input.substring(0, input.length()-stringAfterLastDoubleDot.length()-1) + ":" + suggestion);
+                                                completions.add(Suggestion.suggestion(input.substring(0, input.length()-stringAfterLastDoubleDot.length()-1) + ":" + suggestion));
                                             }
                                         }
                                     } else {
-                                        completions.add(variableString+"(" + booleanArgument.getName() + ":");
+                                        completions.add(Suggestion.suggestion(variableString+"(" + booleanArgument.getName() + ":"));
                                     }
                                 }for(CommandFlag<Void> flag : variable.getRequiredBooleanFlags()){
-                                    completions.add(variableString+"(--" + flag.getName() + "");
+                                    completions.add(Suggestion.suggestion(variableString+"(--" + flag.getName() + ""));
                                 }
                             }else{
-                                completions.add(variableString+"(");
+                                completions.add(Suggestion.suggestion(variableString+"("));
                             }
                         }
                     }else{//Moree completionss
                         for(StringArgument<CommandSender> stringArgument : variable.getRequiredStrings()){
-                            completions.add(variableString+"(" + stringArgument.getName() + ":");
+                            completions.add(Suggestion.suggestion(variableString+"(" + stringArgument.getName() + ":"));
                         }
                         for(NumberVariableValueArgument<CommandSender> numberVariableValueArgument : variable.getRequiredNumbers()){
-                            completions.add(variableString+"(" + numberVariableValueArgument.getName() + ":");
+                            completions.add(Suggestion.suggestion(variableString+"(" + numberVariableValueArgument.getName() + ":"));
                         }
                         for(BooleanVariableValueArgument<CommandSender> booleanArgument : variable.getRequiredBooleans()){
-                            completions.add(variableString+"(" + booleanArgument.getName() + ":");
+                            completions.add(Suggestion.suggestion(variableString+"(" + booleanArgument.getName() + ":"));
                         }
                         for(CommandFlag<Void> flag : variable.getRequiredBooleanFlags()){
-                            completions.add(variableString+"(--" + flag.getName() + "");
+                            completions.add(Suggestion.suggestion(variableString+"(--" + flag.getName() + ""));
                         }
 
                     }
@@ -365,7 +363,7 @@ public final class NumberVariableValueArgument<C> extends CommandArgument<C, Str
                     if (number < min || number > max) {
                         continue;
                     }
-                    completions.add(String.valueOf(number));
+                    completions.add(Suggestion.suggestion(String.valueOf(number)));
                 }
 
                 //return suggestions;
@@ -374,7 +372,7 @@ public final class NumberVariableValueArgument<C> extends CommandArgument<C, Str
             }
 
             for(int i=0; i<10; i++){
-                completions.add(i + ".0");
+                completions.add(Suggestion.suggestion(i + ".0"));
             }
 
 

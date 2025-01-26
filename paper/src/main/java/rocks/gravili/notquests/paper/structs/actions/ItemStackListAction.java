@@ -83,10 +83,10 @@ public class ItemStackListAction extends Action {
                     .argument(StringArgument.<CommandSender>newBuilder("operator").withSuggestionsProvider((context, lastString) -> {
                         ArrayList<String> completions = new ArrayList<>();
 
-                        completions.add("set");
-                        completions.add("add");
-                        completions.add("remove");
-                        completions.add("clear");
+                        completions.add(Suggestion.suggestion("set"));
+                        completions.add(Suggestion.suggestion("add"));
+                        completions.add(Suggestion.suggestion("remove"));
+                        completions.add(Suggestion.suggestion("clear"));
 
                         final List<String> allArgs = context.getRawInput();
                         main.getUtilManager().sendFancyCommandCompletion(context.getSender(), allArgs.toArray(new String[0]), "[Operator]", "[...]");

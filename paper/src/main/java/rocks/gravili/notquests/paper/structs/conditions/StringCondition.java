@@ -76,12 +76,12 @@ public class StringCondition extends Condition {
             manager.command(main.getVariablesManager().registerVariableCommands(variableString, builder)
                     .argument(StringArgument.<CommandSender>newBuilder("operator").withSuggestionsProvider((context, lastString) -> {
                         ArrayList<String> completions = new ArrayList<>();
-                        completions.add("equals");
-                        completions.add("equalsIgnoreCase");
-                        completions.add("contains");
-                        completions.add("startsWith");
-                        completions.add("endsWith");
-                        completions.add("isEmpty");
+                        completions.add(Suggestion.suggestion("equals"));
+                        completions.add(Suggestion.suggestion("equalsIgnoreCase"));
+                        completions.add(Suggestion.suggestion("contains"));
+                        completions.add(Suggestion.suggestion("startsWith"));
+                        completions.add(Suggestion.suggestion("endsWith"));
+                        completions.add(Suggestion.suggestion("isEmpty"));
 
                         final List<String> allArgs = context.getRawInput();
                         main.getUtilManager().sendFancyCommandCompletion(context.getSender(), allArgs.toArray(new String[0]), "[String Comparison Operator]", "[...]");

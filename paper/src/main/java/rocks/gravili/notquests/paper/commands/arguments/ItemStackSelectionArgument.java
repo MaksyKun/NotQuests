@@ -18,15 +18,6 @@
 
 package rocks.gravili.notquests.paper.commands.arguments;
 
-import cloud.commandframework.ArgumentDescription;
-import cloud.commandframework.arguments.CommandArgument;
-import cloud.commandframework.arguments.parser.ArgumentParseResult;
-import cloud.commandframework.arguments.parser.ArgumentParser;
-import cloud.commandframework.bukkit.BukkitCaptionKeys;
-import cloud.commandframework.captions.CaptionVariable;
-import cloud.commandframework.context.CommandContext;
-import cloud.commandframework.exceptions.parsing.NoInputProvidedException;
-import cloud.commandframework.exceptions.parsing.ParserException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -37,6 +28,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.incendo.cloud.parser.ArgumentParser;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.arguments.wrappers.ItemStackSelection;
 import rocks.gravili.notquests.paper.managers.items.NQItem;
@@ -229,7 +221,7 @@ public class ItemStackSelectionArgument<C> extends CommandArgument<C, ItemStackS
                 final String partAfterLastCommaInInput = input.substring( (input.lastIndexOf(",") > input.length()-1) ? (input.lastIndexOf(",")) : (input.lastIndexOf(",") + 1));
                 for(final String possibleMaterial : possibleMaterials){
                     final String string = input.substring(0, input.length()-1-partAfterLastCommaInInput.length()) + "," + possibleMaterial;
-                    completions.add(string);
+                    completions.add(Suggestion.suggestion(string));
                 }
                 return completions;
             }

@@ -18,13 +18,6 @@
 
 package rocks.gravili.notquests.paper.commands.arguments;
 
-import cloud.commandframework.ArgumentDescription;
-import cloud.commandframework.arguments.CommandArgument;
-import cloud.commandframework.arguments.parser.ArgumentParseResult;
-import cloud.commandframework.arguments.parser.ArgumentParser;
-import cloud.commandframework.bukkit.arguments.selector.SinglePlayerSelector;
-import cloud.commandframework.context.CommandContext;
-import cloud.commandframework.exceptions.parsing.NoInputProvidedException;
 import java.util.List;
 import java.util.Queue;
 import java.util.UUID;
@@ -34,13 +27,19 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.incendo.cloud.component.CommandComponent;
+import org.incendo.cloud.context.CommandContext;
+import org.incendo.cloud.context.CommandInput;
+import org.incendo.cloud.description.Description;
+import org.incendo.cloud.parser.ArgumentParseResult;
+import org.incendo.cloud.parser.ArgumentParser;
 import org.jetbrains.annotations.NotNull;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.structs.ActiveQuest;
 import rocks.gravili.notquests.paper.structs.Quest;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 
-public class ActiveQuestSelector<C> extends CommandArgument<C, ActiveQuest> {
+public class ActiveQuestSelector<C> implements ArgumentParser<C, ActiveQuest> {
 
   protected ActiveQuestSelector(
       final boolean required,
@@ -49,16 +48,10 @@ public class ActiveQuestSelector<C> extends CommandArgument<C, ActiveQuest> {
       final @Nullable
           BiFunction<@NonNull CommandContext<C>, @NonNull String, @NonNull List<@NonNull String>>
           suggestionsProvider,
-      final @NonNull ArgumentDescription defaultDescription,
+      final @NonNull Description defaultDescription,
       NotQuests main,
       String playerContext) {
-    super(
-        required,
-        name,
-        new ActiveQuestsParser<>(main, playerContext),
-        defaultValue,
-        ActiveQuest.class,
-        suggestionsProvider);
+
   }
 
   public static <C> ActiveQuestSelector.@NonNull Builder<C> newBuilder(
@@ -66,12 +59,12 @@ public class ActiveQuestSelector<C> extends CommandArgument<C, ActiveQuest> {
     return new ActiveQuestSelector.Builder<>(name, main, playerContext);
   }
 
-  public static <C> @NonNull CommandArgument<C, ActiveQuest> of(
+  public static <C> @NonNull CommandComponent<C> of(
       final @NonNull String name, final NotQuests main, final String playerContext) {
     return ActiveQuestSelector.<C>newBuilder(name, main, playerContext).asRequired().build();
   }
 
-  public static <C> @NonNull CommandArgument<C, ActiveQuest> optional(
+  public static <C> @NonNull CommandComponent<C> optional(
       final @NonNull String name, final NotQuests main, final String playerContext) {
     return ActiveQuestSelector.<C>newBuilder(name, main, playerContext).asOptional().build();
   }
@@ -84,6 +77,11 @@ public class ActiveQuestSelector<C> extends CommandArgument<C, ActiveQuest> {
     return ActiveQuestSelector.<C>newBuilder(name, main, questContext)
         .asOptionalWithDefault(activeQuest.getQuest().getIdentifier())
         .build();
+  }
+
+  @Override
+  public @NonNull ArgumentParseResult<@NonNull ActiveQuest> parse(@NonNull CommandContext<@NonNull C> commandContext, @NonNull CommandInput commandInput) {
+
   }
 
   public static final class Builder<C> extends CommandArgument.Builder<C, ActiveQuest> {

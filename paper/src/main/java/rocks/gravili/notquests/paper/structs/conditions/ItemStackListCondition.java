@@ -80,8 +80,8 @@ public class ItemStackListCondition extends Condition {
             manager.command(main.getVariablesManager().registerVariableCommands(variableString, builder)
                     .argument(StringArgument.<CommandSender>newBuilder("operator").withSuggestionsProvider((context, lastString) -> {
                         ArrayList<String> completions = new ArrayList<>();
-                        completions.add("equals");
-                        completions.add("contains");
+                        completions.add(Suggestion.suggestion("equals"));
+                        completions.add(Suggestion.suggestion("contains"));
 
 
                         final List<String> allArgs = context.getRawInput();

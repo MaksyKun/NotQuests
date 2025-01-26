@@ -18,128 +18,86 @@
 
 package rocks.gravili.notquests.paper.commands.arguments;
 
-import cloud.commandframework.ArgumentDescription;
-import cloud.commandframework.arguments.CommandArgument;
-import cloud.commandframework.arguments.parser.ArgumentParseResult;
-import cloud.commandframework.arguments.parser.ArgumentParser;
-import cloud.commandframework.context.CommandContext;
-import cloud.commandframework.exceptions.parsing.NoInputProvidedException;
 import java.util.List;
 import java.util.Queue;
 import java.util.function.BiFunction;
 import org.bukkit.command.CommandSender;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.incendo.cloud.context.CommandContext;
+import org.incendo.cloud.context.CommandInput;
+import org.incendo.cloud.parser.ArgumentParseResult;
+import org.incendo.cloud.parser.ArgumentParser;
 import org.jetbrains.annotations.NotNull;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.structs.actions.Action;
 
-public class ActionSelector<C> extends CommandArgument<C, Action> {
+public class ActionsParser<C> implements ArgumentParser<C, Action> {
 
-  protected ActionSelector(
-      final boolean required,
-      final @NonNull String name,
-      final @NonNull String defaultValue,
-      final @Nullable
-          BiFunction<@NonNull CommandContext<C>, @NonNull String, @NonNull List<@NonNull String>>
-          suggestionsProvider,
-      final @NonNull ArgumentDescription defaultDescription,
-      NotQuests main) {
-    super(
-        required, name, new ActionsParser<>(main), defaultValue, Action.class, suggestionsProvider);
+  private final NotQuests main;
+
+  /** Constructs a new PluginsParser. */
+  public ActionsParser(NotQuests main) {
+    this.main = main;
   }
 
-  public static <C> ActionSelector.@NonNull Builder<C> newBuilder(
-      final @NonNull String name, final NotQuests main) {
-    return new ActionSelector.Builder<>(name, main);
+  @NotNull
+  @Override
+  public List<String> suggestions(@NotNull CommandContext<C> context, @NotNull String input) {
+    List<String> actionNames =
+            new java.util.ArrayList<>(
+                    main.getActionsYMLManager().getActionsAndIdentifiers().keySet());
+    final List<String> allArgs = context.rawInput();
+
+    main.getUtilManager()
+            .sendFancyCommandCompletion(
+                    (CommandSender) context.sender(),
+                    allArgs.toArray(new String[0]),
+                    "[Action Name]",
+                    "[...]");
+
+    return actionNames;
   }
 
-  public static <C> @NonNull CommandArgument<C, Action> of(
-      final @NonNull String name, final NotQuests main) {
-    return ActionSelector.<C>newBuilder(name, main).asRequired().build();
+  @Override
+  public @NonNull ArgumentParseResult<Action> parse(
+          @NonNull CommandContext<@NonNull C> context, @NonNull Queue<@NonNull String> inputQueue) {
+    if (inputQueue.isEmpty()) {
+      return ArgumentParseResult.failure(
+              new NoInputProvidedException(ActionSelector.ActionsParser.class, context));
+    }
+    final String input = inputQueue.peek();
+    final Action foundAction = main.getActionsYMLManager().getAction(input);
+    inputQueue.remove();
+
+    if (foundAction == null) {
+      return ArgumentParseResult.failure(
+              new IllegalArgumentException("Action '" + input + "' does not exist!"));
+    }
+
+    return ArgumentParseResult.success(foundAction);
   }
 
-  public static <C> @NonNull CommandArgument<C, Action> optional(
-      final @NonNull String name, final NotQuests main) {
-    return ActionSelector.<C>newBuilder(name, main).asOptional().build();
+  @Override
+  public boolean isContextFree() {
+    return true;
   }
 
-  public static <C> @NonNull CommandArgument<C, Action> optional(
-      final @NonNull String name, final @NonNull Action action, final NotQuests main) {
-    return ActionSelector.<C>newBuilder(name, main)
-        .asOptionalWithDefault(action.getActionName())
-        .build();
-  }
+  @Override
+  public @NonNull ArgumentParseResult<@NonNull Action> parse(@NonNull CommandContext<@NonNull C> commandContext, @NonNull CommandInput commandInput) {
+    if (commandInput.isEmpty()) {
+      return ArgumentParseResult.failure(
+              new NoInputProvidedException(ActionSelector.ActionsParser.class, commandContext));
+    }
+    final String input = String.valueOf(commandInput.peek());
+    final Action foundAction = main.getActionsYMLManager().getAction(input);
+    inputQueue.remove();
 
-  public static final class Builder<C> extends CommandArgument.Builder<C, Action> {
-    private final NotQuests main;
-
-    private Builder(final @NonNull String name, NotQuests main) {
-      super(Action.class, name);
-      this.main = main;
+    if (foundAction == null) {
+      return ArgumentParseResult.failure(
+              new IllegalArgumentException("Action '" + input + "' does not exist!"));
     }
 
-    @Override
-    public @NonNull CommandArgument<C, Action> build() {
-      return new ActionSelector<>(
-          this.isRequired(),
-          this.getName(),
-          this.getDefaultValue(),
-          this.getSuggestionsProvider(),
-          this.getDefaultDescription(),
-          this.main);
-    }
-  }
-
-  public static final class ActionsParser<C> implements ArgumentParser<C, Action> {
-
-    private final NotQuests main;
-
-    /** Constructs a new PluginsParser. */
-    public ActionsParser(NotQuests main) {
-      this.main = main;
-    }
-
-    @NotNull
-    @Override
-    public List<String> suggestions(@NotNull CommandContext<C> context, @NotNull String input) {
-      List<String> actionNames =
-          new java.util.ArrayList<>(
-              main.getActionsYMLManager().getActionsAndIdentifiers().keySet());
-      final List<String> allArgs = context.getRawInput();
-
-      main.getUtilManager()
-          .sendFancyCommandCompletion(
-              (CommandSender) context.getSender(),
-              allArgs.toArray(new String[0]),
-              "[Action Name]",
-              "[...]");
-
-      return actionNames;
-    }
-
-    @Override
-    public @NonNull ArgumentParseResult<Action> parse(
-        @NonNull CommandContext<@NonNull C> context, @NonNull Queue<@NonNull String> inputQueue) {
-      if (inputQueue.isEmpty()) {
-        return ArgumentParseResult.failure(
-            new NoInputProvidedException(ActionsParser.class, context));
-      }
-      final String input = inputQueue.peek();
-      final Action foundAction = main.getActionsYMLManager().getAction(input);
-      inputQueue.remove();
-
-      if (foundAction == null) {
-        return ArgumentParseResult.failure(
-            new IllegalArgumentException("Action '" + input + "' does not exist!"));
-      }
-
-      return ArgumentParseResult.success(foundAction);
-    }
-
-    @Override
-    public boolean isContextFree() {
-      return true;
-    }
+    return ArgumentParseResult.success(foundAction);
   }
 }

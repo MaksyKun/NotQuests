@@ -72,7 +72,7 @@ public class EscortNPCObjective extends Objective { //TODO: Add support for othe
                         (context, lastString) -> {
                           final ArrayList<String> completions = new ArrayList<>();
                           for (final int npcID : main.getIntegrationsManager().getCitizensManager().getAllNPCIDs()) {
-                            completions.add("" + npcID);
+                            completions.add(Suggestion.suggestion("" + npcID));
                           }
                           final List<String> allArgs = context.getRawInput();
                           main.getUtilManager()
@@ -95,7 +95,7 @@ public class EscortNPCObjective extends Objective { //TODO: Add support for othe
                             int npcToEscortID = context.get("NPC to escort");
                             for (final int npcID : main.getIntegrationsManager().getCitizensManager().getAllNPCIDs()) {
                               if (npcID != npcToEscortID) {
-                                completions.add("" + npcID);
+                                completions.add(Suggestion.suggestion("" + npcID));
                               }
                             }
                           } catch (Exception ignored) {

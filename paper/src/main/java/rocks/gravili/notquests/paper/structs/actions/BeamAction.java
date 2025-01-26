@@ -59,7 +59,7 @@ public class BeamAction extends Action {
                         (context, lastString) -> {
                           ArrayList<String> completions = new ArrayList<>();
 
-                          completions.add("<Enter beam name>");
+                          completions.add(Suggestion.suggestion("<Enter beam name>"));
 
                           final List<String> allArgs = context.getRawInput();
                           main.getUtilManager()
@@ -93,7 +93,7 @@ public class BeamAction extends Action {
                         (context, lastString) -> {
                           ArrayList<String> completions = new ArrayList<>();
 
-                          completions.add("<Enter beam name>");
+                          completions.add(Suggestion.suggestion("<Enter beam name>"));
 
                           final List<String> allArgs = context.getRawInput();
                           main.getUtilManager()

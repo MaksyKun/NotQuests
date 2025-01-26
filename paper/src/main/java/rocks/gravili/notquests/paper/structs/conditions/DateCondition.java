@@ -127,8 +127,8 @@ public class DateCondition extends Condition {
                                   "<optional flags>");
 
                           ArrayList<String> completions = new ArrayList<>();
-                          completions.add("after");
-                          completions.add("before");
+                          completions.add(Suggestion.suggestion("after"));
+                          completions.add(Suggestion.suggestion("before"));
                           return completions;
                         })
                     .single()

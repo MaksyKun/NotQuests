@@ -61,10 +61,10 @@ public class WorldLeaveTrigger extends Trigger {
 
                           ArrayList<String> completions = new ArrayList<>();
 
-                          completions.add("ALL");
+                          completions.add(Suggestion.suggestion("ALL"));
 
                           for (final World world : Bukkit.getWorlds()) {
-                            completions.add(world.getName());
+                            completions.add(Suggestion.suggestion(world.getName()));
                           }
 
                           return completions;

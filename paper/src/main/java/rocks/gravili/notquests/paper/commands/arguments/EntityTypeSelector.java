@@ -18,12 +18,7 @@
 
 package rocks.gravili.notquests.paper.commands.arguments;
 
-import cloud.commandframework.ArgumentDescription;
-import cloud.commandframework.arguments.CommandArgument;
-import cloud.commandframework.arguments.parser.ArgumentParseResult;
-import cloud.commandframework.arguments.parser.ArgumentParser;
-import cloud.commandframework.context.CommandContext;
-import cloud.commandframework.exceptions.parsing.NoInputProvidedException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
 import java.util.function.BiFunction;
@@ -112,8 +107,8 @@ public class EntityTypeSelector<C> extends CommandArgument<C, String> {
     @Override
     public List<String> suggestions(@NotNull CommandContext<C> context, @NotNull String input) {
       List<String> completions =
-          new java.util.ArrayList<>(main.getDataManager().standardEntityTypeCompletions);
-      completions.add("any");
+          new ArrayList<>(main.getDataManager().standardEntityTypeCompletions);
+      completions.add(Suggestion.suggestion("any"));
 
       //Add extra Mythic Mobs completions, if enabled
       if (mythicMobsFactions && main.getIntegrationsManager().isMythicMobsEnabled() && main.getIntegrationsManager().getMythicMobsManager() != null) {

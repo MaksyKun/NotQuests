@@ -74,7 +74,7 @@ public class KillEliteMobsObjective extends Objective {
 
                           ArrayList<String> completions = new ArrayList<>();
 
-                          completions.add("any");
+                          completions.add(Suggestion.suggestion("any"));
                           if (main.getIntegrationsManager().isEliteMobsEnabled()) {
                             completions.addAll(
                                 main.getDataManager().standardEliteMobNamesCompletions);
@@ -142,7 +142,7 @@ public class KillEliteMobsObjective extends Objective {
                           ArrayList<String> completions = new ArrayList<>();
                           for (final CreatureSpawnEvent.SpawnReason spawnReasonS :
                               CreatureSpawnEvent.SpawnReason.values()) {
-                            completions.add(spawnReasonS.toString());
+                            completions.add(Suggestion.suggestion(spawnReasonS.toString()));
                           }
                           return completions;
                         })
@@ -166,7 +166,7 @@ public class KillEliteMobsObjective extends Objective {
 
                           ArrayList<String> completions = new ArrayList<>();
                           for (int i = 50; i <= 100; i++) {
-                            completions.add("" + i);
+                            completions.add(Suggestion.suggestion("" + i));
                           }
 
                           return completions;

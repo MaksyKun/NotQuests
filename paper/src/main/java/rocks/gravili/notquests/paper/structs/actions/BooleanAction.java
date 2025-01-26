@@ -87,8 +87,8 @@ public class BooleanAction extends Action {
                           (context, lastString) -> {
                             ArrayList<String> completions = new ArrayList<>();
 
-                            completions.add("set");
-                            completions.add("setNot");
+                            completions.add(Suggestion.suggestion("set"));
+                            completions.add(Suggestion.suggestion("setNot"));
 
                             final List<String> allArgs = context.getRawInput();
                             main.getUtilManager()

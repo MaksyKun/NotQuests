@@ -18,11 +18,6 @@
 
 package rocks.gravili.notquests.paper.commands.arguments;
 
-import cloud.commandframework.ArgumentDescription;
-import cloud.commandframework.arguments.CommandArgument;
-import cloud.commandframework.arguments.parser.ArgumentParseResult;
-import cloud.commandframework.arguments.parser.ArgumentParser;
-import cloud.commandframework.context.CommandContext;
 import io.leangen.geantyref.TypeToken;
 import java.util.List;
 import java.util.Queue;
@@ -122,7 +117,7 @@ public class CommandSelector<C> extends CommandArgument<C, String[]> {
                 .tabComplete(main.getMain().getServer().getConsoleSender(), cmd);
         if (compl != null) {
           for (String cmd1 : compl) {
-            completions.add(cmd1);
+            completions.add(Suggestion.suggestion(cmd1));
           }
         }
       }

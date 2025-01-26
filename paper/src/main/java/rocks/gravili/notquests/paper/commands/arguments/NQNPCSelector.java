@@ -18,12 +18,6 @@
 
 package rocks.gravili.notquests.paper.commands.arguments;
 
-import cloud.commandframework.ArgumentDescription;
-import cloud.commandframework.arguments.CommandArgument;
-import cloud.commandframework.arguments.parser.ArgumentParseResult;
-import cloud.commandframework.arguments.parser.ArgumentParser;
-import cloud.commandframework.context.CommandContext;
-import cloud.commandframework.exceptions.parsing.NoInputProvidedException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
@@ -31,6 +25,7 @@ import java.util.function.BiFunction;
 import org.bukkit.command.CommandSender;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.incendo.cloud.context.CommandContext;
 import org.jetbrains.annotations.NotNull;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.arguments.wrappers.NQNPCResult;
@@ -38,7 +33,8 @@ import rocks.gravili.notquests.paper.managers.npc.NPCManager;
 import rocks.gravili.notquests.paper.managers.npc.NQNPC;
 import rocks.gravili.notquests.paper.managers.npc.NQNPCID;
 
-public class NQNPCSelector<C> extends CommandArgument<C, NQNPCResult> { //TODO: allowRightClick selector which just returns null but adds it to the suggestions. Will have to be implemented by the command execution thingy then
+public class NQNPCSelector<C> extends CommandArgument<C, NQNPCResult> {
+  //TODO: allowRightClick selector which just returns null but adds it to the suggestions. Will have to be implemented by the command execution thingy then
 
   protected NQNPCSelector(
       final boolean required,

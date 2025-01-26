@@ -34,7 +34,7 @@ public class ChatAction extends Action {
                       main.getUtilManager().sendFancyCommandCompletion(context.getSender(), allArgs.toArray(new String[0]), "<enter chat message. Wrap in \"\" to use spaces>", "");
 
                       ArrayList<String> completions = new ArrayList<>();
-                      completions.add("<enter chat message. Wrap in \"\" to use spaces>");
+                      completions.add(Suggestion.suggestion("<enter chat message. Wrap in \"\" to use spaces>"));
                       return completions;
                     }
                 ).quoted().withDefaultDescription(ArgumentDescription.of(

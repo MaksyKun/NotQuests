@@ -23,6 +23,8 @@ import cloud.commandframework.arguments.parser.ArgumentParseResult;
 import cloud.commandframework.arguments.parser.ArgumentParser;
 import cloud.commandframework.context.CommandContext;
 import cloud.commandframework.exceptions.parsing.NoInputProvidedException;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
 import java.util.function.BiFunction;
@@ -183,13 +185,13 @@ public final class ItemStackListVariableValueArgument<C> extends CommandArgument
                 final @NonNull String input
         ) {
 
-            List<String> completions = new java.util.ArrayList<>();
-            completions.add("<Enter Variables>");
+            List<String> completions = new ArrayList<>();
+            completions.add(Suggestion.suggestion("<Enter Variables>"));
             for (Material value : Material.values()) {
-                completions.add(value.name().toLowerCase());
+                completions.add(Suggestion.suggestion(value.name().toLowerCase()));
             }
-            completions.add("hand");
-            completions.add("any");
+            completions.add(Suggestion.suggestion("hand"));
+            completions.add(Suggestion.suggestion("any"));
 
 
             final List<String> allArgs = context.getRawInput();

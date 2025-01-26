@@ -50,7 +50,7 @@ public class NPCDeathTrigger extends Trigger { //TODO: Add support for other NPC
                         (context, lastString) -> {
                           final ArrayList<String> completions = new ArrayList<>();
                           for (final int npcID : main.getIntegrationsManager().getCitizensManager().getAllNPCIDs()) {
-                            completions.add("" + npcID);
+                            completions.add(Suggestion.suggestion("" + npcID));
                           }
                           final List<String> allArgs = context.getRawInput();
                           main.getUtilManager()

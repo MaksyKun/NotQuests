@@ -78,9 +78,9 @@ public class BooleanCondition extends Condition {
             manager.command(main.getVariablesManager().registerVariableCommands(variableString, builder)
                     .argument(StringArgument.<CommandSender>newBuilder("operator").withSuggestionsProvider((context, lastString) -> {
                         ArrayList<String> completions = new ArrayList<>();
-                        completions.add("and");
-                        completions.add("equals");
-                        completions.add("or");
+                        completions.add(Suggestion.suggestion("and"));
+                        completions.add(Suggestion.suggestion("equals"));
+                        completions.add(Suggestion.suggestion("or"));
 
 
                         final List<String> allArgs = context.getRawInput();

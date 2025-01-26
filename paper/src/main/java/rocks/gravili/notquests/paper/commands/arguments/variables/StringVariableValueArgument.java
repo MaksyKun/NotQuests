@@ -23,6 +23,8 @@ import cloud.commandframework.arguments.parser.ArgumentParseResult;
 import cloud.commandframework.arguments.parser.ArgumentParser;
 import cloud.commandframework.context.CommandContext;
 import cloud.commandframework.exceptions.parsing.NoInputProvidedException;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
 import java.util.function.BiFunction;
@@ -181,8 +183,8 @@ public final class StringVariableValueArgument<C> extends CommandArgument<C, Str
                 final @NonNull String input
         ) {
 
-            List<String> completions = new java.util.ArrayList<>();
-            completions.add("<Enter String>");
+            List<String> completions = new ArrayList<>();
+            completions.add(Suggestion.suggestion("<Enter String>"));
 
             final List<String> allArgs = context.getRawInput();
 

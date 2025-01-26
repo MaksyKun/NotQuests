@@ -77,11 +77,11 @@ public class NumberAction extends Action {
                     .argument(StringArgument.<CommandSender>newBuilder("operator").withSuggestionsProvider((context, lastString) -> {
                         ArrayList<String> completions = new ArrayList<>();
 
-                        completions.add("set");
-                        completions.add("add");
-                        completions.add("deduct");
-                        completions.add("multiply");
-                        completions.add("divide");
+                        completions.add(Suggestion.suggestion("set"));
+                        completions.add(Suggestion.suggestion("add"));
+                        completions.add(Suggestion.suggestion("deduct"));
+                        completions.add(Suggestion.suggestion("multiply"));
+                        completions.add(Suggestion.suggestion("divide"));
 
 
                         final List<String> allArgs = context.getRawInput();

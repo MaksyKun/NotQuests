@@ -18,8 +18,6 @@
 
 package rocks.gravili.notquests.paper.structs.variables;
 
-import cloud.commandframework.arguments.flags.CommandFlag;
-import cloud.commandframework.arguments.standard.StringArgument;
 import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -28,6 +26,8 @@ import java.util.List;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.inventory.ItemStack;
+import org.incendo.cloud.parser.flag.CommandFlag;
+import org.incendo.cloud.parser.standard.StringParser;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.arguments.variables.BooleanVariableValueArgument;
 import rocks.gravili.notquests.paper.commands.arguments.variables.NumberVariableValueArgument;
@@ -45,10 +45,10 @@ import rocks.gravili.notquests.paper.structs.objectives.NumberVariableObjective;
 
 public abstract class Variable<T> {
     protected final NotQuests main;
-    private final ArrayList<StringArgument<CommandSender>> requiredStrings;
+    private final ArrayList<StringParser<CommandSender>> requiredStrings;
     private final ArrayList<NumberVariableValueArgument<CommandSender>> requiredNumbers;
     private final ArrayList<BooleanVariableValueArgument<CommandSender>> requiredBooleans;
-    private final ArrayList<CommandFlag<Void>> requiredBooleanFlags;
+    private final ArrayList<org.incendo.cloud.parser.flag.CommandFlag<Void>> requiredBooleanFlags;
 
     private final ArrayList<String> setOnlyRequiredValues = new ArrayList<>(); //TODO: Implement
     private final ArrayList<String> getOnlyRequiredValues = new ArrayList<>(); //TODO: Implement
@@ -135,7 +135,7 @@ public abstract class Variable<T> {
         this.canSetValue = canSetValue;
     }
 
-    protected void addRequiredString(final StringArgument<CommandSender> stringArgument){
+    protected void addRequiredString(final StringParser<CommandSender> stringArgument){
         requiredStrings.add(stringArgument);
     }
 
@@ -147,11 +147,11 @@ public abstract class Variable<T> {
         requiredBooleans.add(booleanArgument);
     }
 
-    protected void addRequiredBooleanFlag(final CommandFlag<Void> commandFlag){
+    protected void addRequiredBooleanFlag(final org.incendo.cloud.parser.flag.CommandFlag<Void> commandFlag){
         requiredBooleanFlags.add(commandFlag);
     }
 
-    public final ArrayList<StringArgument<CommandSender>> getRequiredStrings(){
+    public final ArrayList<StringParser<CommandSender>> getRequiredStrings(){
         return requiredStrings;
     }
 

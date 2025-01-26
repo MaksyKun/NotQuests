@@ -37,6 +37,7 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextDecoration;
 import org.apache.commons.io.IOUtils;
 import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -78,6 +79,10 @@ public class LanguageManager {
 
     public LanguageManager(final NotQuests main) {
         this.main = main;
+    }
+
+    public String getOfflineOnline(OfflinePlayer offlinePlayer) {
+        return ((offlinePlayer.isOnline() ? ")<green>(online)</green>" : "<red>(offline)</red>"));
     }
 
 

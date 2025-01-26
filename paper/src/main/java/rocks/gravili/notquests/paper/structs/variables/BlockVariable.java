@@ -133,15 +133,15 @@ public class BlockVariable extends Variable<String> {
   public List<String> getPossibleValues(QuestPlayer questPlayer, Object... objects) {
     final List<String> completions = new ArrayList<>();
     for (Material value : Material.values()) {
-      completions.add(value.name().toLowerCase());
+      completions.add(Suggestion.suggestion(value.name().toLowerCase()));
     }
 
     for (NQItem nqItem : main.getItemsManager().getItems()) {
-      completions.add(nqItem.getItemName());
+      completions.add(Suggestion.suggestion(nqItem.getItemName()));
     }
 
-    completions.add("hand");
-    completions.add("any");
+    completions.add(Suggestion.suggestion("hand"));
+    completions.add(Suggestion.suggestion("any"));
 
     return completions;
   }

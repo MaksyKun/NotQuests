@@ -1,16 +1,5 @@
 package rocks.gravili.notquests.paper.commands.arguments;
 
-
-import cloud.commandframework.ArgumentDescription;
-import cloud.commandframework.arguments.CommandArgument;
-import cloud.commandframework.arguments.parser.ArgumentParseResult;
-import cloud.commandframework.arguments.parser.ArgumentParser;
-import cloud.commandframework.captions.CaptionVariable;
-import cloud.commandframework.captions.StandardCaptionKeys;
-import cloud.commandframework.context.CommandContext;
-import cloud.commandframework.exceptions.parsing.NoInputProvidedException;
-import cloud.commandframework.exceptions.parsing.ParserException;
-import cloud.commandframework.util.StringUtils;
 import java.util.Collections;
 import java.util.List;
 import java.util.Queue;
@@ -18,6 +7,8 @@ import java.util.StringJoiner;
 import java.util.function.BiFunction;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import org.apache.commons.lang.StringUtils;
 import org.apiguardian.api.API;
 import org.bukkit.command.CommandSender;
 import org.checkerframework.checker.nullness.qual.NonNull;
@@ -457,23 +448,23 @@ public final class MiniMessageStringSelector<C> extends CommandArgument<C, Strin
       final String rawInput = context.getRawInputJoined();
       if (input.startsWith("{") && withPlaceholders) {
         for(final String placeholder : main.getCommandManager().getAdminCommands().placeholders){
-          completions.add(prefix + placeholder);
+          completions.add(Suggestion.suggestion(prefix + placeholder));
         }
       } else {
         if (input.startsWith("<")) {
           for (String color : main.getUtilManager().getMiniMessageTokens()) {
-            completions.add(prefix+"<" + color + ">");
+            completions.add(Suggestion.suggestion(prefix+"<" + color + ">"));
             // Now the closings. First we search IF it contains an opening and IF it doesnt contain
             // more closings than the opening
             if (rawInput.contains(prefix+"<" + color + ">")) {
               if (org.apache.commons.lang.StringUtils.countMatches(rawInput, "<" + color + ">")
                   > org.apache.commons.lang.StringUtils.countMatches(rawInput, "</" + color + ">")) {
-                completions.add(prefix+"</" + color + ">");
+                completions.add(Suggestion.suggestion(prefix+"</" + color + ">"));
               }
             }
           }
         } else {
-          completions.add(prefix+"<Enter Message (put in \" \" quotes if you need spaces)>");
+          completions.add(Suggestion.suggestion(prefix+"<Enter Message (put in \" \" quotes if you need spaces)>"));
         }
       }
 

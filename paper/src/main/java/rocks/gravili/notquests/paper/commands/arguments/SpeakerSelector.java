@@ -18,12 +18,6 @@
 
 package rocks.gravili.notquests.paper.commands.arguments;
 
-import cloud.commandframework.ArgumentDescription;
-import cloud.commandframework.arguments.CommandArgument;
-import cloud.commandframework.arguments.parser.ArgumentParseResult;
-import cloud.commandframework.arguments.parser.ArgumentParser;
-import cloud.commandframework.context.CommandContext;
-import cloud.commandframework.exceptions.parsing.NoInputProvidedException;
 import java.util.List;
 import java.util.Queue;
 import java.util.function.BiFunction;
@@ -125,7 +119,7 @@ public class SpeakerSelector<C> extends CommandArgument<C, Speaker> { // 0 = Que
       if (conversation.getSpeakers() != null && conversation.getSpeakers().size() > 0) {
         final int speakerCount = conversation.getSpeakers().size();
         for (int i = 0; i < speakerCount; i++) {
-          completions.add(conversation.getSpeakers().get(i).getSpeakerName());
+          completions.add(Suggestion.suggestion(conversation.getSpeakers().get(i).getSpeakerName()));
         }
       }
 

@@ -64,11 +64,11 @@ public class NumberVariableObjective extends Objective { // TODO: Not done yet
                       .withSuggestionsProvider(
                           (context, lastString) -> {
                             ArrayList<String> completions = new ArrayList<>();
-                            completions.add("equals");
-                            completions.add("lessThan");
-                            completions.add("moreThan");
-                            completions.add("moreOrEqualThan");
-                            completions.add("lessOrEqualThan");
+                            completions.add(Suggestion.suggestion("equals"));
+                            completions.add(Suggestion.suggestion("lessThan"));
+                            completions.add(Suggestion.suggestion("moreThan"));
+                            completions.add(Suggestion.suggestion("moreOrEqualThan"));
+                            completions.add(Suggestion.suggestion("lessOrEqualThan"));
 
                             final List<String> allArgs = context.getRawInput();
                             main.getUtilManager()

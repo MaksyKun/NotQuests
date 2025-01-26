@@ -18,12 +18,7 @@
 
 package rocks.gravili.notquests.paper.commands.arguments;
 
-import cloud.commandframework.ArgumentDescription;
-import cloud.commandframework.arguments.CommandArgument;
-import cloud.commandframework.arguments.parser.ArgumentParseResult;
-import cloud.commandframework.arguments.parser.ArgumentParser;
-import cloud.commandframework.context.CommandContext;
-import cloud.commandframework.exceptions.parsing.NoInputProvidedException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Queue;
@@ -119,13 +114,13 @@ public class ApplyOnSelector<C> extends CommandArgument<C, Integer> { // 0 = Que
     @NotNull
     @Override
     public List<String> suggestions(@NotNull CommandContext<C> context, @NotNull String input) {
-      List<String> completions = new java.util.ArrayList<>();
+      List<String> completions = new ArrayList<>();
 
       final Quest quest = context.get(questContext);
 
-      completions.add("Quest");
+      completions.add(Suggestion.suggestion("Quest"));
       for (Objective objective : quest.getObjectives()) {
-        completions.add("O" + objective.getObjectiveID());
+        completions.add(Suggestion.suggestion("O" + objective.getObjectiveID()));
       }
 
       final List<String> allArgs = context.getRawInput();

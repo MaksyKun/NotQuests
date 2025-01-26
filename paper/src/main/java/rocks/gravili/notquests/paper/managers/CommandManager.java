@@ -18,26 +18,6 @@
 
 package rocks.gravili.notquests.paper.managers;
 
-import cloud.commandframework.ArgumentDescription;
-import cloud.commandframework.Command;
-import cloud.commandframework.arguments.flags.CommandFlag;
-import cloud.commandframework.arguments.standard.DoubleArgument;
-import cloud.commandframework.arguments.standard.DurationArgument;
-import cloud.commandframework.arguments.standard.IntegerArgument;
-import cloud.commandframework.arguments.standard.LongArgument;
-import cloud.commandframework.arguments.standard.StringArgument;
-import cloud.commandframework.arguments.standard.StringArrayArgument;
-import cloud.commandframework.brigadier.CloudBrigadierManager;
-import cloud.commandframework.bukkit.CloudBukkitCapabilities;
-import cloud.commandframework.bukkit.parsers.WorldArgument;
-import cloud.commandframework.context.CommandContext;
-import cloud.commandframework.execution.CommandExecutionCoordinator;
-import cloud.commandframework.meta.CommandMeta;
-import cloud.commandframework.minecraft.extras.AudienceProvider;
-import cloud.commandframework.minecraft.extras.MinecraftExceptionHandler;
-import cloud.commandframework.minecraft.extras.MinecraftExceptionHandler.ExceptionType;
-import cloud.commandframework.minecraft.extras.MinecraftHelp;
-import cloud.commandframework.paper.PaperCommandManager;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import io.leangen.geantyref.TypeToken;
 import java.lang.reflect.Field;
@@ -50,12 +30,16 @@ import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.command.CommandMap;
 import org.bukkit.command.CommandSender;
+import org.incendo.cloud.Command;
+import org.incendo.cloud.context.CommandContext;
+import org.incendo.cloud.paper.LegacyPaperCommandManager;
+import org.incendo.cloud.parser.flag.CommandFlag;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.AdminCommands;
 import rocks.gravili.notquests.paper.commands.AdminConversationCommands;
 import rocks.gravili.notquests.paper.commands.AdminEditCommands;
-import rocks.gravili.notquests.paper.commands.AdminItemsCommands;
-import rocks.gravili.notquests.paper.commands.AdminTagCommands;
+import rocks.gravili.notquests.paper.commands.category.item.AdminItemsCommand;
+import rocks.gravili.notquests.paper.commands.category.tag.AdminTagCommands;
 import rocks.gravili.notquests.paper.commands.NotQuestColors;
 import rocks.gravili.notquests.paper.commands.UserCommands;
 import rocks.gravili.notquests.paper.commands.arguments.ActionSelector;
@@ -68,13 +52,11 @@ import rocks.gravili.notquests.paper.commands.arguments.MiniMessageStringSelecto
 import rocks.gravili.notquests.paper.commands.arguments.MultipleActionsSelector;
 import rocks.gravili.notquests.paper.commands.arguments.NQNPCSelector;
 import rocks.gravili.notquests.paper.commands.arguments.ObjectiveSelector;
-import rocks.gravili.notquests.paper.commands.arguments.QuestSelector;
 import rocks.gravili.notquests.paper.commands.arguments.variables.BooleanVariableValueArgument;
 import rocks.gravili.notquests.paper.commands.arguments.variables.NumberVariableValueArgument;
 import rocks.gravili.notquests.paper.commands.arguments.variables.StringVariableValueArgument;
 import rocks.gravili.notquests.paper.conversation.ConversationManager;
 import rocks.gravili.notquests.paper.managers.data.Category;
-import rocks.gravili.notquests.paper.structs.Quest;
 import rocks.gravili.notquests.paper.structs.objectives.Objective;
 import rocks.gravili.notquests.paper.structs.objectives.ObjectiveHolder;
 
@@ -98,7 +80,7 @@ public class CommandManager {
   public CommandFlag<String> triggerWorldString;
   public CommandFlag<Long> minimumTimeAfterCompletion;
   public CommandFlag<String> withProjectKorraAbilityFlag;
-  private PaperCommandManager<CommandSender> commandManager;
+  private LegacyPaperCommandManager<CommandSender> commandManager;
   // Builders
   private Command.Builder<CommandSender> adminCommandBuilder;
   private Command.Builder<CommandSender> adminEditCommandBuilder;
@@ -126,7 +108,7 @@ public class CommandManager {
   private AdminCommands adminCommands;
   private AdminEditCommands adminEditCommands;
   private AdminTagCommands adminTagCommands;
-  private AdminItemsCommands adminItemsCommands;
+  private AdminItemsCommand adminItemsCommands;
   private AdminConversationCommands adminConversationCommands;
   // User
   private MinecraftHelp<CommandSender> minecraftUserHelp;
@@ -169,7 +151,7 @@ public class CommandManager {
                               "<Enter nametag_containsany flag value>",
                               "");
                       ArrayList<String> completions = new ArrayList<>();
-                      completions.add("<nametag_containsany flag value>");
+                      completions.add(Suggestion.suggestion("<nametag_containsany flag value>"));
                       return completions;
                     }))
             .withDescription(
@@ -191,7 +173,7 @@ public class CommandManager {
                               "<Enter nametag_equals flag value>",
                               "");
                       ArrayList<String> completions = new ArrayList<>();
-                      completions.add("<nametag_equals flag value>");
+                      completions.add(Suggestion.suggestion("<nametag_equals flag value>"));
                       return completions;
                     }))
             .withDescription(ArgumentDescription.of("What the nametag has to be equal"))
@@ -222,7 +204,7 @@ public class CommandManager {
 
                           ArrayList<String> completions = new ArrayList<>();
                           for (NamedTextColor namedTextColor : NamedTextColor.NAMES.values()) {
-                            completions.add("<" + namedTextColor.toString() + ">");
+                            completions.add(Suggestion.suggestion("<" + namedTextColor.toString() + ">"));
                           }
                           return completions;
                         })
@@ -266,10 +248,10 @@ public class CommandManager {
 
                           ArrayList<String> completions = new ArrayList<>();
 
-                          completions.add("ALL");
+                          completions.add(Suggestion.suggestion("ALL"));
 
                           for (final World world : Bukkit.getWorlds()) {
-                            completions.add(world.getName());
+                            completions.add(Suggestion.suggestion(world.getName()));
                           }
 
                           return completions;
@@ -305,7 +287,7 @@ public class CommandManager {
 
                             ArrayList<String> completions = new ArrayList<>();
 
-                            completions.add("any");
+                            completions.add(Suggestion.suggestion("any"));
 
                             completions.addAll(
                                 main.getIntegrationsManager()
@@ -564,7 +546,7 @@ public class CommandManager {
 
                           ArrayList<String> completions = new ArrayList<>();
 
-                          completions.add("[Enter new, unique Condition Identifier]");
+                          completions.add(Suggestion.suggestion("[Enter new, unique Condition Identifier]"));
                           return completions;
                         }));
 
@@ -591,7 +573,7 @@ public class CommandManager {
 
                           ArrayList<String> completions = new ArrayList<>();
 
-                          completions.add("[Enter new, unique Action Identifier]");
+                          completions.add(Suggestion.suggestion("[Enter new, unique Action Identifier]"));
                           return completions;
                         }));
 
@@ -723,7 +705,7 @@ public class CommandManager {
 
     adminTagCommands = new AdminTagCommands(main, commandManager, adminTagCommandBuilder);
 
-    adminItemsCommands = new AdminItemsCommands(main, commandManager, adminItemsCommandBuilder);
+    adminItemsCommands = new AdminItemsCommand(main, commandManager, adminItemsCommandBuilder);
   }
 
   public void setupAdminConversationCommands(
@@ -734,7 +716,7 @@ public class CommandManager {
             main, commandManager, adminConversationCommandBuilder, conversationManager);
   }
 
-  public final PaperCommandManager<CommandSender> getPaperCommandManager() {
+  public final LegacyPaperCommandManager<CommandSender> getPaperCommandManager() {
     return commandManager;
   }
 
@@ -831,7 +813,7 @@ public class CommandManager {
     return adminTagCommands;
   }
 
-  public final AdminItemsCommands getAdminItemsCommands() {
+  public final AdminItemsCommand getAdminItemsCommands() {
     return adminItemsCommands;
   }
 

@@ -77,8 +77,8 @@ public class StringAction extends Action {
                     .argument(StringArgument.<CommandSender>newBuilder("operator").withSuggestionsProvider((context, lastString) -> {
                         ArrayList<String> completions = new ArrayList<>();
 
-                        completions.add("set");
-                        completions.add("append");
+                        completions.add(Suggestion.suggestion("set"));
+                        completions.add(Suggestion.suggestion("append"));
 
 
                         final List<String> allArgs = context.getRawInput();

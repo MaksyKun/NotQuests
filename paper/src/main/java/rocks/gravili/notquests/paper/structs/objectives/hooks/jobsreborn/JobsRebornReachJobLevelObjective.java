@@ -72,7 +72,7 @@ public class JobsRebornReachJobLevelObjective extends Objective {
 
                           ArrayList<String> completions = new ArrayList<>();
                           for (Job job : Jobs.getJobs()) {
-                            completions.add(job.getName());
+                            completions.add(Suggestion.suggestion(job.getName()));
                           }
                           return completions;
                         })

@@ -63,7 +63,7 @@ public class TriggerCommandObjective extends Objective {
                                   "[Amount of triggers needed]");
 
                           ArrayList<String> completions = new ArrayList<>();
-                          completions.add("<Enter new TriggerCommand name>");
+                          completions.add(Suggestion.suggestion("<Enter new TriggerCommand name>"));
 
                           return completions;
                         })

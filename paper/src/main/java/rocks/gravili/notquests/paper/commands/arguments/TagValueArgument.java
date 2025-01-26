@@ -17,12 +17,6 @@
  */
 package rocks.gravili.notquests.paper.commands.arguments;
 
-import cloud.commandframework.ArgumentDescription;
-import cloud.commandframework.arguments.CommandArgument;
-import cloud.commandframework.arguments.parser.ArgumentParseResult;
-import cloud.commandframework.arguments.parser.ArgumentParser;
-import cloud.commandframework.context.CommandContext;
-import cloud.commandframework.exceptions.parsing.NoInputProvidedException;
 import java.util.List;
 import java.util.Queue;
 import java.util.function.BiFunction;
@@ -197,8 +191,8 @@ public final class TagValueArgument<C> extends CommandArgument<C, Object> {
 
       Tag tag = main.getTagManager().getTag(context.get(contextTagName));
       if (tag.getTagType() == TagType.BOOLEAN) {
-        completions.add("true");
-        completions.add("false");
+        completions.add(Suggestion.suggestion("true"));
+        completions.add(Suggestion.suggestion("false"));
         for (String variableString : main.getVariablesManager().getVariableIdentifiers()) {
           Variable<?> variable = main.getVariablesManager().getVariableFromString(variableString);
           if (variable == null || variable.getVariableDataType() != VariableDataType.BOOLEAN) {
@@ -208,9 +202,9 @@ public final class TagValueArgument<C> extends CommandArgument<C, Object> {
               && variable.getRequiredNumbers().isEmpty()
               && variable.getRequiredBooleans().isEmpty()
               && variable.getRequiredBooleanFlags().isEmpty()) {
-            completions.add(variableString);
+            completions.add(Suggestion.suggestion(variableString));
           } else {
-            completions.add(variableString + "(");
+            completions.add(Suggestion.suggestion(variableString + "("));
           }
         }
       }

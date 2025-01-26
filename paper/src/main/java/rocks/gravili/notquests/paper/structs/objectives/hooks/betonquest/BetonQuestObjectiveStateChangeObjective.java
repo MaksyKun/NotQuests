@@ -109,7 +109,7 @@ public class BetonQuestObjectiveStateChangeObjective extends Objective {
                           for (org.betonquest.betonquest.api.Objective.ObjectiveState
                               objectiveState :
                                   org.betonquest.betonquest.api.Objective.ObjectiveState.values()) {
-                            completions.add(objectiveState.name());
+                            completions.add(Suggestion.suggestion(objectiveState.name()));
                           }
 
                           final List<String> allArgs = context.getRawInput();
