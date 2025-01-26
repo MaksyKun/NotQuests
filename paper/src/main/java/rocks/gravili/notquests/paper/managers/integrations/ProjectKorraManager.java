@@ -23,9 +23,11 @@ import com.projectkorra.projectkorra.Element;
 import com.projectkorra.projectkorra.ProjectKorra;
 import com.projectkorra.projectkorra.ability.Ability;
 import com.projectkorra.projectkorra.ability.CoreAbility;
-import java.util.ArrayList;
 import org.bukkit.entity.Player;
+import org.incendo.cloud.suggestion.Suggestion;
 import rocks.gravili.notquests.paper.NotQuests;
+
+import java.util.ArrayList;
 
 public class ProjectKorraManager {
   private final NotQuests main;
@@ -67,10 +69,10 @@ public class ProjectKorraManager {
     }
   }
 
-  public final ArrayList<String> getAllElements() {
+  public final ArrayList<Suggestion> getAllElements() {
     ArrayList<String> allElementsStringList = new ArrayList<>();
     for (Element element : Element.getAllElements()) {
-      allElementsStringList.add(element.getName());
+      allElementsStringList.add(Suggestion.suggestion(element.getName()));
     }
     return allElementsStringList;
   }
@@ -91,7 +93,7 @@ public class ProjectKorraManager {
   public final ArrayList<String> getAllSubElements() {
     final ArrayList<String> allSubElementsStringList = new ArrayList<>();
     for (final Element.SubElement subElement : Element.getAllSubElements()) {
-      allSubElementsStringList.add(subElement.getName());
+      allSubElementsStringList.add(Suggestion.suggestion(subElement.getName()));
     }
     return allSubElementsStringList;
   }

@@ -29,26 +29,26 @@ import org.incendo.cloud.suggestion.SuggestionProvider;
 import rocks.gravili.notquests.paper.NotQuests;
 
 @Getter
-public class BooleanVariableValueParser implements ArgumentParser<CommandSender, Boolean> {
+public class NumberVariableValueParser implements ArgumentParser<CommandSender, Double> {
     private final NotQuests main;
 
     private final String identifier;
     private final StringVariableParser variableParser;
     private final SuggestionProvider<CommandSender> suggestionProvider;
 
-    protected BooleanVariableValueParser(String identifier, StringVariableParser variableParser, SuggestionProvider<CommandSender> suggestionProvider) {
+    protected NumberVariableValueParser(String identifier, StringVariableParser variableParser, SuggestionProvider<CommandSender> suggestionProvider) {
         this.main = NotQuests.getInstance();
         this.identifier = identifier;
         this.variableParser = variableParser;
         this.suggestionProvider = suggestionProvider;
     }
 
-    public static @NonNull BooleanVariableValueParser booleanVariableValueParser(String identifier, StringVariableParser variableParser, SuggestionProvider<CommandSender> suggestionProvider) {
-        return new BooleanVariableValueParser(identifier, variableParser, suggestionProvider);
+    public static @NonNull NumberVariableValueParser numberVariableValueParser(String identifier, StringVariableParser variableParser, SuggestionProvider<CommandSender> suggestionProvider) {
+        return new NumberVariableValueParser(identifier, variableParser, suggestionProvider);
     }
 
     @Override
-    public @NonNull ArgumentParseResult<@NonNull Boolean> parse(@NonNull CommandContext<@NonNull CommandSender> commandContext, @NonNull CommandInput commandInput) {
+    public @NonNull ArgumentParseResult<@NonNull Double> parse(@NonNull CommandContext<@NonNull CommandSender> commandContext, @NonNull CommandInput commandInput) {
         return ArgumentParseResult.failure(new IllegalArgumentException("Invalid NumberVariableValueParser: " + commandContext));
     }
 

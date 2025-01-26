@@ -18,43 +18,43 @@
 
 package rocks.gravili.notquests.paper.structs.variables;
 
+import lombok.Setter;
+import org.bukkit.Bukkit;
+import org.bukkit.inventory.ItemStack;
+import org.incendo.cloud.parser.flag.CommandFlag;
+import org.incendo.cloud.suggestion.Suggestion;
+import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.commands.arguments.variables.BooleanVariableValueParser;
+import rocks.gravili.notquests.paper.commands.arguments.variables.CustomStringParser;
+import rocks.gravili.notquests.paper.commands.arguments.variables.NumberVariableValueParser;
+import rocks.gravili.notquests.paper.managers.expressions.NumberExpression;
+import rocks.gravili.notquests.paper.structs.ActiveObjective;
+import rocks.gravili.notquests.paper.structs.ActiveQuest;
+import rocks.gravili.notquests.paper.structs.QuestPlayer;
+import rocks.gravili.notquests.paper.structs.conditions.*;
+import rocks.gravili.notquests.paper.structs.objectives.ConditionObjective;
+import rocks.gravili.notquests.paper.structs.objectives.NumberVariableObjective;
+
 import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import org.bukkit.Bukkit;
-import org.bukkit.command.CommandSender;
-import org.bukkit.inventory.ItemStack;
-import org.incendo.cloud.parser.flag.CommandFlag;
-import org.incendo.cloud.parser.standard.StringParser;
-import rocks.gravili.notquests.paper.NotQuests;
-import rocks.gravili.notquests.paper.commands.arguments.variables.BooleanVariableValueArgument;
-import rocks.gravili.notquests.paper.commands.arguments.variables.NumberVariableValueArgument;
-import rocks.gravili.notquests.paper.managers.expressions.NumberExpression;
-import rocks.gravili.notquests.paper.structs.ActiveObjective;
-import rocks.gravili.notquests.paper.structs.ActiveQuest;
-import rocks.gravili.notquests.paper.structs.QuestPlayer;
-import rocks.gravili.notquests.paper.structs.conditions.BooleanCondition;
-import rocks.gravili.notquests.paper.structs.conditions.Condition;
-import rocks.gravili.notquests.paper.structs.conditions.ListCondition;
-import rocks.gravili.notquests.paper.structs.conditions.NumberCondition;
-import rocks.gravili.notquests.paper.structs.conditions.StringCondition;
-import rocks.gravili.notquests.paper.structs.objectives.ConditionObjective;
-import rocks.gravili.notquests.paper.structs.objectives.NumberVariableObjective;
-
 public abstract class Variable<T> {
     protected final NotQuests main;
-    private final ArrayList<StringParser<CommandSender>> requiredStrings;
-    private final ArrayList<NumberVariableValueArgument<CommandSender>> requiredNumbers;
-    private final ArrayList<BooleanVariableValueArgument<CommandSender>> requiredBooleans;
+    private final ArrayList<CustomStringParser> requiredStrings;
+    private final ArrayList<NumberVariableValueParser> requiredNumbers;
+    private final ArrayList<BooleanVariableValueParser> requiredBooleans;
     private final ArrayList<org.incendo.cloud.parser.flag.CommandFlag<Void>> requiredBooleanFlags;
 
     private final ArrayList<String> setOnlyRequiredValues = new ArrayList<>(); //TODO: Implement
     private final ArrayList<String> getOnlyRequiredValues = new ArrayList<>(); //TODO: Implement
     private final VariableDataType variableDataType;
+    @Setter
     private HashMap<String, String> additionalStringArguments;
+    @Setter
     private HashMap<String, NumberExpression> additionalNumberArguments;
+    @Setter
     private HashMap<String, NumberExpression> additionalBooleanArguments;
     private boolean canSetValue = false;
 
@@ -70,11 +70,7 @@ public abstract class Variable<T> {
         additionalBooleanArguments = new HashMap<>();
 
 
-        Class<T> typeOf = (Class<T>)
-                ((ParameterizedType)getClass()
-                        .getGenericSuperclass())
-                        .getActualTypeArguments()[0];
-
+        Class<T> typeOf = (Class<T>) ((ParameterizedType)getClass().getGenericSuperclass()).getActualTypeArguments()[0];
         if(typeOf == String.class || typeOf == Character.class){
             variableDataType = VariableDataType.STRING;
         }else if(typeOf == Boolean.class){
@@ -103,16 +99,8 @@ public abstract class Variable<T> {
         return additionalStringArguments;
     }
 
-    public void setAdditionalStringArguments(final HashMap<String, String> additionalStringArguments) {
-        this.additionalStringArguments = additionalStringArguments;
-    }
-
     public final HashMap<String, NumberExpression> getAdditionalBooleanArguments() {
         return additionalBooleanArguments;
-    }
-
-    public void setAdditionalBooleanArguments(HashMap<String, NumberExpression> additionalBooleanArguments) {
-        this.additionalBooleanArguments = additionalBooleanArguments;
     }
 
     public void addSetOnlyRequiredValue(final String value) {
@@ -135,15 +123,15 @@ public abstract class Variable<T> {
         this.canSetValue = canSetValue;
     }
 
-    protected void addRequiredString(final StringParser<CommandSender> stringArgument){
+    protected void addRequiredString(final CustomStringParser stringArgument) {
         requiredStrings.add(stringArgument);
     }
 
-    protected void addRequiredNumber(final NumberVariableValueArgument<CommandSender> numberVariableValueArgument){
+    protected void addRequiredNumber(final NumberVariableValueParser numberVariableValueArgument){
         requiredNumbers.add(numberVariableValueArgument);
     }
 
-    protected void addRequiredBoolean(final BooleanVariableValueArgument<CommandSender> booleanArgument){
+    protected void addRequiredBoolean(final BooleanVariableValueParser booleanArgument){
         requiredBooleans.add(booleanArgument);
     }
 
@@ -151,15 +139,15 @@ public abstract class Variable<T> {
         requiredBooleanFlags.add(commandFlag);
     }
 
-    public final ArrayList<StringParser<CommandSender>> getRequiredStrings(){
+    public final ArrayList<CustomStringParser> getRequiredStrings(){
         return requiredStrings;
     }
 
-    public final ArrayList<NumberVariableValueArgument<CommandSender>> getRequiredNumbers(){
+    public final ArrayList<NumberVariableValueParser> getRequiredNumbers(){
         return requiredNumbers;
     }
 
-    public final ArrayList<BooleanVariableValueArgument<CommandSender>> getRequiredBooleans(){
+    public final ArrayList<BooleanVariableValueParser> getRequiredBooleans(){
         return requiredBooleans;
     }
 
@@ -169,10 +157,6 @@ public abstract class Variable<T> {
 
     public final HashMap<String, NumberExpression> getAdditionalNumberArguments() {
         return additionalNumberArguments;
-    }
-
-    public void setAdditionalNumberArguments(final HashMap<String, NumberExpression> additionalNumberArguments) {
-        this.additionalNumberArguments = additionalNumberArguments;
     }
 
     protected final String getRequiredStringValue(final String key) {
@@ -268,7 +252,7 @@ public abstract class Variable<T> {
 
     public abstract boolean setValueInternally(final T newValue, final QuestPlayer questPlayer, final Object... objects);
 
-    public abstract List<String> getPossibleValues(final QuestPlayer questPlayer, final Object... objects);
+    public abstract List<Suggestion> getPossibleValues(final QuestPlayer questPlayer, final Object... objects);
 
     public final String getVariableType() {
         return main.getVariablesManager().getVariableType(this.getClass());

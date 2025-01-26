@@ -19,14 +19,15 @@
 package rocks.gravili.notquests.paper.commands.arguments;
 
 import io.leangen.geantyref.TypeToken;
-import java.util.List;
-import java.util.Queue;
-import java.util.function.BiFunction;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.command.CommandSender;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.jetbrains.annotations.NotNull;
 import rocks.gravili.notquests.paper.NotQuests;
+
+import java.util.List;
+import java.util.Queue;
+import java.util.function.BiFunction;
 
 public class MiniMessageSelector<C> extends CommandArgument<C, String[]> {
 

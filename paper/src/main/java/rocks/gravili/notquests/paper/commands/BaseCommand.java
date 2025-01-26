@@ -3,6 +3,7 @@ package rocks.gravili.notquests.paper.commands;
 import org.bukkit.command.CommandSender;
 import org.incendo.cloud.Command;
 import org.incendo.cloud.CommandManager;
+import org.incendo.cloud.paper.LegacyPaperCommandManager;
 import rocks.gravili.notquests.paper.NotQuests;
 
 public abstract class BaseCommand {

@@ -19,9 +19,6 @@
 package rocks.gravili.notquests.paper.commands.arguments;
 
 import io.leangen.geantyref.TypeToken;
-import java.util.List;
-import java.util.Queue;
-import java.util.function.BiFunction;
 import org.bukkit.command.CommandSender;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -29,6 +26,10 @@ import org.incendo.cloud.parser.ArgumentParser;
 import org.jetbrains.annotations.NotNull;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.structs.variables.Variable;
+
+import java.util.List;
+import java.util.Queue;
+import java.util.function.BiFunction;
 
 public class VariableSelector<C> extends CommandArgument<C, Variable<?>> { // 0 = Quest
 

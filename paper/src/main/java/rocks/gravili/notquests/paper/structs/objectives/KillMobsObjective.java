@@ -21,15 +21,18 @@ package rocks.gravili.notquests.paper.structs.objectives;
 import cloud.commandframework.ArgumentDescription;
 import cloud.commandframework.Command;
 import cloud.commandframework.paper.PaperCommandManager;
-import java.util.Map;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.incendo.cloud.Command;
+import org.incendo.cloud.description.Description;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.arguments.EntityTypeSelector;
 import rocks.gravili.notquests.paper.commands.arguments.variables.NumberVariableValueArgument;
 import rocks.gravili.notquests.paper.structs.ActiveObjective;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
+
+import java.util.Map;
 
 public class KillMobsObjective extends Objective {
 
@@ -46,16 +49,16 @@ public class KillMobsObjective extends Objective {
   public static void handleCommands(
       NotQuests main,
       PaperCommandManager<CommandSender> manager,
-      Command.Builder<CommandSender> addObjectiveBuilder,
+      org.incendo.cloud.Command.Builder<CommandSender> addObjectiveBuilder,
       final int level) {
     addObjectiveBuilder =
         addObjectiveBuilder
             .argument(
                 EntityTypeSelector.of("entityType", main, true),
-                ArgumentDescription.of("Type of Entity the player has to kill."))
+                Description.of("Type of Entity the player has to kill."))
             .argument(
                 NumberVariableValueArgument.newBuilder("amount", main, null),
-                ArgumentDescription.of("Amount of kills needed"))
+                    Description.of("Amount of kills needed"))
             .flag(main.getCommandManager().nametag_equals)
             .flag(main.getCommandManager().nametag_containsany);
 

@@ -18,9 +18,6 @@
 
 package rocks.gravili.notquests.paper.commands.arguments;
 
-import java.util.List;
-import java.util.concurrent.CompletableFuture;
-
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.checkerframework.checker.nullness.qual.NonNull;
@@ -38,6 +35,9 @@ import org.incendo.cloud.suggestion.SuggestionProvider;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.structs.Quest;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
+
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 public class QuestParser<C> implements ArgumentParser<C, Quest> {
     private boolean takeEnabledOnly = false;

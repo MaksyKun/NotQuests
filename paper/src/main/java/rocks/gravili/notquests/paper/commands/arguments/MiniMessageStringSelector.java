@@ -1,5 +1,11 @@
 package rocks.gravili.notquests.paper.commands.arguments;
 
+import org.apache.commons.lang.StringUtils;
+import org.apiguardian.api.API;
+import org.bukkit.command.CommandSender;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import rocks.gravili.notquests.paper.NotQuests;
+
 import java.util.Collections;
 import java.util.List;
 import java.util.Queue;
@@ -7,12 +13,6 @@ import java.util.StringJoiner;
 import java.util.function.BiFunction;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import org.apache.commons.lang.StringUtils;
-import org.apiguardian.api.API;
-import org.bukkit.command.CommandSender;
-import org.checkerframework.checker.nullness.qual.NonNull;
-import rocks.gravili.notquests.paper.NotQuests;
 
 @SuppressWarnings("unused")
 @API(status = API.Status.STABLE)

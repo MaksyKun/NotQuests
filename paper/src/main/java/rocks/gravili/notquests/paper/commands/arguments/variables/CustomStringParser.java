@@ -29,33 +29,36 @@ import org.incendo.cloud.suggestion.SuggestionProvider;
 import rocks.gravili.notquests.paper.NotQuests;
 
 @Getter
-public class BooleanVariableValueParser implements ArgumentParser<CommandSender, Boolean> {
+public class CustomStringParser implements ArgumentParser<CommandSender, String> {
     private final NotQuests main;
 
-    private final String identifier;
-    private final StringVariableParser variableParser;
-    private final SuggestionProvider<CommandSender> suggestionProvider;
+    private String identifier;
+    private ArgumentParseResult<@NonNull String> parseResult;
+    private SuggestionProvider<CommandSender> suggestionProvider;
 
-    protected BooleanVariableValueParser(String identifier, StringVariableParser variableParser, SuggestionProvider<CommandSender> suggestionProvider) {
+    protected CustomStringParser(String identifier, ArgumentParseResult<@NonNull String> parseResult, SuggestionProvider<CommandSender> suggestionProvider) {
         this.main = NotQuests.getInstance();
         this.identifier = identifier;
-        this.variableParser = variableParser;
+        this.parseResult = parseResult;
         this.suggestionProvider = suggestionProvider;
     }
 
-    public static @NonNull BooleanVariableValueParser booleanVariableValueParser(String identifier, StringVariableParser variableParser, SuggestionProvider<CommandSender> suggestionProvider) {
-        return new BooleanVariableValueParser(identifier, variableParser, suggestionProvider);
+    public static @NonNull CustomStringParser customStringParser(String identifier, ArgumentParseResult<@NonNull String> parseResult, SuggestionProvider<CommandSender> suggestionProvider) {
+        return new CustomStringParser(identifier, parseResult, suggestionProvider);
     }
 
     @Override
-    public @NonNull ArgumentParseResult<@NonNull Boolean> parse(@NonNull CommandContext<@NonNull CommandSender> commandContext, @NonNull CommandInput commandInput) {
-        return ArgumentParseResult.failure(new IllegalArgumentException("Invalid NumberVariableValueParser: " + commandContext));
+    public @NonNull ArgumentParseResult<@NonNull String> parse(@NonNull CommandContext<@NonNull CommandSender> commandContext, @NonNull CommandInput commandInput) {
+        if(parseResult == null) {
+            return ArgumentParseResult.failure(new IllegalArgumentException("Invalid CustomString: " + commandContext));
+        }
+        return parseResult;
     }
 
 
     @Override
     public @NonNull SuggestionProvider<CommandSender> suggestionProvider() {
-        if (suggestionProvider == null) {
+        if(suggestionProvider == null) {
             return SuggestionProvider.noSuggestions();
         }
         return suggestionProvider;

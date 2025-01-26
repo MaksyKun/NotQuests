@@ -18,8 +18,6 @@
 
 package rocks.gravili.notquests.paper.commands.category.tag;
 
-import java.util.concurrent.CompletableFuture;
-
 import org.bukkit.command.CommandSender;
 import org.incendo.cloud.Command;
 import org.incendo.cloud.description.Description;
@@ -30,6 +28,8 @@ import rocks.gravili.notquests.paper.managers.data.Category;
 import rocks.gravili.notquests.paper.managers.tags.Tag;
 import rocks.gravili.notquests.paper.managers.tags.TagType;
 
+import java.util.concurrent.CompletableFuture;
+
 import static org.incendo.cloud.parser.standard.EnumParser.enumParser;
 import static org.incendo.cloud.parser.standard.StringParser.stringParser;
 
@@ -38,10 +38,7 @@ public class AdminTagCommands {
     private final LegacyPaperCommandManager<CommandSender> manager;
     private final Command.Builder<CommandSender> editBuilder;
 
-    public AdminTagCommands(
-            final NotQuests main,
-            LegacyPaperCommandManager<CommandSender> manager,
-            Command.Builder<CommandSender> editBuilder) {
+    public AdminTagCommands(final NotQuests main, LegacyPaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> editBuilder) {
         this.main = main;
         this.manager = manager;
         this.editBuilder = editBuilder;

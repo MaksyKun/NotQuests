@@ -18,9 +18,6 @@
 
 package rocks.gravili.notquests.paper.commands.arguments;
 
-import java.util.List;
-import java.util.Queue;
-import java.util.function.BiFunction;
 import org.bukkit.command.CommandSender;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -28,6 +25,10 @@ import org.jetbrains.annotations.NotNull;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.conversation.Conversation;
 import rocks.gravili.notquests.paper.conversation.Speaker;
+
+import java.util.List;
+import java.util.Queue;
+import java.util.function.BiFunction;
 
 public class SpeakerSelector<C> extends CommandArgument<C, Speaker> { // 0 = Quest
 

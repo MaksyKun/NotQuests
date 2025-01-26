@@ -25,6 +25,7 @@ import org.bukkit.inventory.ItemStack;
 import org.incendo.cloud.Command;
 import org.incendo.cloud.CommandManager;
 import org.incendo.cloud.description.Description;
+import org.incendo.cloud.paper.LegacyPaperCommandManager;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.BaseCommand;
 import rocks.gravili.notquests.paper.commands.arguments.ItemStackSelectionArgument;
@@ -50,7 +51,7 @@ public class AdminItemsCommand extends BaseCommand {
     public void apply(CommandManager<CommandSender> commandManager) {
         
         var editBuilder = commandManager.commandBuilder("notquestsqdmin", "nqa").literal("items");
-        
+
         commandManager.command(editBuilder
                 .literal("create", Description.of("Creates a new Item."))
                 .required("name", stringParser(), Description.of("Item Name"))

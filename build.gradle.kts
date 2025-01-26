@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import org.gradle.api.JavaVersion.*
+import org.gradle.api.JavaVersion.VERSION_21
 
 plugins {
     `java-library`

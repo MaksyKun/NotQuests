@@ -19,16 +19,17 @@
 package rocks.gravili.notquests.paper.commands.arguments;
 
 import io.leangen.geantyref.TypeToken;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Queue;
-import java.util.function.BiFunction;
 import org.bukkit.command.CommandSender;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.jetbrains.annotations.NotNull;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.structs.actions.Action;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Queue;
+import java.util.function.BiFunction;
 
 public class MultipleActionsSelector<C> extends CommandArgument<C, List<Action>> {
 

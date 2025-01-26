@@ -18,12 +18,8 @@
 
 package rocks.gravili.notquests.paper.commands.arguments;
 
-import java.util.List;
-import java.util.Queue;
-import java.util.function.BiFunction;
 import org.bukkit.command.CommandSender;
 import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
 import org.incendo.cloud.context.CommandContext;
 import org.incendo.cloud.context.CommandInput;
 import org.incendo.cloud.parser.ArgumentParseResult;
@@ -31,6 +27,10 @@ import org.incendo.cloud.parser.ArgumentParser;
 import org.jetbrains.annotations.NotNull;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.structs.actions.Action;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Queue;
 
 public class ActionsParser<C> implements ArgumentParser<C, Action> {
 
@@ -44,17 +44,8 @@ public class ActionsParser<C> implements ArgumentParser<C, Action> {
   @NotNull
   @Override
   public List<String> suggestions(@NotNull CommandContext<C> context, @NotNull String input) {
-    List<String> actionNames =
-            new java.util.ArrayList<>(
-                    main.getActionsYMLManager().getActionsAndIdentifiers().keySet());
-    final List<String> allArgs = context.rawInput();
-
-    main.getUtilManager()
-            .sendFancyCommandCompletion(
-                    (CommandSender) context.sender(),
-                    allArgs.toArray(new String[0]),
-                    "[Action Name]",
-                    "[...]");
+    List<String> actionNames = new ArrayList<>(main.getActionsYMLManager().getActionsAndIdentifiers().keySet());
+    main.getUtilManager().sendFancyCommandCompletion((CommandSender) context.sender(), input, "[Action Name]", "[...]");
 
     return actionNames;
   }

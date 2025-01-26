@@ -17,9 +17,6 @@
  */
 package rocks.gravili.notquests.paper.commands.arguments;
 
-import java.util.List;
-import java.util.Queue;
-import java.util.function.BiFunction;
 import org.bukkit.command.CommandSender;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -29,6 +26,10 @@ import rocks.gravili.notquests.paper.managers.tags.Tag;
 import rocks.gravili.notquests.paper.managers.tags.TagType;
 import rocks.gravili.notquests.paper.structs.variables.Variable;
 import rocks.gravili.notquests.paper.structs.variables.VariableDataType;
+
+import java.util.List;
+import java.util.Queue;
+import java.util.function.BiFunction;
 
 /*
  * This Argument is currently unused and might not be needed at all. It was meant for the tag system.

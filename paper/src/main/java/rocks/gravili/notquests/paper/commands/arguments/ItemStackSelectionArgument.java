@@ -18,11 +18,6 @@
 
 package rocks.gravili.notquests.paper.commands.arguments;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Queue;
-import java.util.function.BiFunction;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -32,6 +27,12 @@ import org.incendo.cloud.parser.ArgumentParser;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.arguments.wrappers.ItemStackSelection;
 import rocks.gravili.notquests.paper.managers.items.NQItem;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+import java.util.Queue;
+import java.util.function.BiFunction;
 
 /**
  * cloud argument type that parses Bukkit {@link Material materials}

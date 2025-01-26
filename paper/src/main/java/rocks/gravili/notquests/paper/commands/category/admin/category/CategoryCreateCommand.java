@@ -10,7 +10,6 @@ import rocks.gravili.notquests.paper.commands.BaseCommand;
 import rocks.gravili.notquests.paper.managers.data.Category;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 import static org.incendo.cloud.parser.standard.StringParser.stringParser;

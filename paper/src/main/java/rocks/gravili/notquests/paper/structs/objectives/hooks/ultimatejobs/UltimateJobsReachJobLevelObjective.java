@@ -25,9 +25,6 @@ import cloud.commandframework.paper.PaperCommandManager;
 import de.warsteiner.jobs.UltimateJobs;
 import de.warsteiner.jobs.api.Job;
 import de.warsteiner.jobs.api.JobsPlayer;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -36,6 +33,10 @@ import rocks.gravili.notquests.paper.commands.arguments.variables.NumberVariable
 import rocks.gravili.notquests.paper.structs.ActiveObjective;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 import rocks.gravili.notquests.paper.structs.objectives.Objective;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 public class UltimateJobsReachJobLevelObjective extends Objective {
 

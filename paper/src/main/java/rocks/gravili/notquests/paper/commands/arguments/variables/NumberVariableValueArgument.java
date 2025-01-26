@@ -25,9 +25,6 @@ import cloud.commandframework.arguments.parser.ArgumentParser;
 import cloud.commandframework.arguments.standard.StringArgument;
 import cloud.commandframework.context.CommandContext;
 import cloud.commandframework.exceptions.parsing.NoInputProvidedException;
-
-import java.util.*;
-import java.util.function.BiFunction;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.checkerframework.checker.nullness.qual.NonNull;
@@ -38,6 +35,9 @@ import rocks.gravili.notquests.paper.managers.expressions.NumberExpression;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 import rocks.gravili.notquests.paper.structs.variables.Variable;
 import rocks.gravili.notquests.paper.structs.variables.VariableDataType;
+
+import java.util.*;
+import java.util.function.BiFunction;
 
 public final class NumberVariableValueArgument<C> extends CommandArgument<C, String> {
     private static final int MAX_SUGGESTIONS_INCREMENT = 10;

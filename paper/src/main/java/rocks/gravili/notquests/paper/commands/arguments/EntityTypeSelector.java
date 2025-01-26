@@ -18,15 +18,16 @@
 
 package rocks.gravili.notquests.paper.commands.arguments;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Queue;
-import java.util.function.BiFunction;
 import org.bukkit.command.CommandSender;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.jetbrains.annotations.NotNull;
 import rocks.gravili.notquests.paper.NotQuests;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Queue;
+import java.util.function.BiFunction;
 
 public class EntityTypeSelector<C> extends CommandArgument<C, String> {
 

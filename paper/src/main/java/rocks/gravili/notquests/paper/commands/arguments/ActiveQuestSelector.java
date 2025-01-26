@@ -18,10 +18,6 @@
 
 package rocks.gravili.notquests.paper.commands.arguments;
 
-import java.util.List;
-import java.util.Queue;
-import java.util.UUID;
-import java.util.function.BiFunction;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -38,6 +34,11 @@ import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.structs.ActiveQuest;
 import rocks.gravili.notquests.paper.structs.Quest;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
+
+import java.util.List;
+import java.util.Queue;
+import java.util.UUID;
+import java.util.function.BiFunction;
 
 public class ActiveQuestSelector<C> implements ArgumentParser<C, ActiveQuest> {
 
