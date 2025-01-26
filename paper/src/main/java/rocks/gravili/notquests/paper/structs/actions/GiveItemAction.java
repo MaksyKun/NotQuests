@@ -18,15 +18,13 @@
 
 package rocks.gravili.notquests.paper.structs.actions;
 
-import cloud.commandframework.ArgumentDescription;
-import cloud.commandframework.Command;
-import cloud.commandframework.arguments.standard.IntegerArgument;
-import cloud.commandframework.paper.PaperCommandManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.ItemStack;
+import org.incendo.cloud.Command;
+import org.incendo.cloud.paper.PaperCommandManager;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.arguments.ItemStackSelectionArgument;
 import rocks.gravili.notquests.paper.commands.arguments.wrappers.ItemStackSelection;
@@ -50,10 +48,8 @@ public class GiveItemAction extends Action {
       PaperCommandManager<CommandSender> manager,
       Command.Builder<CommandSender> builder,
       ActionFor actionFor) {
-    manager.command(
-        builder
-            .argument(
-                ItemStackSelectionArgument.of("material", main),
+    manager.command(builder.required("material",
+            ItemStackSelectionArgument.of("material", main),
                 ArgumentDescription.of(
                     "Material of the item which the player should receive. If you use 'hand', the item you are holding in your main hand will be used."))
             .argument(

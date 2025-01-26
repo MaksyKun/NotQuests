@@ -18,10 +18,6 @@
 
 package rocks.gravili.notquests.paper.structs.actions.hooks.betonquest;
 
-import cloud.commandframework.ArgumentDescription;
-import cloud.commandframework.Command;
-import cloud.commandframework.arguments.standard.StringArrayArgument;
-import cloud.commandframework.paper.PaperCommandManager;
 import org.betonquest.betonquest.BetonQuest;
 import org.betonquest.betonquest.Instruction;
 import org.betonquest.betonquest.api.QuestEvent;
@@ -33,6 +29,10 @@ import org.betonquest.betonquest.utils.PlayerConverter;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.incendo.cloud.Command;
+import org.incendo.cloud.description.Description;
+import org.incendo.cloud.paper.LegacyPaperCommandManager;
+import org.incendo.cloud.suggestion.Suggestion;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 import rocks.gravili.notquests.paper.structs.actions.Action;
@@ -42,6 +42,8 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import static org.incendo.cloud.parser.standard.StringArrayParser.stringArrayParser;
 
 public class BetonQuestFireInlineEventAction extends Action {
 
@@ -54,30 +56,14 @@ public class BetonQuestFireInlineEventAction extends Action {
 
   public static void handleCommands(
       NotQuests main,
-      PaperCommandManager<CommandSender> manager,
+      LegacyPaperCommandManager<CommandSender> manager,
       Command.Builder<CommandSender> builder,
       ActionFor actionFor) {
-    manager.command(
-        builder
-            .argument(
-                StringArrayArgument.of(
-                    "event",
-                    (context, lastString) -> {
-                      final List<String> allArgs = context.getRawInput();
-                      main.getUtilManager()
-                          .sendFancyCommandCompletion(
-                              context.getSender(),
-                              allArgs.toArray(new String[0]),
-                              "<Enter new BetonQuest inline event>",
-                              "");
-                      ArrayList<String> completions = new ArrayList<>();
-                      String rawInput = context.getRawInputJoined();
-                      String curInput =
-                          context
-                              .getRawInputJoined()
-                              .substring(
-                                  context.getRawInputJoined().indexOf("BetonQuestFireInlineEvent ")
-                                      + 26);
+    manager.command(builder.required("event", stringArrayParser(), Description.of("BetonQuest Event"), (context, lastString) -> {
+                      main.getUtilManager().sendFancyCommandCompletion(context.sender(), lastString.input().split(" "), "<Enter new BetonQuest inline event>", "");
+                      ArrayList<Suggestion> completions = new ArrayList<>();
+                      String rawInput = context.rawInput().input();
+                      String curInput = context.getRawInputJoined().substring(context.getRawInputJoined().indexOf("BetonQuestFireInlineEvent ") + 26); // TODO (no context existent: MaksyKun)
                       String[] curInputSplit = curInput.split(" ");
 
                       int length = curInputSplit.length;
@@ -100,7 +86,7 @@ public class BetonQuestFireInlineEventAction extends Action {
                           // ignored.printStackTrace();
                         }
                         if (eventTypes != null) {
-                          completions.addAll(eventTypes.keySet());
+                          completions.addAll(eventTypes.keySet().stream().map(Suggestion::suggestion).toList());
                         }
                       } else {
                         final String eventClassName = curInputSplit[0];
@@ -155,8 +141,7 @@ public class BetonQuestFireInlineEventAction extends Action {
                       }
 
                       return completions;
-                    }),
-                ArgumentDescription.of("BetonQuest Event"))
+                    })
             .handler(
                 (context) -> {
                   final String event = String.join(" ", (String[]) context.get("event"));

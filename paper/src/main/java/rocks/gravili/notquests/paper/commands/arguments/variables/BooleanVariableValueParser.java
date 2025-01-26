@@ -43,6 +43,9 @@ public class BooleanVariableValueParser implements ArgumentParser<CommandSender,
         this.suggestionProvider = suggestionProvider;
     }
 
+    public static @NonNull BooleanVariableValueParser booleanVariableValueParser() {
+        return new BooleanVariableValueParser(null, null, null);
+    }
     public static @NonNull BooleanVariableValueParser booleanVariableValueParser(String identifier, StringVariableParser variableParser, SuggestionProvider<CommandSender> suggestionProvider) {
         return new BooleanVariableValueParser(identifier, variableParser, suggestionProvider);
     }
