@@ -18,7 +18,6 @@
 
 package rocks.gravili.notquests.paper.structs.variables.reflectionVariables;
 
-import org.bukkit.command.CommandSender;
 import org.incendo.cloud.suggestion.Suggestion;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.arguments.variables.CustomStringParser;

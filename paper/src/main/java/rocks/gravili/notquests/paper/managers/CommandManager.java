@@ -55,7 +55,6 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
 
-import static org.incendo.cloud.parser.standard.StringArrayParser.stringArrayParser;
 import static org.incendo.cloud.parser.standard.StringParser.greedyStringParser;
 import static rocks.gravili.notquests.paper.commands.arguments.ObjectiveParser.objectiveParser;
 import static rocks.gravili.notquests.paper.commands.arguments.QuestParser.questParser;

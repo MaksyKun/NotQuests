@@ -1,6 +1,5 @@
 package rocks.gravili.notquests.paper.structs.variables;
 
-import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.EquipmentSlot;

@@ -27,7 +27,9 @@ import org.incendo.cloud.paper.LegacyPaperCommandManager;
 import org.incendo.cloud.parser.flag.CommandFlag;
 import org.incendo.cloud.suggestion.Suggestion;
 import rocks.gravili.notquests.paper.NotQuests;
-import rocks.gravili.notquests.paper.commands.arguments.variables.*;
+import rocks.gravili.notquests.paper.commands.arguments.variables.BooleanVariableValue;
+import rocks.gravili.notquests.paper.commands.arguments.variables.CustomStringParser;
+import rocks.gravili.notquests.paper.commands.arguments.variables.NumberVariableValueParser;
 import rocks.gravili.notquests.paper.managers.expressions.NumberExpression;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 import rocks.gravili.notquests.paper.structs.variables.Variable;
@@ -35,10 +37,10 @@ import rocks.gravili.notquests.paper.structs.variables.VariableDataType;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 import static org.incendo.cloud.parser.standard.StringParser.stringParser;
+import static rocks.gravili.notquests.paper.commands.arguments.variables.NumberVariableValueParser.numberVariableValueParser;
 
 public class NumberCondition extends Condition {
 
@@ -87,7 +89,7 @@ public class NumberCondition extends Condition {
                         main.getUtilManager().sendFancyCommandCompletion(context.sender(), lastString.input().split(" "), "[List Operator]", "[...]");
                         return CompletableFuture.completedFuture(completions);
                     })
-                    .required("amount", NumberVariableValueArgument.newBuilder(, main, variable), Description.of("Amount"))
+                    .required("amount", numberVariableValueParser("amount", null, null), Description.of("Amount"))
                     .handler((context) -> {
 
                         final String amountExpression = context.get("amount");

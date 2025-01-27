@@ -18,8 +18,10 @@
 
 package rocks.gravili.notquests.paper.commands.arguments.variables;
 
+import com.mojang.datafixers.util.Pair;
 import lombok.Getter;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.incendo.cloud.context.CommandContext;
 import org.incendo.cloud.context.CommandInput;
@@ -27,9 +29,10 @@ import org.incendo.cloud.parser.ArgumentParseResult;
 import org.incendo.cloud.parser.ArgumentParser;
 import org.incendo.cloud.suggestion.SuggestionProvider;
 import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.managers.expressions.NumberExpression;
 
 @Getter
-public class NumberVariableValueParser implements ArgumentParser<CommandSender, Double> {
+public class NumberVariableValueParser implements ArgumentParser<CommandSender, Pair<Double, String>> {
     private final NotQuests main;
 
     private final String identifier;
@@ -48,8 +51,30 @@ public class NumberVariableValueParser implements ArgumentParser<CommandSender, 
     }
 
     @Override
-    public @NonNull ArgumentParseResult<@NonNull Double> parse(@NonNull CommandContext<@NonNull CommandSender> commandContext, @NonNull CommandInput commandInput) {
-        return ArgumentParseResult.failure(new IllegalArgumentException("Invalid NumberVariableValueParser: " + commandContext));
+    public @NonNull ArgumentParseResult<@NonNull Pair<Double, String>> parse(@NonNull CommandContext<@NonNull CommandSender> commandContext, @NonNull CommandInput commandInput) {
+        if(commandInput.isEmpty()) {
+            return ArgumentParseResult.failure(new IllegalArgumentException("No input provided"));
+        }
+        final String input = commandInput.input();
+
+        try{
+            final NumberExpression numberExpression = new NumberExpression(main, input);
+            if (commandContext.sender() instanceof Player player) {
+                try {
+                    numberExpression.calculateValue(main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId()));
+                } catch (Exception e) {
+                    if (main.getConfiguration().isDebug()) {
+                        e.printStackTrace();
+                    }
+                    return ArgumentParseResult.failure(new IllegalArgumentException("Invalid Expression: " + input + ". Error: " + e.toString()));
+                }
+            }
+        } catch (Exception e){
+            return ArgumentParseResult.failure(new IllegalArgumentException("Erroring Expression: " + input + ". Error: " + e.toString()));
+        }
+
+
+        return ArgumentParseResult.success(Pair.of(Double.parseDouble(input), input));
     }
 
 

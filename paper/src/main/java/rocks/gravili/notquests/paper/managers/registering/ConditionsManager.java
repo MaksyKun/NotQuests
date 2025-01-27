@@ -24,7 +24,6 @@ import org.incendo.cloud.Command;
 import org.incendo.cloud.component.TypedCommandComponent;
 import org.incendo.cloud.context.CommandContext;
 import org.incendo.cloud.description.Description;
-import org.incendo.cloud.meta.CommandMeta;
 import org.incendo.cloud.paper.LegacyPaperCommandManager;
 import org.incendo.cloud.parser.flag.CommandFlag;
 import org.jetbrains.annotations.NotNull;

@@ -23,7 +23,6 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.incendo.cloud.Command;
 import org.incendo.cloud.description.Description;
 import org.incendo.cloud.paper.LegacyPaperCommandManager;
-import org.incendo.cloud.parser.ArgumentParseResult;
 import org.incendo.cloud.suggestion.Suggestion;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.structs.ActiveQuest;
@@ -33,10 +32,8 @@ import rocks.gravili.notquests.paper.structs.objectives.Objective;
 import rocks.gravili.notquests.paper.structs.objectives.ObjectiveHolder;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
-import static org.incendo.cloud.parser.standard.IntegerParser.integerParser;
 import static rocks.gravili.notquests.paper.commands.arguments.ObjectiveParser.objectiveParser;
 
 public class CompletedObjectiveCondition extends Condition {
