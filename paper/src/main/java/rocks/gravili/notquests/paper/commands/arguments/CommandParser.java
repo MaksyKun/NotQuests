@@ -33,15 +33,15 @@ import rocks.gravili.notquests.paper.NotQuests;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
-public class CommandSelectorParser<C> implements ArgumentParser<C, StringArray> {
+public class CommandParser<C> implements ArgumentParser<C, StringArray> {
     private final NotQuests main;
 
-    protected CommandSelectorParser(NotQuests main) {
+    protected CommandParser(NotQuests main) {
         this.main = main;
     }
 
     public static <C> @NonNull ParserDescriptor<C, StringArray> commandParser(final NotQuests main) {
-        return ParserDescriptor.of(new CommandSelectorParser<>(main), StringArray.class);
+        return ParserDescriptor.of(new CommandParser<>(main), StringArray.class);
     }
 
     @Override

@@ -34,9 +34,6 @@ import org.incendo.cloud.description.Description;
 import org.incendo.cloud.paper.LegacyPaperCommandManager;
 import org.incendo.cloud.suggestion.Suggestion;
 import rocks.gravili.notquests.paper.NotQuests;
-import rocks.gravili.notquests.paper.commands.arguments.IntegerParser;
-import rocks.gravili.notquests.paper.commands.arguments.MiniMessageSelector;
-import rocks.gravili.notquests.paper.commands.arguments.variables.BooleanVariableValueArgument;
 import rocks.gravili.notquests.paper.commands.arguments.wrappers.ItemStackSelection;
 import rocks.gravili.notquests.paper.commands.arguments.wrappers.NQNPCResult;
 import rocks.gravili.notquests.paper.managers.data.Category;
@@ -66,8 +63,6 @@ import static rocks.gravili.notquests.paper.commands.arguments.CategoryParser.ca
 import static rocks.gravili.notquests.paper.commands.arguments.ItemStackSelectionParser.itemStackSelectionParser;
 import static rocks.gravili.notquests.paper.commands.arguments.NQNPCParser.nqNPCParser;
 import static rocks.gravili.notquests.paper.commands.arguments.ObjectiveParser.objectiveParser;
-import static rocks.gravili.notquests.paper.commands.arguments.variables.BooleanVariableValue.booleanVariableValueParser;
-
 
 public class AdminEditCommands {
     private final NotQuests main;
@@ -194,7 +189,7 @@ public class AdminEditCommands {
 
         manager.command(editBuilder.literal("displayName")
                 .literal("set")
-                .required("display-name", MiniMessageSelector.<CommandSender>newBuilder("DisplayName", main).withPlaceholders(), Description.of("Quest display name"))
+                .required("display-name", miniMessageParser(), Description.of("Quest display name"))
                 .commandDescription(Description.of("Sets the new display name of the Quest."))
                 .handler((context) -> {
                     final Quest quest = context.get("quest");
@@ -1173,7 +1168,7 @@ public class AdminEditCommands {
                 }));
 
         final Command.Builder<CommandSender> editQuestRequirementsBuilder = builder.literal("edit")
-                .required("Requirement ID", IntegerParser.integerParser(main, 1, (context, input) -> {
+                .required("Requirement ID", integerParser(1), (context, input) -> {
                     main.getUtilManager().sendFancyCommandCompletion(context.sender(), input.input().split(" "), "[Requirement ID]", "[...]");
                     ArrayList<Suggestion> completions = new ArrayList<>();
                     final Quest quest = context.get("quest");
@@ -1181,7 +1176,7 @@ public class AdminEditCommands {
                         completions.add(Suggestion.suggestion("" + condition.getConditionID()));
                     }
                     return CompletableFuture.completedFuture(completions);
-                }));
+                });
 
         manager.command(editQuestRequirementsBuilder.literal("delete", "remove")
                 .commandDescription(Description.of("Removes a requirement from this Quest."))
@@ -1223,8 +1218,9 @@ public class AdminEditCommands {
 
         manager.command(editQuestRequirementsBuilder.literal("hidden")
                 .literal("set")
+                .required("hiddenStatusExpression", booleanParser(), Description.of("Expression"))
+                .commandDescription(Description.of("Sets the new hidden status of the Quest requirement."))
                 //.required("hiddenStatusExpression", booleanVariableValueParser("hiddenStatusExpression", null, ((context, input) -> CompletableFuture.completedFuture(new ArrayList<>()))), Description.of("Expression")).commandDescription(Description.of("Sets the new hidden status of the Quest requirement."))
-                        .required("hiddenStatusExpression", booleanVariableValueParser("hiddenStatusExpression", null, null)).commandDescription(Description.of("Sets the new hidden status of the Quest requirement."))
                 .handler((context) -> {
                     final Quest quest = context.get("quest");
                     int conditionID = context.get("Requirement ID");
@@ -1398,12 +1394,11 @@ public class AdminEditCommands {
                     ));
                 }));
 
-        manager.command(editObjectiveConditionsBuilder.literal("hidden")
+        manager.command(editObjectiveConditionsBuilder
+                .literal("hidden")
                 .literal("set")
-                .required("hiddenStatusExpression", booleanVariableValueParser(), ((context, input) -> CompletableFuture.completedFuture(new ArrayList<>())),Description.of("Expression")).commandDescription(Description.of("Sets the new hidden status of the Objective unlock condition."))
-                .argument(
-                        BooleanVariableValueArgument.newBuilder("hiddenStatusExpression", main, null),
-                        Description.of("Expression")).commandDescription(Description.of("Sets the new hidden status of the Objective unlock condition."))
+                .required("hiddenStatusExpression", booleanParser(), Description.of("Expression"))
+                .commandDescription(Description.of("Sets the new hidden status of the Objective unlock condition."))
                 .handler((context) -> {
                     final Objective objective = main.getCommandManager().getObjectiveFromContextAndLevel(context, level);
 
@@ -1584,9 +1579,8 @@ public class AdminEditCommands {
 
         manager.command(editObjectiveConditionsBuilder.literal("hidden")
                 .literal("set")
-                .argument(
-                        BooleanVariableValueArgument.newBuilder("hiddenStatusExpression", main, null),
-                        Description.of("Expression")).commandDescription(Description.of("Sets the new hidden status of the Objective progress condition."))
+                .required("hiddenStatusExpression", booleanParser(), Description.of("Expression"))
+                .commandDescription(Description.of("Sets the new hidden status of the Objective progress condition."))
                 .handler((context) -> {
                     final Objective objective = main.getCommandManager().getObjectiveFromContextAndLevel(context, level);
 
@@ -1768,9 +1762,8 @@ public class AdminEditCommands {
 
         manager.command(editObjectiveConditionsBuilder.literal("hidden")
                 .literal("set")
-                .argument(
-                        BooleanVariableValueArgument.newBuilder("hiddenStatusExpression", main, null),
-                        Description.of("Expression")).commandDescription(Description.of("Sets the new hidden status of the Objective complete condition."))
+                .required("hiddenStatusExpression", booleanParser(), Description.of("Expression"))
+                .commandDescription(Description.of("Sets the new hidden status of the Objective complete condition."))
                 .handler((context) -> {
                     final Objective objective = main.getCommandManager().getObjectiveFromContextAndLevel(context, level);
 
@@ -2050,7 +2043,7 @@ public class AdminEditCommands {
 
         manager.command(builder.literal("displayName")
                 .literal("set")
-                .required("display-name", MiniMessageSelector.<CommandSender>newBuilder("DisplayName", main).withPlaceholders(), Description.of("Reward display name")).commandDescription(Description.of("Sets new reward Display Name. Only rewards with a Display Name will be displayed."))
+                .required("display-name", miniMessageParser(), Description.of("Reward display name")).commandDescription(Description.of("Sets new reward Display Name. Only rewards with a Display Name will be displayed."))
                 .handler((context) -> {
                     final int ID = context.get("reward-id");
                     final Objective objective = main.getCommandManager().getObjectiveFromContextAndLevel(context, level);
@@ -2174,7 +2167,7 @@ public class AdminEditCommands {
 
         manager.command(builder.literal("displayName")
                 .literal("set")
-                .required("display-name", MiniMessageSelector.<CommandSender>newBuilder("DisplayName", main).withPlaceholders(), Description.of("Reward display name")).commandDescription(Description.of("Sets new reward Display Name. Only rewards with a Display Name will be displayed."))
+                .required("display-name", miniMessageParser(), Description.of("Reward display name")).commandDescription(Description.of("Sets new reward Display Name. Only rewards with a Display Name will be displayed."))
                 .handler((context) -> {
                     final Quest quest = context.get("quest");
                     final int ID = context.get("reward-id");

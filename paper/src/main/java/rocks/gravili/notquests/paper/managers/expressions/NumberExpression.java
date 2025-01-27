@@ -22,9 +22,9 @@ import redempt.crunch.CompiledExpression;
 import redempt.crunch.Crunch;
 import redempt.crunch.functional.EvaluationEnvironment;
 import rocks.gravili.notquests.paper.NotQuests;
-import rocks.gravili.notquests.paper.commands.arguments.variables.BooleanVariableValue;
+import rocks.gravili.notquests.paper.commands.arguments.variables.BooleanVariableValueParser;
 import rocks.gravili.notquests.paper.commands.arguments.variables.CustomStringParser;
-import rocks.gravili.notquests.paper.commands.arguments.variables.NumberVariableValueParser;
+import rocks.gravili.notquests.paper.commands.arguments.variables.NumberVariableValue;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 import rocks.gravili.notquests.paper.structs.variables.Variable;
 import rocks.gravili.notquests.paper.structs.variables.VariableDataType;
@@ -181,13 +181,13 @@ public class NumberExpression {
                                 main.getLogManager().debug("AddString: " + key + " val: " + value);
                             }
                         }
-                        for (NumberVariableValueParser numberParser : variable.getRequiredNumbers()) {
+                        for (NumberVariableValue numberParser : variable.getRequiredNumbers()) {
                             if (numberParser.getIdentifier().equalsIgnoreCase(key)) {
                                 variable.addAdditionalNumberArgument(key, new NumberExpression(main, value));
                                 main.getLogManager().debug("AddNumb: " + key + " val: " + value);
                             }
                         }
-                        for (BooleanVariableValue booleanParser : variable.getRequiredBooleans()) {
+                        for (BooleanVariableValueParser booleanParser : variable.getRequiredBooleans()) {
                             if (booleanParser.getIdentifier().equalsIgnoreCase(key)) {
                                 variable.addAdditionalBooleanArgument(key, new NumberExpression(main, value));
                                 main.getLogManager().debug("AddBool: " + key + " val: " + value);

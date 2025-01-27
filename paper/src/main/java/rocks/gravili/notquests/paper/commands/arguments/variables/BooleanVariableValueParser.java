@@ -19,7 +19,7 @@
 package rocks.gravili.notquests.paper.commands.arguments.variables;
 
 import lombok.Getter;
-import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.incendo.cloud.context.CommandContext;
 import org.incendo.cloud.context.CommandInput;
@@ -27,44 +27,59 @@ import org.incendo.cloud.parser.ArgumentParseResult;
 import org.incendo.cloud.parser.ArgumentParser;
 import org.incendo.cloud.suggestion.SuggestionProvider;
 import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.managers.expressions.NumberExpression;
+import rocks.gravili.notquests.paper.structs.variables.Variable;
+
+import static rocks.gravili.notquests.paper.commands.arguments.variables.StringVariableParser.stringVariableParser;
 
 @Getter
-public class BooleanVariableValueParser<C> implements ArgumentParser<C, BooleanVariableValue> {
+public class BooleanVariableValueParser<C> implements ArgumentParser<C, String> {
     private final NotQuests main;
 
     private final String identifier;
-    private final StringVariableParser variableParser;
-    private final SuggestionProvider<CommandSender> suggestionProvider;
+    private final StringVariableParser<C> variableParser;
 
-    protected BooleanVariableValueParser(String identifier, StringVariableParser variableParser, SuggestionProvider<CommandSender> suggestionProvider) {
+    protected BooleanVariableValueParser(String identifier, StringVariableParser<C> variableParser) {
         this.main = NotQuests.getInstance();
         this.identifier = identifier;
         this.variableParser = variableParser;
-        this.suggestionProvider = suggestionProvider;
     }
 
-    public static @NonNull BooleanVariableValueParser booleanVariableValueParser() {
-        return new BooleanVariableValueParser(null, null, null);
-    }
-    public static @NonNull BooleanVariableValueParser booleanVariableValueParser(String identifier, StringVariableParser variableParser, SuggestionProvider<CommandSender> suggestionProvider) {
-        return new BooleanVariableValueParser(identifier, variableParser, suggestionProvider);
+    public static <C> @NonNull StringVariableParser<C> booleanStringVariableParser(String identifier, Variable<?> variable) {
+        return stringVariableParser(identifier, variable);
     }
 
     @Override
-    public @NonNull ArgumentParseResult<@NonNull BooleanVariableValue> parse(@NonNull CommandContext<@NonNull C> commandContext, @NonNull CommandInput commandInput) {
+    public @NonNull ArgumentParseResult<@NonNull String> parse(@NonNull CommandContext<@NonNull C> commandContext, @NonNull CommandInput commandInput) {
         if (commandInput.isEmpty()) {
             return ArgumentParseResult.failure(new IllegalArgumentException("No input provided"));
         }
-        String rawInput = commandInput.input();
-        return ArgumentParseResult.success();
+        final String input = commandInput.peekString();
+        try {
+            final NumberExpression numberExpression = new NumberExpression(main, input);
+
+            if (commandContext.sender() instanceof Player player) {
+                try {
+                    numberExpression.calculateBooleanValue(main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId()));
+                } catch (Exception e) {
+                    if (main.getConfiguration().isDebug()) {
+                        e.printStackTrace();
+                    }
+                    return ArgumentParseResult.failure(new IllegalArgumentException("Invalid Expression: " + input + ". Error: " + e));
+                }
+            }
+        } catch (Exception e) {
+            return ArgumentParseResult.failure(new IllegalArgumentException("Erroring Expression: " + input + ". Error: " + e));
+        }
+        return ArgumentParseResult.success(input);
     }
 
 
     @Override
     public @NonNull SuggestionProvider<C> suggestionProvider() {
-        if (suggestionProvider == null) {
+        if(variableParser == null) {
             return SuggestionProvider.noSuggestions();
         }
-        return suggestionProvider;
+        return variableParser.suggestionProvider();
     }
 }

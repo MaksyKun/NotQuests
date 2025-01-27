@@ -49,10 +49,10 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
+import static org.incendo.cloud.parser.standard.IntegerParser.integerParser;
 import static org.incendo.cloud.parser.standard.StringParser.stringParser;
 import static rocks.gravili.notquests.paper.commands.arguments.ActiveQuestParser.activeQuestParser;
 import static rocks.gravili.notquests.paper.commands.arguments.CategoryParser.categoryParser;
-import static rocks.gravili.notquests.paper.commands.arguments.IntegerParser.integerParser;
 import static rocks.gravili.notquests.paper.commands.arguments.QuestParser.questParser;
 
 public class UserCommands {
@@ -343,7 +343,7 @@ public class UserCommands {
 
         manager.command(builder.literal("continueConversation")
                 .senderType(Player.class)
-                .required("optionID", integerParser(main, 1, (context, input) -> {
+                .required("optionID", integerParser(1), Description.of("Option message to continue conversation"), (context, input) -> {
                     main.getUtilManager().sendFancyCommandCompletion(context.sender(), input.input().split(" "), "<Enter option message to continue conversation>", "");
                     List<Suggestion> completions = new ArrayList<>();
 
@@ -366,7 +366,8 @@ public class UserCommands {
                     }
 
                     return CompletableFuture.completedFuture(completions);
-                }), Description.of("Option message to continue conversation")).commandDescription(Description.of("Selects an answer for the currently open conversation"))
+                })
+                .commandDescription(Description.of("Selects an answer for the currently open conversation"))
                 .handler((context) -> {
                     if (main.getConversationManager() == null) {
                         return;

@@ -168,6 +168,8 @@ dependencies {
     //compileOnly("io.papermc.paper:paper-api:1.18.1-R0.1-SNAPSHOT!!")
     //implementation("de.themoep:inventorygui:1.5-SNAPSHOT")
 
+    compileOnly("org.projectlombok:lombok:1.18.24")
+
     compileOnly("net.citizensnpcs:citizens-main:2.0.37-SNAPSHOT")
     //compileOnly(files("libs/citizens-2.0.34-b3410.jar"))
 
@@ -247,6 +249,7 @@ dependencies {
     compileOnly("com.willfp:eco:6.38.3")
 
     compileOnly(files("libs/znpcs-5.0.jar")) // No Repo existent
+    compileOnly(files("libs/ProjectKorra-1.11.2.jar")) // No Repo existent
 
 
     implementation("com.github.Redempt:Crunch:2.0.3")

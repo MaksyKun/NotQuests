@@ -28,7 +28,7 @@ import org.incendo.cloud.description.Description;
 import org.incendo.cloud.suggestion.Suggestion;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.arguments.variables.CustomStringParser;
-import rocks.gravili.notquests.paper.commands.arguments.variables.NumberVariableValueParser;
+import rocks.gravili.notquests.paper.commands.arguments.variables.NumberVariableValue;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 
 import java.util.ArrayList;
@@ -50,9 +50,9 @@ public class ContainerInventoryVariable extends Variable<ItemStack[]> {
             return CompletableFuture.completedFuture(suggestions);
         }));
 
-        addRequiredNumber(NumberVariableValueParser.numberVariableValueParser("x", null, null));
-        addRequiredNumber(NumberVariableValueParser.numberVariableValueParser("y", null, null));
-        addRequiredNumber(NumberVariableValueParser.numberVariableValueParser("z", null, null));
+        addRequiredNumber(NumberVariableValue.numberVariableValueParser("x", null, null));
+        addRequiredNumber(NumberVariableValue.numberVariableValueParser("y", null, null));
+        addRequiredNumber(NumberVariableValue.numberVariableValueParser("z", null, null));
 
         addRequiredBooleanFlag(main.getCommandManager().getPaperCommandManager().flagBuilder("skipItemIfInventoryFull")
                 .withDescription(Description.of("Does not drop the item if inventory full if flag set")).build()

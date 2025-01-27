@@ -143,7 +143,7 @@ public class ItemStackSelectionParser<C> implements ArgumentParser<C, ItemStackS
                 final @NonNull CommandContext<?> context
         ) {
             super(
-                    ItemStackSelectionArgument.MaterialParser.class,
+                    ItemStackSelectionParser.class,
                     context,
                     BukkitCaptionKeys.ARGUMENT_PARSE_FAILURE_MATERIAL,
                     CaptionVariable.of("input", input)

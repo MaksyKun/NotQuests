@@ -70,7 +70,7 @@ public class ProjectKorraManager {
   }
 
   public final ArrayList<Suggestion> getAllElements() {
-    ArrayList<String> allElementsStringList = new ArrayList<>();
+    ArrayList<Suggestion> allElementsStringList = new ArrayList<>();
     for (Element element : Element.getAllElements()) {
       allElementsStringList.add(Suggestion.suggestion(element.getName()));
     }
@@ -90,8 +90,8 @@ public class ProjectKorraManager {
     }
   }
 
-  public final ArrayList<String> getAllSubElements() {
-    final ArrayList<String> allSubElementsStringList = new ArrayList<>();
+  public final ArrayList<Suggestion> getAllSubElements() {
+    final ArrayList<Suggestion> allSubElementsStringList = new ArrayList<>();
     for (final Element.SubElement subElement : Element.getAllSubElements()) {
       allSubElementsStringList.add(Suggestion.suggestion(subElement.getName()));
     }

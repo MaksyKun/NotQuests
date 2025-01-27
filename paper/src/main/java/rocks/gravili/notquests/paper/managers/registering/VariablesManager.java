@@ -29,9 +29,9 @@ import redempt.crunch.CompiledExpression;
 import redempt.crunch.Crunch;
 import redempt.crunch.functional.EvaluationEnvironment;
 import rocks.gravili.notquests.paper.NotQuests;
-import rocks.gravili.notquests.paper.commands.arguments.variables.BooleanVariableValue;
+import rocks.gravili.notquests.paper.commands.arguments.variables.BooleanVariableValueParser;
 import rocks.gravili.notquests.paper.commands.arguments.variables.CustomStringParser;
-import rocks.gravili.notquests.paper.commands.arguments.variables.NumberVariableValueParser;
+import rocks.gravili.notquests.paper.commands.arguments.variables.NumberVariableValue;
 import rocks.gravili.notquests.paper.managers.expressions.NumberExpression;
 import rocks.gravili.notquests.paper.structs.variables.*;
 import rocks.gravili.notquests.paper.structs.variables.hooks.*;
@@ -216,13 +216,13 @@ public class VariablesManager {
                         variable.setAdditionalStringArguments(additionalStringArguments);
 
                         final HashMap<String, NumberExpression> additionalNumberArguments = new HashMap<>();
-                        for (NumberVariableValueParser numberParser : variable.getRequiredNumbers()) {
+                        for (NumberVariableValue numberParser : variable.getRequiredNumbers()) {
                             additionalNumberArguments.put(numberParser.getIdentifier(), new NumberExpression(main, context.get(numberParser.getIdentifier())));
                         }
                         variable.setAdditionalNumberArguments(additionalNumberArguments);
 
                         final HashMap<String, NumberExpression> additionalBooleanArguments = new HashMap<>();
-                        for (BooleanVariableValue booleanParser : variable.getRequiredBooleans()) {
+                        for (BooleanVariableValueParser booleanParser : variable.getRequiredBooleans()) {
                             additionalBooleanArguments.put(booleanParser.getIdentifier(), new NumberExpression(main, context.get(booleanParser.getIdentifier())));
                         }
                         for (final CommandFlag<?> commandFlag : variable.getRequiredBooleanFlags()) {
@@ -271,12 +271,12 @@ public class VariablesManager {
                 }
             }
             if (variable.getRequiredNumbers() != null) {
-                for (NumberVariableValueParser numberParser : variable.getRequiredNumbers()) {
+                for (NumberVariableValue numberParser : variable.getRequiredNumbers()) {
                     newBuilder = newBuilder.required(numberParser, Description.of("Optional Number Argument"));
                 }
             }
             if (variable.getRequiredBooleans() != null) {
-                for (BooleanVariableValue booleanParser : variable.getRequiredBooleans()) {
+                for (BooleanVariableValueParser booleanParser : variable.getRequiredBooleans()) {
                     newBuilder = newBuilder.argument(booleanParser, Description.of("Optional Boolean Argument"));
                 }
             }

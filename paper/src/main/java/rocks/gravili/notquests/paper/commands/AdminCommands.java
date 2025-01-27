@@ -23,15 +23,10 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.incendo.cloud.Command;
-import org.incendo.cloud.bukkit.data.SinglePlayerSelector;
 import org.incendo.cloud.description.Description;
-import org.incendo.cloud.meta.CommandMeta;
 import org.incendo.cloud.paper.LegacyPaperCommandManager;
 import org.incendo.cloud.suggestion.Suggestion;
 import rocks.gravili.notquests.paper.NotQuests;
-import rocks.gravili.notquests.paper.commands.arguments.ConditionSelector;
-import rocks.gravili.notquests.paper.commands.arguments.MiniMessageSelector;
-import rocks.gravili.notquests.paper.commands.arguments.variables.BooleanVariableValueArgument;
 import rocks.gravili.notquests.paper.managers.data.Category;
 import rocks.gravili.notquests.paper.managers.expressions.NumberExpression;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
@@ -39,12 +34,17 @@ import rocks.gravili.notquests.paper.structs.actions.Action;
 import rocks.gravili.notquests.paper.structs.conditions.Condition;
 import rocks.gravili.notquests.paper.structs.conditions.Condition.ConditionResult;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.concurrent.CompletableFuture;
 
 import static org.incendo.cloud.bukkit.parser.PlayerParser.playerParser;
+import static org.incendo.cloud.minecraft.extras.parser.ComponentParser.miniMessageParser;
+import static org.incendo.cloud.parser.standard.BooleanParser.booleanParser;
 import static org.incendo.cloud.parser.standard.IntegerParser.integerParser;
+import static rocks.gravili.notquests.paper.commands.arguments.CategoryParser.categoryParser;
+import static rocks.gravili.notquests.paper.commands.arguments.ConditionParser.conditionParser;
 
 public class AdminCommands {
     public final ArrayList<String> placeholders;
@@ -245,23 +245,22 @@ public class AdminCommands {
 
     public void handleQuestPoints() {
         manager.command(builder.literal("questpoints")
-                .argument(SinglePlayerSelectorArgument.of("player"), Description.of("Player whose questpoints you want to see."))
+                .required("player", playerParser(), Description.of("Player whose questpoints you want to see."))
                 .literal("show", "view")
-                .meta(CommandMeta.DESCRIPTION, "Shows questpoints of a player")
+                .commandDescription(Description.of("Shows questpoints of a player"))
                 .handler((context) -> {
-                    final SinglePlayerSelector singlePlayerSelector = context.get("player");
+                    final Player playerSelector = context.get("player");
 
-                    if (singlePlayerSelector.hasAny() && singlePlayerSelector.getPlayer() != null) {
-
-                        final QuestPlayer questPlayer = notQuests.getQuestPlayerManager().getActiveQuestPlayer(singlePlayerSelector.getPlayer().getUniqueId());
+                    if (playerSelector.isOnline()) {
+                        final QuestPlayer questPlayer = notQuests.getQuestPlayerManager().getActiveQuestPlayer(playerSelector.getUniqueId());
                         if (questPlayer != null) {
-                            context.sender().sendMessage(notQuests.parse("<notQuests>Quest points for player <highlight>" + singlePlayerSelector.getPlayer().getName() + "</highlight> <green>(online)</green>: <highlight2>" + questPlayer.getQuestPoints()));
+                            context.sender().sendMessage(notQuests.parse("<notQuests>Quest points for player <highlight>" + playerSelector.getName() + "</highlight> <green>(online)</green>: <highlight2>" + questPlayer.getQuestPoints()));
                         } else {
-                            context.sender().sendMessage(notQuests.parse("<error>Seems like the player <highlight>" + singlePlayerSelector.getPlayer().getName() + "</highlight> <green>(online)</green> does not have any quest points!"));
+                            context.sender().sendMessage(notQuests.parse("<error>Seems like the player <highlight>" + playerSelector.getName() + "</highlight> <green>(online)</green> does not have any quest points!"));
                         }
                     } else {
 
-                        final OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(singlePlayerSelector.getSelector());
+                        final OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(playerSelector.getUniqueId());
 
                         final QuestPlayer questPlayer = notQuests.getQuestPlayerManager().getActiveQuestPlayer(offlinePlayer.getUniqueId());
                         if (questPlayer != null) {
@@ -276,22 +275,21 @@ public class AdminCommands {
 
 
         manager.command(builder.literal("questpoints")
-                .argument(SinglePlayerSelectorArgument.of("player"), Description.of("Player to whom you want to add questpoints to."))
+                .required("player", playerParser(), Description.of("Player to whom you want to add questpoints to."))
                 .literal("add")
-                .argument(IntegerArgument.of("amount"), Description.of("Amount of questpoints to add"))
-                .meta(CommandMeta.DESCRIPTION, "Add questpoints to a player")
+                .required("amount", integerParser(1), Description.of("Amount of questpoints to add"))
+                .commandDescription(Description.of("Add questpoints to a player"))
                 .handler((context) -> {
-                    final SinglePlayerSelector singlePlayerSelector = context.get("player");
+                    final Player playerSelector = context.get("player");
                     int questPointsToAdd = context.get("amount");
 
-                    if (singlePlayerSelector.hasAny() && singlePlayerSelector.getPlayer() != null) {
-                        final QuestPlayer questPlayer = notQuests.getQuestPlayerManager().getOrCreateQuestPlayer(singlePlayerSelector.getPlayer().getUniqueId());
+                    if (playerSelector.isOnline()) {
+                        final QuestPlayer questPlayer = notQuests.getQuestPlayerManager().getOrCreateQuestPlayer(playerSelector.getUniqueId());
                         long oldQuestPoints = questPlayer.getQuestPoints();
                         questPlayer.addQuestPoints(questPointsToAdd, false);
-                        context.sender().sendMessage(notQuests.parse("<notQuests>Quest points for player <highlight>" + singlePlayerSelector.getPlayer().getName() + "</highlight> <green>(online)</green> have been set from <unimportant>" + oldQuestPoints
-                                + "</unimportant> to <highlight2>" + (oldQuestPoints + questPointsToAdd) + "</highlight2>."));
+                        context.sender().sendMessage(notQuests.parse(MessageFormat.format("<notQuests>Quest points for player <highlight>{0}</highlight> <green>(online)</green> have been set from <unimportant>{1}</unimportant> to <highlight2>{2}</highlight2>.", playerSelector.getName(), oldQuestPoints, oldQuestPoints + questPointsToAdd)));
                     } else {
-                        final OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(singlePlayerSelector.getSelector());
+                        final OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(playerSelector.getUniqueId());
                         final QuestPlayer questPlayer = notQuests.getQuestPlayerManager().getOrCreateQuestPlayerFromDatabase(offlinePlayer.getUniqueId());
                         final long oldQuestPoints = questPlayer.getQuestPoints();
                         questPlayer.addQuestPoints(questPointsToAdd, false);
@@ -303,22 +301,22 @@ public class AdminCommands {
                 }));
 
         manager.command(builder.literal("questpoints")
-                .argument(SinglePlayerSelectorArgument.of("player"), Description.of("Player of whom you want to remove questpoints from."))
+                .required("player", playerParser(), Description.of("Player of whom you want to remove questpoints from."))
                 .literal("remove", "deduct")
-                .argument(IntegerArgument.of("amount"), Description.of("Amount of questpoints to remove"))
-                .meta(CommandMeta.DESCRIPTION, "Remove questpoints from a player")
+                .required("amount", integerParser(1), Description.of("Amount of questpoints to remove"))
+                .commandDescription(Description.of("Remove questpoints from a player"))
                 .handler((context) -> {
-                    final SinglePlayerSelector singlePlayerSelector = context.get("player");
+                    final Player playerSelector = context.get("player");
                     int questPointsToRemove = context.get("amount");
 
-                    if (singlePlayerSelector.hasAny() && singlePlayerSelector.getPlayer() != null) {
-                        final QuestPlayer questPlayer = notQuests.getQuestPlayerManager().getOrCreateQuestPlayer(singlePlayerSelector.getPlayer().getUniqueId());
+                    if (playerSelector.isOnline()) {
+                        final QuestPlayer questPlayer = notQuests.getQuestPlayerManager().getOrCreateQuestPlayer(playerSelector.getUniqueId());
                         long oldQuestPoints = questPlayer.getQuestPoints();
                         questPlayer.removeQuestPoints(questPointsToRemove, false);
-                        context.sender().sendMessage(notQuests.parse("<notQuests>Quest points for player <highlight>" + singlePlayerSelector.getPlayer().getName() + "</highlight> <green>(online)</green> have been set from <unimportant>" + oldQuestPoints
+                        context.sender().sendMessage(notQuests.parse("<notQuests>Quest points for player <highlight>" + playerSelector.getName() + "</highlight> <green>(online)</green> have been set from <unimportant>" + oldQuestPoints
                                 + "</unimportant> to <highlight2>" + (oldQuestPoints - questPointsToRemove) + "</highlight2>."));
                     } else {
-                        final OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(singlePlayerSelector.getSelector());
+                        final OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(playerSelector.getUniqueId());
                         final QuestPlayer questPlayer = notQuests.getQuestPlayerManager().getOrCreateQuestPlayerFromDatabase(offlinePlayer.getUniqueId());
                         final long oldQuestPoints = questPlayer.getQuestPoints();
                         questPlayer.removeQuestPoints(questPointsToRemove, false);
@@ -331,22 +329,22 @@ public class AdminCommands {
 
 
         manager.command(builder.literal("questpoints")
-                .argument(SinglePlayerSelectorArgument.of("player"), Description.of("Player whose questpoints amount you want to change."))
+                .required("player", playerParser(), Description.of("Player whose questpoints amount you want to change."))
                 .literal("set")
-                .argument(IntegerArgument.of("amount"), Description.of("New questpoints amount"))
-                .meta(CommandMeta.DESCRIPTION, "Set the questpoints of a player")
+                .required("amount", integerParser(1), Description.of("New questpoints amount"))
+                .commandDescription(Description.of("Set questpoints for a player"))
                 .handler((context) -> {
-                    final SinglePlayerSelector singlePlayerSelector = context.get("player");
+                    final Player playerSelector = context.get("player");
                     int newQuestPointsAmount = context.get("amount");
 
-                    if (singlePlayerSelector.hasAny() && singlePlayerSelector.getPlayer() != null) {
-                        final QuestPlayer questPlayer = notQuests.getQuestPlayerManager().getOrCreateQuestPlayer(singlePlayerSelector.getPlayer().getUniqueId());
+                    if (playerSelector.isOnline()) {
+                        final QuestPlayer questPlayer = notQuests.getQuestPlayerManager().getOrCreateQuestPlayer(playerSelector.getUniqueId());
                         long oldQuestPoints = questPlayer.getQuestPoints();
                         questPlayer.setQuestPoints(newQuestPointsAmount, false);
-                        context.sender().sendMessage(notQuests.parse("<notQuests>Quest points for player <highlight>" + singlePlayerSelector.getPlayer().getName() + "</highlight> <green>(online)</green> have been set from <unimportant>" + oldQuestPoints
+                        context.sender().sendMessage(notQuests.parse("<notQuests>Quest points for player <highlight>" + playerSelector.getName() + "</highlight> <green>(online)</green> have been set from <unimportant>" + oldQuestPoints
                                 + "</unimportant> to <highlight2>" + (newQuestPointsAmount) + "</highlight2>."));
                     } else {
-                        final OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(singlePlayerSelector.getSelector());
+                        final OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(playerSelector.getUniqueId());
                         final QuestPlayer questPlayer = notQuests.getQuestPlayerManager().getOrCreateQuestPlayerFromDatabase(offlinePlayer.getUniqueId());
                         final long oldQuestPoints = questPlayer.getQuestPoints();
                         questPlayer.setQuestPoints(newQuestPointsAmount, false);
@@ -366,7 +364,7 @@ public class AdminCommands {
 
         final Command.Builder<CommandSender> conditionsEditBuilder = conditionsBuilder
                 .literal("edit")
-                .required("condition", ConditionSelector.of("condition", notQuests), Description.of("Condition Name"));
+                .required("condition", conditionParser(notQuests), Description.of("Condition Name"));
 
 
         manager.command(conditionsEditBuilder.commandDescription(Description.of("Removes a condition"))
@@ -430,7 +428,7 @@ public class AdminCommands {
         manager.command(conditionsEditBuilder.commandDescription(Description.of("Changes the current category of this Condition."))
                 .literal("category")
                 .literal("set")
-                .required("category", CategorySelector.of("category", notQuests), Description.of("New category for this Condition."))
+                .required("category", categoryParser(notQuests), Description.of("New category for this Condition."))
                 .handler((context) -> {
                     final Condition condition = context.get("condition");
 
@@ -455,7 +453,7 @@ public class AdminCommands {
 
         manager.command(conditionsEditBuilder.literal("description", Description.of("Sets the new description of the condition."))
                 .literal("set")
-                .argument(MiniMessageSelector.<CommandSender>newBuilder("description", notQuests).withPlaceholders().build(), Description.of("Condition description"))
+                .required("description", miniMessageParser(), Description.of("Condition description"))
                 .handler((context) -> {
                     final Condition condition = context.get("condition");
 
@@ -474,7 +472,7 @@ public class AdminCommands {
 
         manager.command(conditionsEditBuilder.literal("hidden", Description.of("Sets the new hidden status of the condition."))
                 .literal("set")
-                .required("hiddenStatusExpression", BooleanVariableValueArgument.newBuilder("hiddenStatusExpression", notQuests, null), Description.of("Expression"))
+                .required("hiddenStatusExpression", booleanParser(), Description.of("Expression"))
                 .handler((context) -> {
                     final Condition condition = context.get("condition");
 
@@ -622,13 +620,11 @@ public class AdminCommands {
                 .literal("edit")
                 .required("condition-id", integerParser(1), (context, input) -> {
                             notQuests.getUtilManager().sendFancyCommandCompletion(context.sender(), context.rawInput().input().split(" "), "[condition-id]", "[...]");
-
                             ArrayList<Suggestion> completions = new ArrayList<>();
-
                             final Action action = context.get("action");
 
                             for (final Condition condition : action.getConditions()) {
-                                completions.add(Suggestion.suggestion(Suggestion.suggestion("" + (action.getConditions().indexOf(condition) + 1))));
+                                completions.add(Suggestion.suggestion("" + (action.getConditions().indexOf(condition) + 1)));
                             }
 
                             return CompletableFuture.completedFuture(completions);
@@ -659,7 +655,7 @@ public class AdminCommands {
         manager.command(editActionConditionsBuilder.commandDescription(Description.of("Sets the new description of the Action condition."))
                 .literal("description")
                 .literal("set")
-                .required(MiniMessageSelector.<CommandSender>newBuilder("description", notQuests).withPlaceholders().build(), Description.of("Action condition description"))
+                .required("description", miniMessageParser(), Description.of("Action condition description"))
                 .handler((context) -> {
                     final Action action = context.get("action");
 
@@ -741,7 +737,7 @@ public class AdminCommands {
 
         manager.command(editActionConditionsBuilder.literal("hidden", Description.of("Sets the new hidden status of the Action condition."))
                 .literal("set")
-                .required("hiddenStatusExpression", BooleanVariableValueArgument.newBuilder("", notQuests, null), Description.of("Expression"))
+                .required("hiddenStatusExpression", booleanParser(), Description.of("Expression"))
                 .handler((context) -> {
                     final Action action = context.get("action");
 
@@ -773,7 +769,7 @@ public class AdminCommands {
         manager.command(actionsEditBuilder
                 .literal("category")
                 .literal("show")
-                .meta(CommandMeta.DESCRIPTION, "Shows the current category of this Action.")
+                .commandDescription(Description.of("Shows the current category of this Action."))
                 .handler((context) -> {
                     final Action action = context.get("action");
 
@@ -786,7 +782,7 @@ public class AdminCommands {
         manager.command(actionsEditBuilder
                 .literal("category", Description.of("Changes the current category of this Action."))
                 .literal("set")
-                .required(CategorySelector.of("category", notQuests), Description.of("New category for this Action."))
+                .required("category", categoryParser(notQuests), Description.of("New category for this Action."))
                 .handler((context) -> {
                     final Action action = context.get("action");
                     final Category category = context.get("category");

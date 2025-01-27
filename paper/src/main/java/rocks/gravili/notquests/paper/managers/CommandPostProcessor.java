@@ -34,7 +34,7 @@ public class CommandPostProcessor<C> implements CommandPostprocessor<C> {
 
     @Override
     public void accept(@NotNull final CommandPostprocessingContext<C> context) {
-        if (main.getDataManager().isDisabled() && !(context.command().getArguments().size() >= 3 && (context.command().getArguments().get(2).getName().equalsIgnoreCase("enablePluginAndSaving") || context.command().getArguments().get(2).getName().equalsIgnoreCase("disablePluginAndSaving") || context.command().getArguments().get(2).getName().equalsIgnoreCase("showErrorsAndWarnings"))) {
+        if (main.getDataManager().isDisabled() && !(context.command().nonFlagArguments().size() >= 3 && (context.command().nonFlagArguments().get(2).name().equalsIgnoreCase("enablePluginAndSaving") || context.command().nonFlagArguments().get(2).name().equalsIgnoreCase("disablePluginAndSaving") || context.command().nonFlagArguments().get(2).name().equalsIgnoreCase("showErrorsAndWarnings")))) {
             if (context.commandContext().sender() instanceof final CommandSender commandSender) {
                 main.getDataManager().sendPluginDisabledMessage(commandSender);
             }

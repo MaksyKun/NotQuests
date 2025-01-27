@@ -18,8 +18,10 @@
 
 package rocks.gravili.notquests.paper.commands.arguments.variables;
 
+import com.mojang.datafixers.util.Pair;
 import lombok.Getter;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.incendo.cloud.context.CommandContext;
 import org.incendo.cloud.context.CommandInput;
@@ -27,36 +29,52 @@ import org.incendo.cloud.parser.ArgumentParseResult;
 import org.incendo.cloud.parser.ArgumentParser;
 import org.incendo.cloud.suggestion.SuggestionProvider;
 import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.managers.expressions.NumberExpression;
 
 @Getter
-public class BooleanVariableValue implements ArgumentParser<CommandSender, Boolean> {
+public class NumberVariableValue implements ArgumentParser<CommandSender, Pair<Double, String>> {
     private final NotQuests main;
 
     private final String identifier;
     private final StringVariableParser variableParser;
     private final SuggestionProvider<CommandSender> suggestionProvider;
 
-    protected BooleanVariableValue(String identifier, StringVariableParser variableParser, SuggestionProvider<CommandSender> suggestionProvider) {
+    protected NumberVariableValue(String identifier, StringVariableParser variableParser, SuggestionProvider<CommandSender> suggestionProvider) {
         this.main = NotQuests.getInstance();
         this.identifier = identifier;
         this.variableParser = variableParser;
         this.suggestionProvider = suggestionProvider;
     }
 
-    public static @NonNull BooleanVariableValue booleanVariableValueParser() {
-        return new BooleanVariableValue(null, null, null);
-    }
-    public static @NonNull BooleanVariableValue booleanVariableValueParser(String identifier, StringVariableParser variableParser, SuggestionProvider<CommandSender> suggestionProvider) {
-        return new BooleanVariableValue(identifier, variableParser, suggestionProvider);
+    public static @NonNull NumberVariableValue numberVariableValueParser(String identifier, StringVariableParser variableParser, SuggestionProvider<CommandSender> suggestionProvider) {
+        return new NumberVariableValue(identifier, variableParser, suggestionProvider);
     }
 
     @Override
-    public @NonNull ArgumentParseResult<@NonNull Boolean> parse(@NonNull CommandContext<@NonNull CommandSender> commandContext, @NonNull CommandInput commandInput) {
-        if (commandInput.isEmpty()) {
+    public @NonNull ArgumentParseResult<@NonNull Pair<Double, String>> parse(@NonNull CommandContext<@NonNull CommandSender> commandContext, @NonNull CommandInput commandInput) {
+        if(commandInput.isEmpty()) {
             return ArgumentParseResult.failure(new IllegalArgumentException("No input provided"));
         }
-        String rawInput = commandInput.input();
-        return ArgumentParseResult.success(Boolean.parseBoolean(rawInput));
+        final String input = commandInput.input();
+
+        try{
+            final NumberExpression numberExpression = new NumberExpression(main, input);
+            if (commandContext.sender() instanceof Player player) {
+                try {
+                    numberExpression.calculateValue(main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId()));
+                } catch (Exception e) {
+                    if (main.getConfiguration().isDebug()) {
+                        e.printStackTrace();
+                    }
+                    return ArgumentParseResult.failure(new IllegalArgumentException("Invalid Expression: " + input + ". Error: " + e.toString()));
+                }
+            }
+        } catch (Exception e){
+            return ArgumentParseResult.failure(new IllegalArgumentException("Erroring Expression: " + input + ". Error: " + e.toString()));
+        }
+
+
+        return ArgumentParseResult.success(Pair.of(Double.parseDouble(input), input));
     }
 
 

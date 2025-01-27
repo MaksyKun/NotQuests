@@ -10,7 +10,9 @@ import org.incendo.cloud.paper.LegacyPaperCommandManager;
 import org.incendo.cloud.parser.flag.CommandFlag;
 import org.incendo.cloud.suggestion.Suggestion;
 import rocks.gravili.notquests.paper.NotQuests;
-import rocks.gravili.notquests.paper.commands.arguments.variables.*;
+import rocks.gravili.notquests.paper.commands.arguments.variables.BooleanVariableValueParser;
+import rocks.gravili.notquests.paper.commands.arguments.variables.CustomStringParser;
+import rocks.gravili.notquests.paper.commands.arguments.variables.NumberVariableValue;
 import rocks.gravili.notquests.paper.managers.expressions.NumberExpression;
 import rocks.gravili.notquests.paper.structs.ActiveObjective;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
@@ -19,7 +21,6 @@ import rocks.gravili.notquests.paper.structs.variables.VariableDataType;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 import static org.incendo.cloud.parser.standard.IntegerParser.integerParser;
@@ -105,13 +106,13 @@ public class NumberVariableObjective extends Objective { // TODO: Not done yet
                         numberVariableObjective.setAdditionalStringArguments(additionalStringArguments);
 
                         HashMap<String, NumberExpression> additionalNumberArguments = new HashMap<>();
-                        for (NumberVariableValueParser numberParser : variable.getRequiredNumbers()) {
+                        for (NumberVariableValue numberParser : variable.getRequiredNumbers()) {
                             additionalNumberArguments.put(numberParser.getIdentifier(), new NumberExpression(main, context.get(numberParser.getIdentifier())));
                         }
                         numberVariableObjective.setAdditionalNumberArguments(additionalNumberArguments);
 
                         HashMap<String, NumberExpression> additionalBooleanArguments = new HashMap<>();
-                        for (BooleanVariableValue booleanParser : variable.getRequiredBooleans()) {
+                        for (BooleanVariableValueParser booleanParser : variable.getRequiredBooleans()) {
                             additionalBooleanArguments.put(booleanParser.getIdentifier(), new NumberExpression(main, context.get(booleanParser.getIdentifier())));
                         }
                         for (CommandFlag<?> commandFlag : variable.getRequiredBooleanFlags()) {

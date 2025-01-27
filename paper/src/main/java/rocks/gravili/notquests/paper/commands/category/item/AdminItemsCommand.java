@@ -25,11 +25,9 @@ import org.bukkit.inventory.ItemStack;
 import org.incendo.cloud.Command;
 import org.incendo.cloud.CommandManager;
 import org.incendo.cloud.description.Description;
+import org.incendo.cloud.paper.LegacyPaperCommandManager;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.BaseCommand;
-import rocks.gravili.notquests.paper.commands.arguments.ItemStackSelectionArgument;
-import rocks.gravili.notquests.paper.commands.arguments.MiniMessageSelector;
-import rocks.gravili.notquests.paper.commands.arguments.NQItemSelector;
 import rocks.gravili.notquests.paper.commands.arguments.wrappers.ItemStackSelection;
 import rocks.gravili.notquests.paper.managers.data.Category;
 import rocks.gravili.notquests.paper.managers.items.NQItem;
@@ -37,12 +35,15 @@ import rocks.gravili.notquests.paper.managers.items.NQItem;
 import java.util.Arrays;
 
 import static org.incendo.cloud.bukkit.parser.PlayerParser.playerParser;
+import static org.incendo.cloud.minecraft.extras.parser.ComponentParser.miniMessageParser;
 import static org.incendo.cloud.parser.standard.IntegerParser.integerParser;
 import static org.incendo.cloud.parser.standard.StringParser.stringParser;
+import static rocks.gravili.notquests.paper.commands.arguments.ItemStackSelectionParser.itemStackSelectionParser;
+import static rocks.gravili.notquests.paper.commands.arguments.NQNPCParser.nqNPCParser;
 
 public class AdminItemsCommand extends BaseCommand {
 
-    public AdminItemsCommand(NotQuests notQuests, Command.Builder<CommandSender> builder) {
+    public AdminItemsCommand(NotQuests notQuests, LegacyPaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> builder) {
         super(notQuests, builder);
     }
 
@@ -50,13 +51,10 @@ public class AdminItemsCommand extends BaseCommand {
     public void apply(CommandManager<CommandSender> commandManager) {
         
         var editBuilder = commandManager.commandBuilder("notquestsqdmin", "nqa").literal("items");
-
         commandManager.command(editBuilder
                 .literal("create", Description.of("Creates a new Item."))
                 .required("name", stringParser(), Description.of("Item Name"))
-                .required("material", ItemStackSelectionArgument.of("material", notQuests),
-                        Description.of("Material of what this item should be based on. If you use 'hand', the item you are holding in your notQuests hand will be used.")
-                )
+                .required("material", itemStackSelectionParser(notQuests), Description.of("Material of what this item should be based on. If you use 'hand', the item you are holding in your notQuests hand will be used."))
                 .handler(context -> {
                     final String itemName = context.get("name");
 
@@ -129,7 +127,7 @@ public class AdminItemsCommand extends BaseCommand {
 
         Command.Builder<CommandSender> admitItemsEditBuilder = editBuilder
                 .literal("edit", "e")
-                .required("item", NQItemSelector.of("item", notQuests), Description.of("NotQuests Item which you want to edit."));
+                .required("item", nqNPCParser(notQuests), Description.of("NotQuests Item which you want to edit."));
 
 
         commandManager.command(admitItemsEditBuilder.commandDescription(Description.of("Gives the player the item."))
@@ -171,8 +169,7 @@ public class AdminItemsCommand extends BaseCommand {
         commandManager.command(admitItemsEditBuilder.commandDescription(Description.of("Sets an item's display name."))
                 .literal("displayName")
                 .literal("set")
-                .required("display-name", MiniMessageSelector.<CommandSender>newBuilder("Display Name", notQuests).build(),
-                        Description.of("New display name"))
+                .required("display-name", miniMessageParser(), Description.of("New display name"))
                 .handler((context) -> {
                     NQItem nqItem = context.get("item");
                     final String displayName = String.join(" ", (String[]) context.get("display-name"));

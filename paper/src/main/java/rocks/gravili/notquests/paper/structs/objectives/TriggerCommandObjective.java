@@ -20,19 +20,16 @@ package rocks.gravili.notquests.paper.structs.objectives;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.incendo.cloud.Command;
 import org.incendo.cloud.description.Description;
 import org.incendo.cloud.paper.LegacyPaperCommandManager;
 import org.incendo.cloud.suggestion.Suggestion;
 import rocks.gravili.notquests.paper.NotQuests;
-import rocks.gravili.notquests.paper.commands.arguments.variables.NumberVariableValueArgument;
 import rocks.gravili.notquests.paper.structs.ActiveObjective;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
@@ -52,27 +49,25 @@ public class TriggerCommandObjective extends Objective {
             LegacyPaperCommandManager<CommandSender> manager,
             Command.Builder<CommandSender> addObjectiveBuilder,
             final int level) {
-        manager.command(
-                addObjectiveBuilder
-                        .required("Trigger name", stringParser(), Description.of("Triggercommand name"), (context, lastString) -> {
-                            main.getUtilManager().sendFancyCommandCompletion(context.sender(), lastString.input().split(" "), "[New Trigger Name]", "[Amount of triggers needed]");
-                            ArrayList<Suggestion> completions = new ArrayList<>();
-                            completions.add(Suggestion.suggestion("<Enter new TriggerCommand name>"));
-                            return CompletableFuture.completedFuture(completions);
-                        })
-                        .required("amount", integerParser(1), Description.of("Amount of times the trigger needs to be triggered to complete this objective."))
-                        .handler(
-                                (context) -> {
-                                    final String triggerName = context.get("Trigger name");
-                                    final String amountExpression = context.get("amount");
+        manager.command(addObjectiveBuilder
+                .required("Trigger name", stringParser(), Description.of("Triggercommand name"), (context, lastString) -> {
+                    main.getUtilManager().sendFancyCommandCompletion(context.sender(), lastString.input().split(" "), "[New Trigger Name]", "[Amount of triggers needed]");
+                    ArrayList<Suggestion> completions = new ArrayList<>();
+                    completions.add(Suggestion.suggestion("<Enter new TriggerCommand name>"));
+                    return CompletableFuture.completedFuture(completions);
+                })
+                .required("amount", integerParser(1), Description.of("Amount of times the trigger needs to be triggered to complete this objective."))
+                .handler((context) -> {
+                    final String triggerName = context.get("Trigger name");
+                    final String amountExpression = context.get("amount");
 
-                                    TriggerCommandObjective triggerCommandObjective =
-                                            new TriggerCommandObjective(main);
-                                    triggerCommandObjective.setProgressNeededExpression(amountExpression);
-                                    triggerCommandObjective.setTriggerName(triggerName);
+                    TriggerCommandObjective triggerCommandObjective =
+                            new TriggerCommandObjective(main);
+                    triggerCommandObjective.setProgressNeededExpression(amountExpression);
+                    triggerCommandObjective.setTriggerName(triggerName);
 
-                                    main.getObjectiveManager().addObjective(triggerCommandObjective, context, level);
-                                }));
+                    main.getObjectiveManager().addObjective(triggerCommandObjective, context, level);
+                }));
     }
 
     @Override

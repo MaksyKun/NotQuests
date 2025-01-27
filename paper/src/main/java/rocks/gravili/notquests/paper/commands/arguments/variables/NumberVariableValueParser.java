@@ -32,12 +32,12 @@ import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.managers.expressions.NumberExpression;
 
 @Getter
-public class NumberVariableValueParser implements ArgumentParser<CommandSender, Pair<Double, String>> {
+public class NumberVariableValueParser<C> implements ArgumentParser<C, NumberVariableValue> {
     private final NotQuests main;
 
     private final String identifier;
     private final StringVariableParser variableParser;
-    private final SuggestionProvider<CommandSender> suggestionProvider;
+    private final SuggestionProvider<C> suggestionProvider;
 
     protected NumberVariableValueParser(String identifier, StringVariableParser variableParser, SuggestionProvider<CommandSender> suggestionProvider) {
         this.main = NotQuests.getInstance();
@@ -51,7 +51,7 @@ public class NumberVariableValueParser implements ArgumentParser<CommandSender, 
     }
 
     @Override
-    public @NonNull ArgumentParseResult<@NonNull Pair<Double, String>> parse(@NonNull CommandContext<@NonNull CommandSender> commandContext, @NonNull CommandInput commandInput) {
+    public @NonNull ArgumentParseResult<@NonNull NumberVariableValue> parse(@NonNull CommandContext<@NonNull CommandSender> commandContext, @NonNull CommandInput commandInput) {
         if(commandInput.isEmpty()) {
             return ArgumentParseResult.failure(new IllegalArgumentException("No input provided"));
         }
@@ -79,7 +79,7 @@ public class NumberVariableValueParser implements ArgumentParser<CommandSender, 
 
 
     @Override
-    public @NonNull SuggestionProvider<CommandSender> suggestionProvider() {
+    public @NonNull SuggestionProvider<C> suggestionProvider() {
         if (suggestionProvider == null) {
             return SuggestionProvider.noSuggestions();
         }

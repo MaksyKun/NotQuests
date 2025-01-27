@@ -26,7 +26,7 @@ import org.bukkit.block.Block;
 import org.incendo.cloud.suggestion.Suggestion;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.arguments.variables.CustomStringParser;
-import rocks.gravili.notquests.paper.commands.arguments.variables.NumberVariableValueParser;
+import rocks.gravili.notquests.paper.commands.arguments.variables.NumberVariableValue;
 import rocks.gravili.notquests.paper.managers.items.NQItem;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 
@@ -50,9 +50,9 @@ public class BlockVariable extends Variable<String> {
             return CompletableFuture.completedFuture(suggestions);
         }));
 
-        addRequiredNumber(NumberVariableValueParser.numberVariableValueParser("x", null, null));
-        addRequiredNumber(NumberVariableValueParser.numberVariableValueParser("y", null, null));
-        addRequiredNumber(NumberVariableValueParser.numberVariableValueParser("z", null, null));
+        addRequiredNumber(NumberVariableValue.numberVariableValueParser("x", null, null));
+        addRequiredNumber(NumberVariableValue.numberVariableValueParser("y", null, null));
+        addRequiredNumber(NumberVariableValue.numberVariableValueParser("z", null, null));
     }
 
 

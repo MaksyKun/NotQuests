@@ -12,7 +12,7 @@ import rocks.gravili.notquests.paper.structs.QuestPlayer;
 
 import java.util.ArrayList;
 
-import static rocks.gravili.notquests.paper.commands.arguments.CommandSelectorParser.commandParser;
+import static rocks.gravili.notquests.paper.commands.arguments.CommandParser.commandParser;
 
 public class PlayerCommandAction extends Action {
   private String playerCommand = "";

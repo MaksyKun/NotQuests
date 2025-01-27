@@ -33,7 +33,6 @@ import org.incendo.cloud.description.Description;
 import org.incendo.cloud.paper.LegacyPaperCommandManager;
 import org.incendo.cloud.suggestion.Suggestion;
 import rocks.gravili.notquests.paper.NotQuests;
-import rocks.gravili.notquests.paper.commands.arguments.SpeakerSelector;
 import rocks.gravili.notquests.paper.commands.arguments.wrappers.NQNPCResult;
 import rocks.gravili.notquests.paper.conversation.Conversation;
 import rocks.gravili.notquests.paper.conversation.ConversationLine;
@@ -54,6 +53,7 @@ import static org.incendo.cloud.parser.standard.StringParser.stringParser;
 import static rocks.gravili.notquests.paper.commands.arguments.CategoryParser.categoryParser;
 import static rocks.gravili.notquests.paper.commands.arguments.ConversationParser.conversationParser;
 import static rocks.gravili.notquests.paper.commands.arguments.NQNPCParser.nqNPCParser;
+import static rocks.gravili.notquests.paper.commands.arguments.SpeakerParser.speakerParser;
 
 public class AdminConversationCommands {
     private final NotQuests main;
@@ -373,7 +373,7 @@ public class AdminConversationCommands {
         manager.command(conversationEditBuilder
                 .literal("speakers")
                 .literal("remove", "delete")
-                .argument(SpeakerSelector.of("Speaker", main, "conversation")).commandDescription(Description.of("Adds / creates a new speaker for the conversation."))
+                .required("speaker", speakerParser(main, "conversation")).commandDescription(Description.of("Adds / creates a new speaker for the conversation."))
                 .handler((context) -> {
                     final Conversation foundConversation = context.get("conversation");
 

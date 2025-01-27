@@ -24,9 +24,9 @@ import org.bukkit.inventory.ItemStack;
 import org.incendo.cloud.parser.flag.CommandFlag;
 import org.incendo.cloud.suggestion.Suggestion;
 import rocks.gravili.notquests.paper.NotQuests;
-import rocks.gravili.notquests.paper.commands.arguments.variables.BooleanVariableValue;
+import rocks.gravili.notquests.paper.commands.arguments.variables.BooleanVariableValueParser;
 import rocks.gravili.notquests.paper.commands.arguments.variables.CustomStringParser;
-import rocks.gravili.notquests.paper.commands.arguments.variables.NumberVariableValueParser;
+import rocks.gravili.notquests.paper.commands.arguments.variables.NumberVariableValue;
 import rocks.gravili.notquests.paper.managers.expressions.NumberExpression;
 import rocks.gravili.notquests.paper.structs.ActiveObjective;
 import rocks.gravili.notquests.paper.structs.ActiveQuest;
@@ -43,8 +43,8 @@ import java.util.List;
 public abstract class Variable<T> {
     protected final NotQuests main;
     private final ArrayList<CustomStringParser> requiredStrings;
-    private final ArrayList<NumberVariableValueParser> requiredNumbers;
-    private final ArrayList<BooleanVariableValue> requiredBooleans;
+    private final ArrayList<NumberVariableValue> requiredNumbers;
+    private final ArrayList<BooleanVariableValueParser> requiredBooleans;
     private final ArrayList<org.incendo.cloud.parser.flag.CommandFlag<Void>> requiredBooleanFlags;
 
     private final ArrayList<String> setOnlyRequiredValues = new ArrayList<>(); //TODO: Implement
@@ -127,11 +127,11 @@ public abstract class Variable<T> {
         requiredStrings.add(stringArgument);
     }
 
-    protected void addRequiredNumber(final NumberVariableValueParser numberVariableValueArgument){
+    protected void addRequiredNumber(final NumberVariableValue numberVariableValueArgument){
         requiredNumbers.add(numberVariableValueArgument);
     }
 
-    protected void addRequiredBoolean(final BooleanVariableValue booleanArgument){
+    protected void addRequiredBoolean(final BooleanVariableValueParser booleanArgument){
         requiredBooleans.add(booleanArgument);
     }
 
@@ -143,11 +143,11 @@ public abstract class Variable<T> {
         return requiredStrings;
     }
 
-    public final ArrayList<NumberVariableValueParser> getRequiredNumbers(){
+    public final ArrayList<NumberVariableValue> getRequiredNumbers(){
         return requiredNumbers;
     }
 
-    public final ArrayList<BooleanVariableValue> getRequiredBooleans(){
+    public final ArrayList<BooleanVariableValueParser> getRequiredBooleans(){
         return requiredBooleans;
     }
 

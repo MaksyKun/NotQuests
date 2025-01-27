@@ -42,7 +42,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
 @Getter
-public class StringVariableParser implements ArgumentParser<CommandSender, String> {
+public class StringVariableParser<C> implements ArgumentParser<C, String> {
     private final NotQuests main;
 
     private String identifier;
@@ -51,24 +51,24 @@ public class StringVariableParser implements ArgumentParser<CommandSender, Strin
     private static final int MAX_SUGGESTIONS_INCREMENT = 10;
     private static final int NUMBER_SHIFT_MULTIPLIER = 10;
 
-    protected StringVariableParser(String identifier, Variable<?> variable) {
+    public StringVariableParser(String identifier, Variable<?> variable) {
         this.main = NotQuests.getInstance();
         this.identifier = identifier;
         this.variable = variable;
     }
 
-    public static @NonNull StringVariableParser stringVariableParser(String identifier, Variable<?> variable) {
-        return new StringVariableParser(identifier, variable);
+    public static <C> @NonNull StringVariableParser<C> stringVariableParser(String identifier, Variable<?> variable) {
+        return new StringVariableParser<>(identifier, variable);
     }
 
     @Override
-    public @NonNull ArgumentParseResult<@NonNull String> parse(@NonNull CommandContext<@NonNull CommandSender> commandContext, @NonNull CommandInput commandInput) {
+    public @NonNull ArgumentParseResult<@NonNull String> parse(@NonNull CommandContext<@NonNull C> commandContext, @NonNull CommandInput commandInput) {
         return ArgumentParseResult.failure(new IllegalArgumentException("Invalid StringVariable: " + commandContext));
     }
 
 
     @Override
-    public @NonNull SuggestionProvider<CommandSender> suggestionProvider() {
+    public @NonNull SuggestionProvider<C> suggestionProvider() {
         return ((context, input) -> {
             final List<Suggestion> completions = new ArrayList<>();
             completions.add(Suggestion.suggestion("<Enter Variable or Number>"));
@@ -89,12 +89,12 @@ public class StringVariableParser implements ArgumentParser<CommandSender, Strin
                                     completions.add(Suggestion.suggestion(rawInput + stringParser.getIdentifier() + ":"));
                                 }
                             }
-                            for (NumberVariableValueParser numberParser : variable.getRequiredNumbers()) {
+                            for (NumberVariableValue numberParser : variable.getRequiredNumbers()) {
                                 if (!rawInput.contains(numberParser.getIdentifier())) {
                                     completions.add(Suggestion.suggestion(rawInput + numberParser.getIdentifier() + ":"));
                                 }
                             }
-                            for (BooleanVariableValue booleanParser : variable.getRequiredBooleans()) {
+                            for (BooleanVariableValueParser booleanParser : variable.getRequiredBooleans()) {
                                 if (!rawInput.contains(booleanParser.getIdentifier())) {
                                     completions.add(Suggestion.suggestion(rawInput + booleanParser.getIdentifier() + ":"));
                                 }
@@ -111,7 +111,7 @@ public class StringVariableParser implements ArgumentParser<CommandSender, Strin
                                 try {
                                     for (final CustomStringParser stringParser : variable.getRequiredStrings()) {
                                         if (subStringAfter.contains(":")) {
-                                            Iterable<Suggestion> suggestions = (Iterable<Suggestion>) stringParser.getSuggestionProvider().suggestionsFuture(context, input).get();
+                                            Iterable<Suggestion> suggestions = (Iterable<Suggestion>) stringParser.getSuggestionProvider().suggestionsFuture(context.get(identifier), input).get();
                                             if (subStringAfter.endsWith(":")) {
                                                 suggestions.forEach(suggestion -> completions.add(Suggestion.suggestion(rawInput + suggestion.suggestion())));
                                             } else {
@@ -123,9 +123,9 @@ public class StringVariableParser implements ArgumentParser<CommandSender, Strin
                                             completions.add(Suggestion.suggestion(variableString + "(" + stringParser.getIdentifier() + ":"));
                                         }
                                     }
-                                    for (final NumberVariableValueParser numberParser : variable.getRequiredNumbers()) {
+                                    for (final NumberVariableValue numberParser : variable.getRequiredNumbers()) {
                                         if (subStringAfter.contains(":")) {
-                                            Iterable<Suggestion> suggestions = (Iterable<Suggestion>) numberParser.getSuggestionProvider().suggestionsFuture(context, input).get();
+                                            Iterable<Suggestion> suggestions = (Iterable<Suggestion>) numberParser.getSuggestionProvider().suggestionsFuture(context.get(identifier), input).get();
                                             if (subStringAfter.endsWith(":")) {
                                                 suggestions.forEach(suggestion -> completions.add(Suggestion.suggestion(rawInput + suggestion.suggestion())));
                                             } else {
@@ -137,9 +137,9 @@ public class StringVariableParser implements ArgumentParser<CommandSender, Strin
                                             completions.add(Suggestion.suggestion(variableString + "(" + numberParser.getIdentifier() + ":"));
                                         }
                                     }
-                                    for (BooleanVariableValue booleanParser : variable.getRequiredBooleans()) {
+                                    for (BooleanVariableValueParser booleanParser : variable.getRequiredBooleans()) {
                                         if (subStringAfter.contains(":")) {
-                                            Iterable<Suggestion> suggestions = (Iterable<Suggestion>) booleanParser.getSuggestionProvider().suggestionsFuture(context, input).get();
+                                            Iterable<Suggestion> suggestions = (Iterable<Suggestion>) booleanParser.suggestionProvider().suggestionsFuture(context.get(identifier), input).get();
                                             if (subStringAfter.endsWith(":")) {
                                                 suggestions.forEach(suggestion -> completions.add(Suggestion.suggestion(rawInput + suggestion.suggestion())));
                                             } else {
@@ -167,10 +167,10 @@ public class StringVariableParser implements ArgumentParser<CommandSender, Strin
                         for (CustomStringParser stringParser : variable.getRequiredStrings()) {
                             completions.add(Suggestion.suggestion(variableString + "(" + stringParser.getIdentifier() + ":"));
                         }
-                        for (NumberVariableValueParser numberParser : variable.getRequiredNumbers()) {
+                        for (NumberVariableValue numberParser : variable.getRequiredNumbers()) {
                             completions.add(Suggestion.suggestion(variableString + "(" + numberParser.getIdentifier() + ":"));
                         }
-                        for (BooleanVariableValue booleanParser : variable.getRequiredBooleans()) {
+                        for (BooleanVariableValueParser booleanParser : variable.getRequiredBooleans()) {
                             completions.add(Suggestion.suggestion(variableString + "(" + booleanParser.getIdentifier() + ":"));
                         }
                         for (CommandFlag<Void> flag : variable.getRequiredBooleanFlags()) {
@@ -210,7 +210,7 @@ public class StringVariableParser implements ArgumentParser<CommandSender, Strin
             for (int i = 0; i < 10; i++) {
                 completions.add(Suggestion.suggestion(i + ".0"));
             }
-            main.getUtilManager().sendFancyCommandCompletion(context.sender(), input.input().split(" "), "[Enter Variable / Mathematical Expression]", "[...]");
+            main.getUtilManager().sendFancyCommandCompletion((CommandSender) context.sender(), input.input().split(" "), "[Enter Variable / Mathematical Expression]", "[...]");
 
             if (context.sender() instanceof Player player) {
                 final QuestPlayer questPlayer = main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId());

@@ -15,7 +15,6 @@ import org.incendo.cloud.description.Description;
 import org.incendo.cloud.suggestion.Suggestion;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.BaseCommand;
-import rocks.gravili.notquests.paper.commands.arguments.ItemStackSelectionArgument;
 import rocks.gravili.notquests.paper.commands.arguments.wrappers.ItemStackSelection;
 import rocks.gravili.notquests.paper.managers.data.Category;
 import rocks.gravili.notquests.paper.structs.PredefinedProgressOrder;
@@ -26,6 +25,7 @@ import java.util.Collections;
 import java.util.concurrent.CompletableFuture;
 
 import static org.incendo.cloud.parser.standard.StringParser.stringParser;
+import static rocks.gravili.notquests.paper.commands.arguments.ItemStackSelectionParser.itemStackSelectionParser;
 
 public class CategoryEditCommand extends BaseCommand {
     public CategoryEditCommand(NotQuests notQuests, Command.Builder<CommandSender> builder) {
@@ -186,7 +186,7 @@ public class CategoryEditCommand extends BaseCommand {
 
         commandManager.command(builder.commandDescription(Description.of("Sets the item displayed in the category GUI (default: book)."))
                 .literal("guiItem")
-                .required("material", ItemStackSelectionArgument.of("material", notQuests), Description.of("Material of item displayed in the category GUI."))
+                .required("material", itemStackSelectionParser(notQuests), Description.of("Material of item displayed in the category GUI."))
                 .flag(commandManager.flagBuilder("glow").withDescription(Description.of("Makes the item have the enchanted glow.")))
                 .handler((context) -> {
                     final Category category = context.get("category");
