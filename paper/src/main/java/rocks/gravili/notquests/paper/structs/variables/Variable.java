@@ -24,7 +24,7 @@ import org.bukkit.inventory.ItemStack;
 import org.incendo.cloud.parser.flag.CommandFlag;
 import org.incendo.cloud.suggestion.Suggestion;
 import rocks.gravili.notquests.paper.NotQuests;
-import rocks.gravili.notquests.paper.commands.arguments.variables.BooleanVariableValueParser;
+import rocks.gravili.notquests.paper.commands.arguments.variables.BooleanVariableValue;
 import rocks.gravili.notquests.paper.commands.arguments.variables.CustomStringParser;
 import rocks.gravili.notquests.paper.commands.arguments.variables.NumberVariableValueParser;
 import rocks.gravili.notquests.paper.managers.expressions.NumberExpression;
@@ -44,7 +44,7 @@ public abstract class Variable<T> {
     protected final NotQuests main;
     private final ArrayList<CustomStringParser> requiredStrings;
     private final ArrayList<NumberVariableValueParser> requiredNumbers;
-    private final ArrayList<BooleanVariableValueParser> requiredBooleans;
+    private final ArrayList<BooleanVariableValue> requiredBooleans;
     private final ArrayList<org.incendo.cloud.parser.flag.CommandFlag<Void>> requiredBooleanFlags;
 
     private final ArrayList<String> setOnlyRequiredValues = new ArrayList<>(); //TODO: Implement
@@ -131,7 +131,7 @@ public abstract class Variable<T> {
         requiredNumbers.add(numberVariableValueArgument);
     }
 
-    protected void addRequiredBoolean(final BooleanVariableValueParser booleanArgument){
+    protected void addRequiredBoolean(final BooleanVariableValue booleanArgument){
         requiredBooleans.add(booleanArgument);
     }
 
@@ -147,7 +147,7 @@ public abstract class Variable<T> {
         return requiredNumbers;
     }
 
-    public final ArrayList<BooleanVariableValueParser> getRequiredBooleans(){
+    public final ArrayList<BooleanVariableValue> getRequiredBooleans(){
         return requiredBooleans;
     }
 

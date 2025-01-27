@@ -139,7 +139,7 @@ public class ItemStackListAction extends Action {
                         listAction.setAdditionalNumberArguments(additionalNumberArguments);
 
                         HashMap<String, NumberExpression> additionalBooleanArguments = new HashMap<>();
-                        for (BooleanVariableValueParser booleanParser : variable.getRequiredBooleans()) {
+                        for (BooleanVariableValue booleanParser : variable.getRequiredBooleans()) {
                             additionalBooleanArguments.put(booleanParser.getIdentifier(), new NumberExpression(main, context.get(booleanParser.getIdentifier())));
                         }
                         for (CommandFlag<?> commandFlag : variable.getRequiredBooleanFlags()) {

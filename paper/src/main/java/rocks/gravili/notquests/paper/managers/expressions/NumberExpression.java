@@ -185,7 +185,7 @@ public class NumberExpression {
                                 main.getLogManager().debug("AddNumb: " + key + " val: " + value);
                             }
                         }
-                        for (BooleanVariableValueParser booleanParser : variable.getRequiredBooleans()) {
+                        for (BooleanVariableValue booleanParser : variable.getRequiredBooleans()) {
                             if (booleanParser.getIdentifier().equalsIgnoreCase(key)) {
                                 variable.addAdditionalBooleanArgument(key, new NumberExpression(main, value));
                                 main.getLogManager().debug("AddBool: " + key + " val: " + value);

@@ -38,24 +38,34 @@ public class IntegerParser<C> implements ArgumentParser<C, Integer> {
     private final NotQuests main;
     private Integer withMin = 1;
 
+    private ArgumentParseResult<Integer> parseResult;
     private SuggestionProvider<C> suggestionProvider;
 
-    protected IntegerParser(NotQuests main, Integer withMin, SuggestionProvider<C> suggestionProvider) {
+    protected IntegerParser(NotQuests main, Integer withMin, ArgumentParseResult<Integer> parseResult, SuggestionProvider<C> suggestionProvider) {
         this.main = main;
         this.withMin = withMin;
+        this.parseResult = parseResult;
         this.suggestionProvider = suggestionProvider;
     }
 
+    public static <C> @NonNull ParserDescriptor<C, Integer> integerParserWithArgumentParser(final NotQuests main, Integer withMin, ArgumentParseResult<Integer> parseResult) {
+        return ParserDescriptor.of(new IntegerParser<>(main, withMin, parseResult, null), Integer.class);
+    }
+
     public static <C> @NonNull ParserDescriptor<C, Integer> integerParser(final NotQuests main, Integer withMin, SuggestionProvider<C> suggestionProvider) {
-        return ParserDescriptor.of(new IntegerParser<>(main, withMin, suggestionProvider), Integer.class);
+        return ParserDescriptor.of(new IntegerParser<>(main, withMin, null, suggestionProvider), Integer.class);
     }
 
     public static <C> @NonNull ParserDescriptor<C, Integer> integerParser(final NotQuests main, Integer withMin) {
-        return ParserDescriptor.of(new IntegerParser<>(main, withMin, null), Integer.class);
+        return ParserDescriptor.of(new IntegerParser<>(main, withMin, null, null), Integer.class);
     }
 
     @Override
     public @NonNull ArgumentParseResult<@NonNull Integer> parse(@NonNull CommandContext<@NonNull C> commandContext, @NonNull CommandInput commandInput) {
+        if(parseResult != null) {
+            return parseResult;
+        }
+
         if (commandInput.isEmpty()) {
             return ArgumentParseResult.failure(new IllegalArgumentException("Invalid Integer: " + commandContext));
         }

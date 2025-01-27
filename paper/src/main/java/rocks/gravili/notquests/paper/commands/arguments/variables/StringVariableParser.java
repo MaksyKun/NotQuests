@@ -94,7 +94,7 @@ public class StringVariableParser implements ArgumentParser<CommandSender, Strin
                                     completions.add(Suggestion.suggestion(rawInput + numberParser.getIdentifier() + ":"));
                                 }
                             }
-                            for (BooleanVariableValueParser booleanParser : variable.getRequiredBooleans()) {
+                            for (BooleanVariableValue booleanParser : variable.getRequiredBooleans()) {
                                 if (!rawInput.contains(booleanParser.getIdentifier())) {
                                     completions.add(Suggestion.suggestion(rawInput + booleanParser.getIdentifier() + ":"));
                                 }
@@ -137,7 +137,7 @@ public class StringVariableParser implements ArgumentParser<CommandSender, Strin
                                             completions.add(Suggestion.suggestion(variableString + "(" + numberParser.getIdentifier() + ":"));
                                         }
                                     }
-                                    for (BooleanVariableValueParser booleanParser : variable.getRequiredBooleans()) {
+                                    for (BooleanVariableValue booleanParser : variable.getRequiredBooleans()) {
                                         if (subStringAfter.contains(":")) {
                                             Iterable<Suggestion> suggestions = (Iterable<Suggestion>) booleanParser.getSuggestionProvider().suggestionsFuture(context, input).get();
                                             if (subStringAfter.endsWith(":")) {
@@ -170,7 +170,7 @@ public class StringVariableParser implements ArgumentParser<CommandSender, Strin
                         for (NumberVariableValueParser numberParser : variable.getRequiredNumbers()) {
                             completions.add(Suggestion.suggestion(variableString + "(" + numberParser.getIdentifier() + ":"));
                         }
-                        for (BooleanVariableValueParser booleanParser : variable.getRequiredBooleans()) {
+                        for (BooleanVariableValue booleanParser : variable.getRequiredBooleans()) {
                             completions.add(Suggestion.suggestion(variableString + "(" + booleanParser.getIdentifier() + ":"));
                         }
                         for (CommandFlag<Void> flag : variable.getRequiredBooleanFlags()) {

@@ -220,7 +220,7 @@ public class VariablesManager {
                         variable.setAdditionalNumberArguments(additionalNumberArguments);
 
                         final HashMap<String, NumberExpression> additionalBooleanArguments = new HashMap<>();
-                        for (BooleanVariableValueParser booleanParser : variable.getRequiredBooleans()) {
+                        for (BooleanVariableValue booleanParser : variable.getRequiredBooleans()) {
                             additionalBooleanArguments.put(booleanParser.getIdentifier(), new NumberExpression(main, context.get(booleanParser.getIdentifier())));
                         }
                         for (final CommandFlag<?> commandFlag : variable.getRequiredBooleanFlags()) {
@@ -270,11 +270,11 @@ public class VariablesManager {
             }
             if (variable.getRequiredNumbers() != null) {
                 for (NumberVariableValueParser numberParser : variable.getRequiredNumbers()) {
-                    newBuilder = newBuilder.argument(numberParser, Description.of("Optional Number Argument"));
+                    newBuilder = newBuilder.required(numberParser, Description.of("Optional Number Argument"));
                 }
             }
             if (variable.getRequiredBooleans() != null) {
-                for (BooleanVariableValueParser booleanParser : variable.getRequiredBooleans()) {
+                for (BooleanVariableValue booleanParser : variable.getRequiredBooleans()) {
                     newBuilder = newBuilder.argument(booleanParser, Description.of("Optional Boolean Argument"));
                 }
             }

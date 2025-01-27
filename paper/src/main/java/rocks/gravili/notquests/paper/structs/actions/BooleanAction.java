@@ -35,11 +35,10 @@ import rocks.gravili.notquests.paper.structs.variables.VariableDataType;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 import static org.incendo.cloud.parser.standard.StringParser.stringParser;
-import static rocks.gravili.notquests.paper.commands.arguments.variables.BooleanVariableValueParser.booleanVariableValueParser;
+import static rocks.gravili.notquests.paper.commands.arguments.variables.BooleanVariableValue.booleanVariableValueParser;
 
 public class BooleanAction extends Action {
 
@@ -121,7 +120,7 @@ public class BooleanAction extends Action {
                                 booleanAction.setAdditionalNumberArguments(additionalNumberArguments);
 
                                 HashMap<String, NumberExpression> additionalBooleanArguments = new HashMap<>();
-                                for (BooleanVariableValueParser booleanParser : variable.getRequiredBooleans()) {
+                                for (BooleanVariableValue booleanParser : variable.getRequiredBooleans()) {
                                     additionalBooleanArguments.put(booleanParser.getIdentifier(), new NumberExpression(main, context.get(booleanParser.getIdentifier())));
                                 }
                                 for (CommandFlag<?> commandFlag : variable.getRequiredBooleanFlags()) {

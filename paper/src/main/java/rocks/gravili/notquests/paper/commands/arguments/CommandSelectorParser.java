@@ -50,7 +50,7 @@ public class CommandSelectorParser<C> implements ArgumentParser<C, StringArray> 
         final String[] result = new String[commandInput.input().split(" ").length];
         StringArray finalResult = new StringArray(result);
         for (int i = 0; i < result.length; i++) {
-            result[i] = commandInput.peekString(); // TODO (no context existent: MaksyKun)
+            result[i] = commandInput.peekString(); // TODO: Missing context
         }
         return ArgumentParseResult.success(finalResult);
     }

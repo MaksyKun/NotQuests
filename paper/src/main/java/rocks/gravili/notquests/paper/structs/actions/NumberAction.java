@@ -35,7 +35,6 @@ import rocks.gravili.notquests.paper.structs.variables.VariableDataType;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 import static org.incendo.cloud.parser.standard.StringParser.stringParser;
@@ -112,7 +111,7 @@ public class NumberAction extends Action {
                         numberAction.setAdditionalNumberArguments(additionalNumberArguments);
 
                         HashMap<String, NumberExpression> additionalBooleanArguments = new HashMap<>();
-                        for(BooleanVariableValueParser booleanParser : variable.getRequiredBooleans()){
+                        for(BooleanVariableValue booleanParser : variable.getRequiredBooleans()){
                             additionalBooleanArguments.put(booleanParser.getIdentifier(), new NumberExpression(main, context.get(booleanParser.getIdentifier())));
                         }
                         for(CommandFlag<?> commandFlag : variable.getRequiredBooleanFlags()){

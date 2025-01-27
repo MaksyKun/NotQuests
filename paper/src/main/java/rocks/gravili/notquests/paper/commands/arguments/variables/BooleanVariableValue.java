@@ -29,39 +29,39 @@ import org.incendo.cloud.suggestion.SuggestionProvider;
 import rocks.gravili.notquests.paper.NotQuests;
 
 @Getter
-public class BooleanVariableValueParser<C> implements ArgumentParser<C, BooleanVariableValue> {
+public class BooleanVariableValue implements ArgumentParser<CommandSender, Boolean> {
     private final NotQuests main;
 
     private final String identifier;
     private final StringVariableParser variableParser;
     private final SuggestionProvider<CommandSender> suggestionProvider;
 
-    protected BooleanVariableValueParser(String identifier, StringVariableParser variableParser, SuggestionProvider<CommandSender> suggestionProvider) {
+    protected BooleanVariableValue(String identifier, StringVariableParser variableParser, SuggestionProvider<CommandSender> suggestionProvider) {
         this.main = NotQuests.getInstance();
         this.identifier = identifier;
         this.variableParser = variableParser;
         this.suggestionProvider = suggestionProvider;
     }
 
-    public static @NonNull BooleanVariableValueParser booleanVariableValueParser() {
-        return new BooleanVariableValueParser(null, null, null);
+    public static @NonNull BooleanVariableValue booleanVariableValueParser() {
+        return new BooleanVariableValue(null, null, null);
     }
-    public static @NonNull BooleanVariableValueParser booleanVariableValueParser(String identifier, StringVariableParser variableParser, SuggestionProvider<CommandSender> suggestionProvider) {
-        return new BooleanVariableValueParser(identifier, variableParser, suggestionProvider);
+    public static @NonNull BooleanVariableValue booleanVariableValueParser(String identifier, StringVariableParser variableParser, SuggestionProvider<CommandSender> suggestionProvider) {
+        return new BooleanVariableValue(identifier, variableParser, suggestionProvider);
     }
 
     @Override
-    public @NonNull ArgumentParseResult<@NonNull BooleanVariableValue> parse(@NonNull CommandContext<@NonNull C> commandContext, @NonNull CommandInput commandInput) {
+    public @NonNull ArgumentParseResult<@NonNull Boolean> parse(@NonNull CommandContext<@NonNull CommandSender> commandContext, @NonNull CommandInput commandInput) {
         if (commandInput.isEmpty()) {
             return ArgumentParseResult.failure(new IllegalArgumentException("No input provided"));
         }
         String rawInput = commandInput.input();
-        return ArgumentParseResult.success();
+        return ArgumentParseResult.success(Boolean.parseBoolean(rawInput));
     }
 
 
     @Override
-    public @NonNull SuggestionProvider<C> suggestionProvider() {
+    public @NonNull SuggestionProvider<CommandSender> suggestionProvider() {
         if (suggestionProvider == null) {
             return SuggestionProvider.noSuggestions();
         }

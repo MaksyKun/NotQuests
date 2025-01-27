@@ -63,13 +63,13 @@ public class NQNPCParser<C> implements ArgumentParser<C, NQNPCResult> {
         String rawInput = commandInput.input();
 
         if(allowNone && rawInput.equalsIgnoreCase("none")){
-            // TODO (no context existent: MaksyKun)
+            // TODO: Missing context
             // inputQueue.remove();
             return ArgumentParseResult.success(new NQNPCResult(null, true, false));
         }
 
         if(allowRightClickSelect && rawInput.equalsIgnoreCase("rightClickSelect")){
-            // TODO (no context existent: MaksyKun)
+            // TODO: Missing context
             // inputQueue.remove();
             return ArgumentParseResult.success(new NQNPCResult(null, false, true));
         }
@@ -79,7 +79,7 @@ public class NQNPCParser<C> implements ArgumentParser<C, NQNPCResult> {
         }
 
         Integer foundInteger;
-        for (String npcIdentifier : entries) {
+        for (String npcIdentifier : NotQuests.getInstance().getNPCManager().getAllNPCsString()) {
             if (npcIdentifier.equalsIgnoreCase(rawInput)) {
                 String type = npcIdentifier.split(":")[0];
                 String id = npcIdentifier.split(":")[1];

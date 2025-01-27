@@ -42,6 +42,7 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
 import static org.incendo.cloud.parser.standard.StringArrayParser.stringArrayParser;
 
@@ -63,13 +64,16 @@ public class BetonQuestFireInlineEventAction extends Action {
                       main.getUtilManager().sendFancyCommandCompletion(context.sender(), lastString.input().split(" "), "<Enter new BetonQuest inline event>", "");
                       ArrayList<Suggestion> completions = new ArrayList<>();
                       String rawInput = context.rawInput().input();
-                      String curInput = context.getRawInputJoined().substring(context.getRawInputJoined().indexOf("BetonQuestFireInlineEvent ") + 26); // TODO (no context existent: MaksyKun)
+                      //String curInput = context.getRawInputJoined().substring(context.getRawInputJoined().indexOf("BetonQuestFireInlineEvent ") + 26);
+                      String curInput = rawInput.substring(rawInput.indexOf("BetonQuestFireInlineEvent ") + 26);
                       String[] curInputSplit = curInput.split(" ");
 
                       int length = curInputSplit.length;
                       if (curInput.endsWith(" ")) {
                         length++;
                       }
+
+
                       /*context.getSender().sendMessage(curInput);
                       context.getSender().sendMessage(curInputSplit);
                       context.getSender().sendMessage("Length: " + length);*/
@@ -140,7 +144,7 @@ public class BetonQuestFireInlineEventAction extends Action {
                         }
                       }
 
-                      return completions;
+                      return CompletableFuture.completedFuture(completions);
                     })
             .handler(
                 (context) -> {

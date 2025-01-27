@@ -61,8 +61,11 @@ import static org.incendo.cloud.parser.standard.BooleanParser.booleanParser;
 import static org.incendo.cloud.parser.standard.DurationParser.durationParser;
 import static org.incendo.cloud.parser.standard.IntegerParser.integerParser;
 import static org.incendo.cloud.parser.standard.StringParser.greedyStringParser;
+import static rocks.gravili.notquests.paper.commands.arguments.CategoryParser.categoryParser;
+import static rocks.gravili.notquests.paper.commands.arguments.ItemStackSelectionParser.itemStackSelectionParser;
 import static rocks.gravili.notquests.paper.commands.arguments.NQNPCParser.nqNPCParser;
 import static rocks.gravili.notquests.paper.commands.arguments.ObjectiveParser.objectiveParser;
+import static rocks.gravili.notquests.paper.commands.arguments.variables.BooleanVariableValue.booleanVariableValueParser;
 
 
 public class AdminEditCommands {
@@ -321,7 +324,7 @@ public class AdminEditCommands {
                 }));
 
         manager.command(editBuilder.literal("guiItem")
-                .required("material", ItemStackSelectionArgument.of("material", main), Description.of("Material of item displayed in the Quest take GUI."))
+                .required("material", itemStackSelectionParser(main), Description.of("Material of item displayed in the Quest take GUI."))
                 .flag(
                         manager.flagBuilder("glow")
                                 .withDescription(Description.of("Makes the item have the enchanted glow."))
@@ -368,7 +371,7 @@ public class AdminEditCommands {
                 objectivesBuilder
                         .literal("edit")
                         .required(objectiveIDIdentifier,
-                                ObjectiveSelector.<CommandSender>newBuilder(objectiveIDIdentifier, main, 0).build(),
+                                objectiveParser(main, 0),
                                 Description.of(objectiveIDIdentifier))
                         .literal("objectives", "o");
 
@@ -378,7 +381,7 @@ public class AdminEditCommands {
                 objectivesBuilderLevel1
                         .literal("edit")
                         .required(objectiveIDIdentifier2,
-                                ObjectiveSelector.<CommandSender>newBuilder(objectiveIDIdentifier2, main, 1).build(),
+                                objectiveParser(main, 1),
                                 Description.of(objectiveIDIdentifier2))
                         .literal("objectives", "o");
 
@@ -406,7 +409,7 @@ public class AdminEditCommands {
         manager.command(
                 builder
                         .literal("add")
-                        .required("npc", NQNPCSelector.of("NPC", main, false, true), Description.of("ID of the Citizens NPC to whom the Quest should be attached."))
+                        .required("npc", nqNPCParser(main, false, true), Description.of("ID of the Citizens NPC to whom the Quest should be attached."))
                         .flag(
                                 manager
                                         .flagBuilder("hideInNPC")
@@ -558,7 +561,7 @@ public class AdminEditCommands {
                 }));
 
         manager.command(builder.literal("set")
-                .required("category", CategorySelector.of("category", main), Description.of("New category for this Quest."))
+                .required("category", categoryParser(main), Description.of("New category for this Quest."))
                 .commandDescription(Description.of("Changes the current category of this Quest."))
                 .handler((context) -> {
                     final Quest quest = context.get("quest");
@@ -1196,7 +1199,7 @@ public class AdminEditCommands {
 
         manager.command(editQuestRequirementsBuilder.literal("description")
                 .literal("set")
-                .argument(MiniMessageSelector.<CommandSender>newBuilder("description", main).withPlaceholders().build(), Description.of("Quest requirementdescription")).commandDescription(Description.of("Sets the new description of the Quest requirement."))
+                .required("description", miniMessageParser(), Description.of("Quest requirementdescription")).commandDescription(Description.of("Sets the new description of the Quest requirement."))
                 .handler((context) -> {
                     final Quest quest = context.get("quest");
                     int conditionID = context.get("Requirement ID");
@@ -1219,9 +1222,8 @@ public class AdminEditCommands {
 
         manager.command(editQuestRequirementsBuilder.literal("hidden")
                 .literal("set")
-                .required("hiddenStatusExpression",
-                        BooleanVariableValueArgument.newBuilder("hiddenStatusExpression", main, null),
-                        Description.of("Expression")).commandDescription(Description.of("Sets the new hidden status of the Quest requirement."))
+                //.required("hiddenStatusExpression", booleanVariableValueParser("hiddenStatusExpression", null, ((context, input) -> CompletableFuture.completedFuture(new ArrayList<>()))), Description.of("Expression")).commandDescription(Description.of("Sets the new hidden status of the Quest requirement."))
+                        .required("hiddenStatusExpression", booleanVariableValueParser("hiddenStatusExpression", null, null)).commandDescription(Description.of("Sets the new hidden status of the Quest requirement."))
                 .handler((context) -> {
                     final Quest quest = context.get("quest");
                     int conditionID = context.get("Requirement ID");
@@ -1334,22 +1336,16 @@ public class AdminEditCommands {
 
         final Command.Builder<CommandSender> editObjectiveConditionsBuilder = builder
                 .literal("edit")
-                .argument(IntegerArgument.<CommandSender>newBuilder("Condition ID").withMin(1).withSuggestionsProvider(
-                        (context, input) -> {
-                            final List<String> allArgs = context.getRawInput();
+                .required("Condition ID", integerParser(1), Description.of("Condition ID"), (context, input) -> {
                             main.getUtilManager().sendFancyCommandCompletion(context.sender(), input.input().split(" "), "[Condition ID]", "[...]");
-
                             ArrayList<Suggestion> completions = new ArrayList<>();
-
                             final Objective objective = main.getCommandManager().getObjectiveFromContextAndLevel(context, level);
-
                             for (final Condition condition : objective.getUnlockConditions()) {
                                 completions.add(Suggestion.suggestion("" + condition.getConditionID()));
                             }
-
                             return CompletableFuture.completedFuture(completions);
                         }
-                ));
+                );
 
         manager.command(editObjectiveConditionsBuilder
                 .literal("delete", "remove").commandDescription(Description.of("Removes an unlock condition from this Objective."))
@@ -1373,7 +1369,7 @@ public class AdminEditCommands {
 
         manager.command(editObjectiveConditionsBuilder.literal("description")
                 .literal("set")
-                .argument(MiniMessageSelector.<CommandSender>newBuilder("description", main).withPlaceholders().build(), Description.of("Objective condition description")).commandDescription(Description.of("Sets the new description of the Objective unlock condition."))
+                .required("description", miniMessageParser(), Description.of("Objective condition description")).commandDescription(Description.of("Sets the new description of the Objective unlock condition."))
                 .handler((context) -> {
                     final Objective objective = main.getCommandManager().getObjectiveFromContextAndLevel(context, level);
 
@@ -1403,6 +1399,7 @@ public class AdminEditCommands {
 
         manager.command(editObjectiveConditionsBuilder.literal("hidden")
                 .literal("set")
+                .required("hiddenStatusExpression", booleanVariableValueParser(), ((context, input) -> CompletableFuture.completedFuture(new ArrayList<>())),Description.of("Expression")).commandDescription(Description.of("Sets the new hidden status of the Objective unlock condition."))
                 .argument(
                         BooleanVariableValueArgument.newBuilder("hiddenStatusExpression", main, null),
                         Description.of("Expression")).commandDescription(Description.of("Sets the new hidden status of the Objective unlock condition."))
@@ -1523,22 +1520,17 @@ public class AdminEditCommands {
 
         final Command.Builder<CommandSender> editObjectiveConditionsBuilder = builder
                 .literal("edit")
-                .argument(IntegerArgument.<CommandSender>newBuilder("Condition ID").withMin(1).withSuggestionsProvider(
-                        (context, input) -> {
-                            final List<String> allArgs = context.getRawInput();
+                .required("Condition ID", integerParser(1), Description.of("Condition ID"), (context, input) -> {
                             main.getUtilManager().sendFancyCommandCompletion(context.sender(), input.input().split(" "), "[Condition ID]", "[...]");
 
                             ArrayList<Suggestion> completions = new ArrayList<>();
-
                             final Objective objective = main.getCommandManager().getObjectiveFromContextAndLevel(context, level);
-
                             for (final Condition condition : objective.getProgressConditions()) {
                                 completions.add(Suggestion.suggestion("" + condition.getConditionID()));
                             }
-
                             return CompletableFuture.completedFuture(completions);
                         }
-                ));
+                );
 
         manager.command(editObjectiveConditionsBuilder
                 .literal("delete", "remove").commandDescription(Description.of("Removes an progress condition from this Objective."))
@@ -1562,7 +1554,7 @@ public class AdminEditCommands {
 
         manager.command(editObjectiveConditionsBuilder.literal("description")
                 .literal("set")
-                .argument(MiniMessageSelector.<CommandSender>newBuilder("description", main).withPlaceholders().build(), Description.of("Objective condition description")).commandDescription(Description.of("Sets the new description of the Objective progress condition."))
+                .required("description", miniMessageParser(), Description.of("Objective condition description")).commandDescription(Description.of("Sets the new description of the Objective progress condition."))
                 .handler((context) -> {
                     final Objective objective = main.getCommandManager().getObjectiveFromContextAndLevel(context, level);
 
@@ -1711,13 +1703,9 @@ public class AdminEditCommands {
 
         final Command.Builder<CommandSender> editObjectiveConditionsBuilder = builder
                 .literal("edit")
-                .argument(IntegerArgument.<CommandSender>newBuilder("Condition ID").withMin(1).withSuggestionsProvider(
-                        (context, input) -> {
-                            final List<String> allArgs = context.getRawInput();
+                .required("Condition ID", integerParser(1), Description.of("Condition ID"), (context, input) -> {
                             main.getUtilManager().sendFancyCommandCompletion(context.sender(), input.input().split(" "), "[Condition ID]", "[...]");
-
                             ArrayList<Suggestion> completions = new ArrayList<>();
-
                             final Objective objective = main.getCommandManager().getObjectiveFromContextAndLevel(context, level);
 
                             for (final Condition condition : objective.getCompleteConditions()) {
@@ -1726,7 +1714,7 @@ public class AdminEditCommands {
 
                             return CompletableFuture.completedFuture(completions);
                         }
-                ));
+                );
 
         manager.command(editObjectiveConditionsBuilder
                 .literal("delete", "remove").commandDescription(Description.of("Removes an complete condition from this Objective."))
@@ -1750,7 +1738,7 @@ public class AdminEditCommands {
 
         manager.command(editObjectiveConditionsBuilder.literal("description")
                 .literal("set")
-                .argument(MiniMessageSelector.<CommandSender>newBuilder("description", main).withPlaceholders().build(), Description.of("Objective condition description")).commandDescription(Description.of("Sets the new description of the Objective complete condition."))
+                .required("description", miniMessageParser(), Description.of("Objective condition description")).commandDescription(Description.of("Sets the new description of the Objective complete condition."))
                 .handler((context) -> {
                     final Objective objective = main.getCommandManager().getObjectiveFromContextAndLevel(context, level);
 
