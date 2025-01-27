@@ -18,6 +18,9 @@
 
 package rocks.gravili.notquests.paper.managers.registering;
 
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.minimessage.MiniMessage;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.command.CommandSender;
 import org.incendo.cloud.Command;
 import org.incendo.cloud.context.CommandContext;
@@ -40,6 +43,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Optional;
 
 import static rocks.gravili.notquests.paper.commands.arguments.ObjectiveParser.objectiveParser;
 
@@ -206,12 +210,15 @@ public class ObjectiveManager {
 
 
         final ObjectiveHolder objectiveHolder = main.getCommandManager().getObjectiveHolderFromContextAndLevel(context, level);
-        final String taskDescription =
-                context.flags().getValue(main.getCommandManager().taskDescription, "");
-
+        final Optional<Component> _taskDescription = context.flags().getValue(main.getCommandManager().taskDescription);
+        if(_taskDescription.isEmpty()){
+            context.sender().sendMessage(main.parse("<error>Task description is required!"));
+            return;
+        }
+        String taskDescription = MiniMessage.builder().build().serialize(_taskDescription.get());
         objective.setObjectiveHolder(objectiveHolder);
         objective.setObjectiveID(objectiveHolder.getFreeObjectiveID());
-        if (taskDescription != null && !taskDescription.isBlank()) {
+        if (!taskDescription.isBlank()) {
             objective.setTaskDescription(taskDescription, true);
         }
         context.sender().sendMessage(main.parse("<success>" + getObjectiveType(objective.getClass()) + " Objective successfully added to Quest <highlight>" + objectiveHolder.getIdentifier() + "</highlight>!"));

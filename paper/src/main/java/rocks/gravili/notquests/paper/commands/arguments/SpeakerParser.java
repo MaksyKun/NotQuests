@@ -30,7 +30,6 @@ import org.incendo.cloud.suggestion.SuggestionProvider;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.conversation.Conversation;
 import rocks.gravili.notquests.paper.conversation.Speaker;
-import rocks.gravili.notquests.paper.managers.data.Category;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;

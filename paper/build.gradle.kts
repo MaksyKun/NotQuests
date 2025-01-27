@@ -250,6 +250,7 @@ dependencies {
 
     compileOnly(files("libs/znpcs-5.0.jar")) // No Repo existent
     compileOnly(files("libs/ProjectKorra-1.11.2.jar")) // No Repo existent
+    compileOnly(files("libs/EliteMobs.jar")) // No Repo existent
 
 
     implementation("com.github.Redempt:Crunch:2.0.3")
