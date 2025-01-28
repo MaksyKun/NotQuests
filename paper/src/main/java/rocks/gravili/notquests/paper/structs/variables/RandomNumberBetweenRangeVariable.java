@@ -20,7 +20,7 @@ package rocks.gravili.notquests.paper.structs.variables;
 
 import org.incendo.cloud.suggestion.Suggestion;
 import rocks.gravili.notquests.paper.NotQuests;
-import rocks.gravili.notquests.paper.commands.arguments.variables.NumberVariableValue;
+import rocks.gravili.notquests.paper.commands.arguments.variables.NumberVariableValueParser;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 
 import java.util.List;
@@ -29,8 +29,8 @@ import java.util.Random;
 public class RandomNumberBetweenRangeVariable extends Variable<Integer> {
   public RandomNumberBetweenRangeVariable(NotQuests main) {
     super(main);
-    addRequiredNumber(NumberVariableValue.numberVariableValueParser("min", null, null));
-    addRequiredNumber(NumberVariableValue.numberVariableValueParser("max", null, null));
+    addRequiredNumber(NumberVariableValueParser.of("min", null, null));
+    addRequiredNumber(NumberVariableValueParser.of("max", null, null));
   }
 
   @Override

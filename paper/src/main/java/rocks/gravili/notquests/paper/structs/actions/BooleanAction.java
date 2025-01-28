@@ -28,8 +28,8 @@ import org.incendo.cloud.parser.flag.CommandFlag;
 import org.incendo.cloud.suggestion.Suggestion;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.arguments.variables.BooleanVariableValueParser;
-import rocks.gravili.notquests.paper.commands.arguments.variables.CustomStringParser;
-import rocks.gravili.notquests.paper.commands.arguments.variables.NumberVariableValue;
+import rocks.gravili.notquests.paper.commands.arguments.variables.NumberVariableValueParser;
+import rocks.gravili.notquests.paper.commands.arguments.variables.StringVariableValueParser;
 import rocks.gravili.notquests.paper.managers.expressions.NumberExpression;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 import rocks.gravili.notquests.paper.structs.variables.Variable;
@@ -107,22 +107,20 @@ public class BooleanAction extends Action {
                                         expression, variable.getVariableType());
 
                                 HashMap<String, String> additionalStringArguments = new HashMap<>();
-                                for (CustomStringParser stringParser :
-                                        variable.getRequiredStrings()) {
-                                    additionalStringArguments.put(
-                                            stringParser.getIdentifier(), context.get(stringParser.getIdentifier()));
+                                for (StringVariableValueParser<CommandSender> stringParser : variable.getRequiredStrings()) {
+                                    additionalStringArguments.put(stringParser.getIdentifier(), context.get(stringParser.getIdentifier()));
                                 }
 
                                 booleanAction.setAdditionalStringArguments(additionalStringArguments);
 
                                 HashMap<String, NumberExpression> additionalNumberArguments = new HashMap<>();
-                                for (NumberVariableValue numericParser : variable.getRequiredNumbers()) {
+                                for (NumberVariableValueParser<CommandSender> numericParser : variable.getRequiredNumbers()) {
                                     additionalNumberArguments.put(numericParser.getIdentifier(), new NumberExpression(main, context.get(numericParser.getIdentifier())));
                                 }
                                 booleanAction.setAdditionalNumberArguments(additionalNumberArguments);
 
                                 HashMap<String, NumberExpression> additionalBooleanArguments = new HashMap<>();
-                                for (BooleanVariableValueParser booleanParser : variable.getRequiredBooleans()) {
+                                for (BooleanVariableValueParser<CommandSender> booleanParser : variable.getRequiredBooleans()) {
                                     additionalBooleanArguments.put(booleanParser.getIdentifier(), new NumberExpression(main, context.get(booleanParser.getIdentifier())));
                                 }
                                 for (CommandFlag<?> commandFlag : variable.getRequiredBooleanFlags()) {

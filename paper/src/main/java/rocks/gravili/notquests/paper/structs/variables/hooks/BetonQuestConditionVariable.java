@@ -28,7 +28,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.incendo.cloud.suggestion.Suggestion;
 import rocks.gravili.notquests.paper.NotQuests;
-import rocks.gravili.notquests.paper.commands.arguments.variables.CustomStringParser;
+import rocks.gravili.notquests.paper.commands.arguments.variables.StringVariableValueParser;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 import rocks.gravili.notquests.paper.structs.variables.Variable;
 
@@ -42,13 +42,13 @@ public class BetonQuestConditionVariable extends Variable<Boolean> {
     public BetonQuestConditionVariable(NotQuests main) {
         super(main);
 
-        addRequiredString(CustomStringParser.customStringParser("package", null, (context, lastString) -> {
+        addRequiredString(StringVariableValueParser.of("package", null, (context, lastString) -> {
             final ArrayList<Suggestion> completions = new ArrayList<>(Config.getPackages().keySet().stream().map(Suggestion::suggestion).toList());
             main.getUtilManager().sendFancyCommandCompletion(context.sender(), lastString.input().split(" "), "[Quest Name]", "[...]");
             return CompletableFuture.completedFuture(completions);
         }));
 
-        addRequiredString(CustomStringParser.customStringParser("condition", null,  (context, lastString) -> {
+        addRequiredString(StringVariableValueParser.of("condition", null,  (context, lastString) -> {
                     String packageName = context.get("package");
                     final QuestPackage configPack = Config.getPackages().get(packageName);
                     ConfigurationSection conditionsFileConfiguration =

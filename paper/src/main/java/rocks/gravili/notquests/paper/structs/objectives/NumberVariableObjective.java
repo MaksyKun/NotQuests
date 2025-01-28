@@ -11,8 +11,8 @@ import org.incendo.cloud.parser.flag.CommandFlag;
 import org.incendo.cloud.suggestion.Suggestion;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.arguments.variables.BooleanVariableValueParser;
-import rocks.gravili.notquests.paper.commands.arguments.variables.CustomStringParser;
-import rocks.gravili.notquests.paper.commands.arguments.variables.NumberVariableValue;
+import rocks.gravili.notquests.paper.commands.arguments.variables.NumberVariableValueParser;
+import rocks.gravili.notquests.paper.commands.arguments.variables.StringVariableValueParser;
 import rocks.gravili.notquests.paper.managers.expressions.NumberExpression;
 import rocks.gravili.notquests.paper.structs.ActiveObjective;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
@@ -100,13 +100,13 @@ public class NumberVariableObjective extends Objective { // TODO: Not done yet
                         numberVariableObjective.setProgressNeededExpression(amountExpression);
 
                         HashMap<String, String> additionalStringArguments = new HashMap<>();
-                        for (CustomStringParser stringParser : variable.getRequiredStrings()) {
+                        for (StringVariableValueParser stringParser : variable.getRequiredStrings()) {
                             additionalStringArguments.put(stringParser.getIdentifier(), context.get(stringParser.getIdentifier()));
                         }
                         numberVariableObjective.setAdditionalStringArguments(additionalStringArguments);
 
                         HashMap<String, NumberExpression> additionalNumberArguments = new HashMap<>();
-                        for (NumberVariableValue numberParser : variable.getRequiredNumbers()) {
+                        for (NumberVariableValueParser numberParser : variable.getRequiredNumbers()) {
                             additionalNumberArguments.put(numberParser.getIdentifier(), new NumberExpression(main, context.get(numberParser.getIdentifier())));
                         }
                         numberVariableObjective.setAdditionalNumberArguments(additionalNumberArguments);

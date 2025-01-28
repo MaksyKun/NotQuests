@@ -22,6 +22,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.incendo.cloud.Command;
+import org.incendo.cloud.component.CommandComponent;
+import org.incendo.cloud.component.TypedCommandComponent;
 import org.incendo.cloud.context.CommandContext;
 import org.incendo.cloud.description.Description;
 import org.incendo.cloud.parser.flag.CommandFlag;
@@ -30,8 +32,8 @@ import redempt.crunch.Crunch;
 import redempt.crunch.functional.EvaluationEnvironment;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.arguments.variables.BooleanVariableValueParser;
-import rocks.gravili.notquests.paper.commands.arguments.variables.CustomStringParser;
-import rocks.gravili.notquests.paper.commands.arguments.variables.NumberVariableValue;
+import rocks.gravili.notquests.paper.commands.arguments.variables.NumberVariableValueParser;
+import rocks.gravili.notquests.paper.commands.arguments.variables.StringVariableValueParser;
 import rocks.gravili.notquests.paper.managers.expressions.NumberExpression;
 import rocks.gravili.notquests.paper.structs.variables.*;
 import rocks.gravili.notquests.paper.structs.variables.hooks.*;
@@ -210,19 +212,19 @@ public class VariablesManager {
 
 
                         final HashMap<String, String> additionalStringArguments = new HashMap<>();
-                        for (CustomStringParser stringParser : variable.getRequiredStrings()) {
+                        for (StringVariableValueParser<CommandSender> stringParser : variable.getRequiredStrings()) {
                             additionalStringArguments.put(stringParser.getIdentifier(), context.get(stringParser.getIdentifier()));
                         }
                         variable.setAdditionalStringArguments(additionalStringArguments);
 
                         final HashMap<String, NumberExpression> additionalNumberArguments = new HashMap<>();
-                        for (NumberVariableValue numberParser : variable.getRequiredNumbers()) {
+                        for (NumberVariableValueParser<CommandSender> numberParser : variable.getRequiredNumbers()) {
                             additionalNumberArguments.put(numberParser.getIdentifier(), new NumberExpression(main, context.get(numberParser.getIdentifier())));
                         }
                         variable.setAdditionalNumberArguments(additionalNumberArguments);
 
                         final HashMap<String, NumberExpression> additionalBooleanArguments = new HashMap<>();
-                        for (BooleanVariableValueParser booleanParser : variable.getRequiredBooleans()) {
+                        for (BooleanVariableValueParser<CommandSender> booleanParser : variable.getRequiredBooleans()) {
                             additionalBooleanArguments.put(booleanParser.getIdentifier(), new NumberExpression(main, context.get(booleanParser.getIdentifier())));
                         }
                         for (final CommandFlag<?> commandFlag : variable.getRequiredBooleanFlags()) {
@@ -266,18 +268,18 @@ public class VariablesManager {
         Variable<?> variable = getVariableFromString(variableString);
         if (variable != null) {
             if (variable.getRequiredStrings() != null) {
-                for (CustomStringParser stringParser : variable.getRequiredStrings()) {
-                    newBuilder = newBuilder.required(stringParser, Description.of("Optional String Argument"));
+                for (StringVariableValueParser<CommandSender> stringParser : variable.getRequiredStrings()) {
+                    newBuilder = newBuilder.required(stringParser.getIdentifier(), stringParser.getParserDescriptor(), Description.of("Optional String Argument"));
                 }
             }
             if (variable.getRequiredNumbers() != null) {
-                for (NumberVariableValue numberParser : variable.getRequiredNumbers()) {
-                    newBuilder = newBuilder.required(numberParser, Description.of("Optional Number Argument"));
+                for (NumberVariableValueParser<CommandSender> numberParser : variable.getRequiredNumbers()) {
+                    newBuilder = newBuilder.required(numberParser.getIdentifier(), numberParser.getParserDescriptor(), Description.of("Optional Number Argument"));
                 }
             }
             if (variable.getRequiredBooleans() != null) {
-                for (BooleanVariableValueParser booleanParser : variable.getRequiredBooleans()) {
-                    newBuilder = newBuilder.argument(booleanParser, Description.of("Optional Boolean Argument"));
+                for (BooleanVariableValueParser<CommandSender> booleanParser : variable.getRequiredBooleans()) {
+                    newBuilder = newBuilder.required(booleanParser.getIdentifier(), booleanParser.getParserDescriptor(), Description.of("Optional Boolean Argument"));
                 }
             }
             if (variable.getRequiredBooleanFlags() != null) {

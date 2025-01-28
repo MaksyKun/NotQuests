@@ -28,8 +28,8 @@ import org.incendo.cloud.parser.flag.CommandFlag;
 import org.incendo.cloud.suggestion.Suggestion;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.arguments.variables.BooleanVariableValueParser;
-import rocks.gravili.notquests.paper.commands.arguments.variables.CustomStringParser;
-import rocks.gravili.notquests.paper.commands.arguments.variables.NumberVariableValue;
+import rocks.gravili.notquests.paper.commands.arguments.variables.NumberVariableValueParser;
+import rocks.gravili.notquests.paper.commands.arguments.variables.StringVariableValueParser;
 import rocks.gravili.notquests.paper.managers.expressions.NumberExpression;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 import rocks.gravili.notquests.paper.structs.variables.Variable;
@@ -40,7 +40,7 @@ import java.util.HashMap;
 import java.util.concurrent.CompletableFuture;
 
 import static org.incendo.cloud.parser.standard.StringParser.stringParser;
-import static rocks.gravili.notquests.paper.commands.arguments.variables.NumberVariableValue.numberVariableValueParser;
+import static rocks.gravili.notquests.paper.commands.arguments.variables.NumberVariableValueParser.numberVariableParser;
 
 public class NumberCondition extends Condition {
 
@@ -89,7 +89,7 @@ public class NumberCondition extends Condition {
                         main.getUtilManager().sendFancyCommandCompletion(context.sender(), lastString.input().split(" "), "[List Operator]", "[...]");
                         return CompletableFuture.completedFuture(completions);
                     })
-                    .required("amount", numberVariableValueParser("amount", null, null), Description.of("Amount"))
+                    .required("amount", numberVariableParser("amount", null), Description.of("Amount"))
                     .handler((context) -> {
 
                         final String amountExpression = context.get("amount");
@@ -107,13 +107,13 @@ public class NumberCondition extends Condition {
 
 
                         HashMap<String, String> additionalStringArguments = new HashMap<>();
-                        for(CustomStringParser stringParser : variable.getRequiredStrings()){
+                        for(StringVariableValueParser stringParser : variable.getRequiredStrings()){
                             additionalStringArguments.put(stringParser.getIdentifier(), context.get(stringParser.getIdentifier()));
                         }
                         numberCondition.setAdditionalStringArguments(additionalStringArguments);
 
                         HashMap<String, NumberExpression> additionalNumberArguments = new HashMap<>();
-                        for(NumberVariableValue numberParser : variable.getRequiredNumbers()){
+                        for(NumberVariableValueParser numberParser : variable.getRequiredNumbers()){
                             additionalNumberArguments.put(numberParser.getIdentifier(), new NumberExpression(main, context.get(numberParser.getIdentifier())));
                         }
                         numberCondition.setAdditionalNumberArguments(additionalNumberArguments);

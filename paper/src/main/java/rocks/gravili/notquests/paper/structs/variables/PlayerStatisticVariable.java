@@ -21,7 +21,7 @@ package rocks.gravili.notquests.paper.structs.variables;
 import org.bukkit.Statistic;
 import org.incendo.cloud.suggestion.Suggestion;
 import rocks.gravili.notquests.paper.NotQuests;
-import rocks.gravili.notquests.paper.commands.arguments.variables.CustomStringParser;
+import rocks.gravili.notquests.paper.commands.arguments.variables.StringVariableValueParser;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 
 import java.util.ArrayList;
@@ -32,7 +32,7 @@ public class PlayerStatisticVariable extends Variable<Integer> {
     public PlayerStatisticVariable(NotQuests main) {
         super(main);
         setCanSetValue(true);
-        addRequiredString(CustomStringParser.customStringParser("Statistic", null, (context, lastString) -> {
+        addRequiredString(StringVariableValueParser.of("Statistic", null, (context, lastString) -> {
             main.getUtilManager().sendFancyCommandCompletion(context.sender(), lastString.input().split(" "), "[Statistic]", "[...]");
 
             final ArrayList<Suggestion> suggestions = new ArrayList<>();

@@ -18,13 +18,14 @@
 
 package rocks.gravili.notquests.paper.managers.expressions;
 
+import org.bukkit.command.CommandSender;
 import redempt.crunch.CompiledExpression;
 import redempt.crunch.Crunch;
 import redempt.crunch.functional.EvaluationEnvironment;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.arguments.variables.BooleanVariableValueParser;
-import rocks.gravili.notquests.paper.commands.arguments.variables.CustomStringParser;
-import rocks.gravili.notquests.paper.commands.arguments.variables.NumberVariableValue;
+import rocks.gravili.notquests.paper.commands.arguments.variables.NumberVariableValueParser;
+import rocks.gravili.notquests.paper.commands.arguments.variables.StringVariableValueParser;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 import rocks.gravili.notquests.paper.structs.variables.Variable;
 import rocks.gravili.notquests.paper.structs.variables.VariableDataType;
@@ -175,19 +176,19 @@ public class NumberExpression {
                         final String[] split = extraArgument.split(":");
                         final String key = split[0];
                         final String value = split[1];
-                        for (CustomStringParser stringParser : variable.getRequiredStrings()) {
+                        for (StringVariableValueParser<CommandSender> stringParser : variable.getRequiredStrings()) {
                             if (stringParser.getIdentifier().equalsIgnoreCase(key)) {
                                 variable.addAdditionalStringArgument(key, value);
                                 main.getLogManager().debug("AddString: " + key + " val: " + value);
                             }
                         }
-                        for (NumberVariableValue numberParser : variable.getRequiredNumbers()) {
+                        for (NumberVariableValueParser<CommandSender> numberParser : variable.getRequiredNumbers()) {
                             if (numberParser.getIdentifier().equalsIgnoreCase(key)) {
                                 variable.addAdditionalNumberArgument(key, new NumberExpression(main, value));
                                 main.getLogManager().debug("AddNumb: " + key + " val: " + value);
                             }
                         }
-                        for (BooleanVariableValueParser booleanParser : variable.getRequiredBooleans()) {
+                        for (BooleanVariableValueParser<CommandSender> booleanParser : variable.getRequiredBooleans()) {
                             if (booleanParser.getIdentifier().equalsIgnoreCase(key)) {
                                 variable.addAdditionalBooleanArgument(key, new NumberExpression(main, value));
                                 main.getLogManager().debug("AddBool: " + key + " val: " + value);

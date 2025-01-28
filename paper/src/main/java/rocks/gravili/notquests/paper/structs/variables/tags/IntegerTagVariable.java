@@ -20,7 +20,7 @@ package rocks.gravili.notquests.paper.structs.variables.tags;
 
 import org.incendo.cloud.suggestion.Suggestion;
 import rocks.gravili.notquests.paper.NotQuests;
-import rocks.gravili.notquests.paper.commands.arguments.variables.CustomStringParser;
+import rocks.gravili.notquests.paper.commands.arguments.variables.StringVariableValueParser;
 import rocks.gravili.notquests.paper.managers.tags.Tag;
 import rocks.gravili.notquests.paper.managers.tags.TagType;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
@@ -35,7 +35,7 @@ public class IntegerTagVariable extends Variable<Integer> {
     public IntegerTagVariable(final NotQuests main) {
         super(main);
 
-        addRequiredString(CustomStringParser.customStringParser("TagName", null, (context, lastString) -> {
+        addRequiredString(StringVariableValueParser.of("TagName", null, (context, lastString) -> {
             main.getUtilManager().sendFancyCommandCompletion(context.sender(), lastString.input().split(" "), "[Permission Node]", "[...]");
             ArrayList<Suggestion> suggestions = new ArrayList<>();
             for (final Tag tag : main.getTagManager().getTags()) {

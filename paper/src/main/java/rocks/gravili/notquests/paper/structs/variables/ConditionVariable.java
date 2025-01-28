@@ -25,7 +25,7 @@ import redempt.crunch.CompiledExpression;
 import redempt.crunch.Crunch;
 import redempt.crunch.functional.EvaluationEnvironment;
 import rocks.gravili.notquests.paper.NotQuests;
-import rocks.gravili.notquests.paper.commands.arguments.variables.CustomStringParser;
+import rocks.gravili.notquests.paper.commands.arguments.variables.StringVariableValueParser;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 
 import java.util.ArrayList;
@@ -44,7 +44,7 @@ public class ConditionVariable extends Variable<Boolean> {
     public ConditionVariable(NotQuests main) {
         super(main);
 
-        addRequiredString(CustomStringParser.customStringParser("Conditions", null, (context, lastString) -> {
+        addRequiredString(StringVariableValueParser.of("Conditions", null, (context, lastString) -> {
             main.getUtilManager().sendFancyCommandCompletion(context.sender(), lastString.input().split(" "), "[Conditions(s) expression]", "[...]");
 
             ArrayList<Suggestion> suggestions = new ArrayList<>();

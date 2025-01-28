@@ -20,7 +20,7 @@ package rocks.gravili.notquests.paper.structs.variables;
 
 import org.incendo.cloud.suggestion.Suggestion;
 import rocks.gravili.notquests.paper.NotQuests;
-import rocks.gravili.notquests.paper.commands.arguments.variables.CustomStringParser;
+import rocks.gravili.notquests.paper.commands.arguments.variables.StringVariableValueParser;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 
 import java.util.ArrayList;
@@ -34,7 +34,7 @@ public class PermissionVariable extends Variable<Boolean> {
             setCanSetValue(true);
         }
 
-        addRequiredString(CustomStringParser.customStringParser("Permission", null, (context, lastString) -> {
+        addRequiredString(StringVariableValueParser.of("Permission", null, (context, lastString) -> {
             main.getUtilManager().sendFancyCommandCompletion(context.sender(), lastString.input().split(" "), "[Permission Node]", "[...]");
             ArrayList<Suggestion> suggestions = new ArrayList<>();
             suggestions.add(Suggestion.suggestion("<Enter Permission node>"));

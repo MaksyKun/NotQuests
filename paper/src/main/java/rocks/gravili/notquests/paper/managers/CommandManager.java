@@ -49,7 +49,7 @@ import rocks.gravili.notquests.paper.commands.arguments.MultiActionsParser;
 import rocks.gravili.notquests.paper.commands.arguments.NQNPCParser;
 import rocks.gravili.notquests.paper.commands.arguments.variables.BooleanVariableValueParser;
 import rocks.gravili.notquests.paper.commands.arguments.variables.NumberVariableValueParser;
-import rocks.gravili.notquests.paper.commands.arguments.variables.StringVariableParser;
+import rocks.gravili.notquests.paper.commands.arguments.variables.StringVariableValueParser;
 import rocks.gravili.notquests.paper.commands.category.item.AdminItemsCommand;
 import rocks.gravili.notquests.paper.commands.category.tag.AdminTagCommands;
 import rocks.gravili.notquests.paper.conversation.ConversationManager;
@@ -366,7 +366,7 @@ public class CommandManager {
                 cloudBrigadierManager.setNativeNumberSuggestions(false);
 
                 cloudBrigadierManager.registerMapping(
-                        new TypeToken<StringVariableParser<CommandSender>>() {
+                        new TypeToken<StringVariableValueParser<CommandSender>>() {
                         }, builder -> builder.cloudSuggestions().toConstant(StringArgumentType.greedyString()));
 
                 // Greedy string to prevent false, red brigardier color when entering special symbols like a

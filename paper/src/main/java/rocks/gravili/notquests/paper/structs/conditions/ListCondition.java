@@ -28,9 +28,8 @@ import org.incendo.cloud.parser.flag.CommandFlag;
 import org.incendo.cloud.suggestion.Suggestion;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.arguments.variables.BooleanVariableValueParser;
-import rocks.gravili.notquests.paper.commands.arguments.variables.CustomStringParser;
-import rocks.gravili.notquests.paper.commands.arguments.variables.ListVariableValueArgument;
-import rocks.gravili.notquests.paper.commands.arguments.variables.NumberVariableValue;
+import rocks.gravili.notquests.paper.commands.arguments.variables.NumberVariableValueParser;
+import rocks.gravili.notquests.paper.commands.arguments.variables.StringVariableValueParser;
 import rocks.gravili.notquests.paper.managers.expressions.NumberExpression;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 import rocks.gravili.notquests.paper.structs.variables.Variable;
@@ -42,6 +41,7 @@ import java.util.HashMap;
 import java.util.concurrent.CompletableFuture;
 
 import static org.incendo.cloud.parser.standard.StringParser.stringParser;
+import static rocks.gravili.notquests.paper.commands.arguments.variables.ListVariableValueParser.listVariableParser;
 
 public class ListCondition extends Condition {
 
@@ -86,7 +86,7 @@ public class ListCondition extends Condition {
                         main.getUtilManager().sendFancyCommandCompletion(context.sender(), lastString.input().split(" "), "[List Operator]", "[...]");
                         return CompletableFuture.completedFuture(completions);
                     })
-                    .required("expression", ListVariableValueArgument.newBuilder("expression", main, variable), Description.of("Expression"))
+                    .required("expression", listVariableParser("expression", variable), Description.of("Expression"))
                     .handler((context) -> {
 
                         final String expression = context.get("expression");
@@ -100,13 +100,13 @@ public class ListCondition extends Condition {
 
 
                         HashMap<String, String> additionalStringArguments = new HashMap<>();
-                        for (CustomStringParser stringParser : variable.getRequiredStrings()) {
+                        for (StringVariableValueParser stringParser : variable.getRequiredStrings()) {
                             additionalStringArguments.put(stringParser.getIdentifier(), context.get(stringParser.getIdentifier()));
                         }
                         listCondition.setAdditionalStringArguments(additionalStringArguments);
 
                         HashMap<String, NumberExpression> additionalNumberArguments = new HashMap<>();
-                        for (NumberVariableValue numberParser : variable.getRequiredNumbers()) {
+                        for (NumberVariableValueParser numberParser : variable.getRequiredNumbers()) {
                             additionalNumberArguments.put(numberParser.getIdentifier(), new NumberExpression(main, context.get(numberParser.getIdentifier())));
                         }
                         listCondition.setAdditionalNumberArguments(additionalNumberArguments);

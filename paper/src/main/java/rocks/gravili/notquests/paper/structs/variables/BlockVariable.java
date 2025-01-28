@@ -25,8 +25,8 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.incendo.cloud.suggestion.Suggestion;
 import rocks.gravili.notquests.paper.NotQuests;
-import rocks.gravili.notquests.paper.commands.arguments.variables.CustomStringParser;
-import rocks.gravili.notquests.paper.commands.arguments.variables.NumberVariableValue;
+import rocks.gravili.notquests.paper.commands.arguments.variables.NumberVariableValueParser;
+import rocks.gravili.notquests.paper.commands.arguments.variables.StringVariableValueParser;
 import rocks.gravili.notquests.paper.managers.items.NQItem;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 
@@ -41,7 +41,7 @@ public class BlockVariable extends Variable<String> {
         super(main);
         setCanSetValue(true);
 
-        addRequiredString(CustomStringParser.customStringParser("world", null, (context, input) -> {
+        addRequiredString(StringVariableValueParser.of("world", null, (context, input) -> {
             main.getUtilManager().sendFancyCommandCompletion(context.sender(), input.input().split(" "), "[World Name]", "[...]");
             ArrayList<Suggestion> suggestions = new ArrayList<>();
             for (World world : Bukkit.getWorlds()) {
@@ -50,9 +50,9 @@ public class BlockVariable extends Variable<String> {
             return CompletableFuture.completedFuture(suggestions);
         }));
 
-        addRequiredNumber(NumberVariableValue.numberVariableValueParser("x", null, null));
-        addRequiredNumber(NumberVariableValue.numberVariableValueParser("y", null, null));
-        addRequiredNumber(NumberVariableValue.numberVariableValueParser("z", null, null));
+        addRequiredNumber(NumberVariableValueParser.of("x", null));
+        addRequiredNumber(NumberVariableValueParser.of("x", null));
+        addRequiredNumber(NumberVariableValueParser.of("x", null));
     }
 
 
@@ -64,8 +64,7 @@ public class BlockVariable extends Variable<String> {
         double y = getRequiredNumberValue("y", questPlayer);
         double z = getRequiredNumberValue("z", questPlayer);
         if (world == null) {
-            main.getLogManager()
-                    .warn(
+            main.getLogManager().warn(
                             "Error: cannot get value of chest inventory variable, because the world "
                                     + worldName
                                     + " does not exist.");

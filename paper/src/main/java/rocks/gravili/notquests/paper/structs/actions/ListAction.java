@@ -28,9 +28,8 @@ import org.incendo.cloud.parser.flag.CommandFlag;
 import org.incendo.cloud.suggestion.Suggestion;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.arguments.variables.BooleanVariableValueParser;
-import rocks.gravili.notquests.paper.commands.arguments.variables.CustomStringParser;
-import rocks.gravili.notquests.paper.commands.arguments.variables.ListVariableValueArgument;
-import rocks.gravili.notquests.paper.commands.arguments.variables.NumberVariableValue;
+import rocks.gravili.notquests.paper.commands.arguments.variables.NumberVariableValueParser;
+import rocks.gravili.notquests.paper.commands.arguments.variables.StringVariableValueParser;
 import rocks.gravili.notquests.paper.managers.expressions.NumberExpression;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 import rocks.gravili.notquests.paper.structs.variables.Variable;
@@ -43,6 +42,7 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 import static org.incendo.cloud.parser.standard.StringParser.stringParser;
+import static rocks.gravili.notquests.paper.commands.arguments.variables.ListVariableValueParser.listVariableParser;
 
 
 public class ListAction extends Action {
@@ -89,7 +89,7 @@ public class ListAction extends Action {
                         main.getUtilManager().sendFancyCommandCompletion(context.sender(), lastString.input().split(" "), "[Operator]", "[...]");
                         return CompletableFuture.completedFuture(completions);
                     })
-                    .argument(ListVariableValueArgument.newBuilder("expression", main, variable), ArgumentDescription.of("Expression"))
+                    .required("expression", listVariableParser("expression", variable), Description.of("Expression"))
                     .handler((context) -> {
                         final String expression = context.get("expression");
                         final String operator = context.get("operator");
@@ -101,19 +101,19 @@ public class ListAction extends Action {
 
 
                         HashMap<String, String> additionalStringArguments = new HashMap<>();
-                        for(CustomStringParser stringParser : variable.getRequiredStrings()){
+                        for(StringVariableValueParser<CommandSender> stringParser : variable.getRequiredStrings()){
                             additionalStringArguments.put(stringParser.getIdentifier(), context.get(stringParser.getIdentifier()));
                         }
                         listAction.setAdditionalStringArguments(additionalStringArguments);
 
                         HashMap<String, NumberExpression> additionalNumberArguments = new HashMap<>();
-                        for(NumberVariableValue numberParser : variable.getRequiredNumbers()){
+                        for(NumberVariableValueParser<CommandSender> numberParser : variable.getRequiredNumbers()){
                             additionalNumberArguments.put(numberParser.getIdentifier(), new NumberExpression(main, context.get(numberParser.getIdentifier())));
                         }
                         listAction.setAdditionalNumberArguments(additionalNumberArguments);
 
                         HashMap<String, NumberExpression> additionalBooleanArguments = new HashMap<>();
-                        for(BooleanVariableValueParser booleanParser : variable.getRequiredBooleans()){
+                        for(BooleanVariableValueParser<CommandSender> booleanParser : variable.getRequiredBooleans()){
                             additionalBooleanArguments.put(booleanParser.getIdentifier(), new NumberExpression(main, context.get(booleanParser.getIdentifier())));
                         }
                         for(CommandFlag<?> commandFlag : variable.getRequiredBooleanFlags()){

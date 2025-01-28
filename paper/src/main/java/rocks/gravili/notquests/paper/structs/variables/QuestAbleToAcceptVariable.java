@@ -20,7 +20,7 @@ package rocks.gravili.notquests.paper.structs.variables;
 
 import org.incendo.cloud.suggestion.Suggestion;
 import rocks.gravili.notquests.paper.NotQuests;
-import rocks.gravili.notquests.paper.commands.arguments.variables.CustomStringParser;
+import rocks.gravili.notquests.paper.commands.arguments.variables.StringVariableValueParser;
 import rocks.gravili.notquests.paper.structs.*;
 import rocks.gravili.notquests.paper.structs.conditions.Condition;
 import rocks.gravili.notquests.paper.structs.conditions.Condition.ConditionResult;
@@ -37,7 +37,7 @@ import java.util.concurrent.TimeUnit;
 public class QuestAbleToAcceptVariable extends Variable<Boolean> {
     public QuestAbleToAcceptVariable(NotQuests main) {
         super(main);
-        addRequiredString(CustomStringParser.customStringParser("Quest to check", null, (context, lastString) -> {
+        addRequiredString(StringVariableValueParser.of("Quest to check", null, (context, lastString) -> {
             main.getUtilManager().sendFancyCommandCompletion(context.sender(), lastString.input().split(" "), "[Quest Name]", "[...]");
             ArrayList<Suggestion> suggestions = new ArrayList<>();
             for (Quest quest : main.getQuestManager().getAllQuests()) {

@@ -21,7 +21,7 @@ package rocks.gravili.notquests.paper.structs.variables.hooks;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.incendo.cloud.suggestion.Suggestion;
 import rocks.gravili.notquests.paper.NotQuests;
-import rocks.gravili.notquests.paper.commands.arguments.variables.CustomStringParser;
+import rocks.gravili.notquests.paper.commands.arguments.variables.StringVariableValueParser;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 import rocks.gravili.notquests.paper.structs.variables.Variable;
 
@@ -33,7 +33,7 @@ public class PlaceholderAPIStringVariable extends Variable<String> {
 
     public PlaceholderAPIStringVariable(NotQuests main) {
         super(main);
-        addRequiredString(CustomStringParser.customStringParser("Placeholder", null, (context, lastString) -> {
+        addRequiredString(StringVariableValueParser.of("Placeholder", null, (context, lastString) -> {
             main.getUtilManager().sendFancyCommandCompletion(context.sender(), lastString.input().split(" "), "[Quest Name]", "[...]");
             ArrayList<Suggestion> suggestions = new ArrayList<>();
             for (String identifier : PlaceholderAPI.getRegisteredIdentifiers()) {

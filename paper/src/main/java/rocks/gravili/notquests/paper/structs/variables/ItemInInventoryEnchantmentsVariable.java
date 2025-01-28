@@ -6,7 +6,7 @@ import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.incendo.cloud.suggestion.Suggestion;
 import rocks.gravili.notquests.paper.NotQuests;
-import rocks.gravili.notquests.paper.commands.arguments.variables.CustomStringParser;
+import rocks.gravili.notquests.paper.commands.arguments.variables.StringVariableValueParser;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 
 import java.util.ArrayList;
@@ -19,7 +19,7 @@ public class ItemInInventoryEnchantmentsVariable extends Variable<String[]> {
         super(main);
         setCanSetValue(false); // TODO: Add that to apply enchantments
 
-        addRequiredString(CustomStringParser.customStringParser("ItemSlot", null, (context, lastString) -> {
+        addRequiredString(StringVariableValueParser.of("ItemSlot", null, (context, lastString) -> {
             main.getUtilManager().sendFancyCommandCompletion(context.sender(), lastString.input().split(" "), "[Item Slot ID / Equipment Slot Name]", "[...]");
             ArrayList<Suggestion> suggestions = new ArrayList<>();
             for (final EquipmentSlot equipmentSlot : EquipmentSlot.values()) {

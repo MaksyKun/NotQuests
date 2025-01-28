@@ -20,7 +20,7 @@ package rocks.gravili.notquests.paper.structs.variables;
 
 import org.incendo.cloud.suggestion.Suggestion;
 import rocks.gravili.notquests.paper.NotQuests;
-import rocks.gravili.notquests.paper.commands.arguments.variables.NumberVariableValue;
+import rocks.gravili.notquests.paper.commands.arguments.variables.NumberVariableValueParser;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 
 import java.util.List;
@@ -30,7 +30,7 @@ public class ChanceVariable extends Variable<Boolean> {
   public ChanceVariable(NotQuests main) {
     super(main);
 
-    addRequiredNumber(NumberVariableValue.numberVariableValueParser("chance", null, null));
+    addRequiredNumber(NumberVariableValueParser.of("chance", null));
   }
 
   @Override

@@ -20,7 +20,7 @@ package rocks.gravili.notquests.paper.structs.variables.reflectionVariables;
 
 import org.incendo.cloud.suggestion.Suggestion;
 import rocks.gravili.notquests.paper.NotQuests;
-import rocks.gravili.notquests.paper.commands.arguments.variables.CustomStringParser;
+import rocks.gravili.notquests.paper.commands.arguments.variables.StringVariableValueParser;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 import rocks.gravili.notquests.paper.structs.variables.Variable;
 
@@ -34,14 +34,14 @@ public class ReflectionStaticDoubleVariable extends Variable<Double> {
         super(main);
         setCanSetValue(true);
 
-        addRequiredString(CustomStringParser.customStringParser("Class Path", null, (context, lastString) -> {
+        addRequiredString(StringVariableValueParser.of("Class Path", null, (context, lastString) -> {
             main.getUtilManager().sendFancyCommandCompletion(context.sender(), lastString.input().split(" "), "[Quest Name]", "[...]");
             ArrayList<Suggestion> suggestions = new ArrayList<>();
             suggestions.add(Suggestion.suggestion("<Enter class path>"));
             return CompletableFuture.completedFuture(suggestions);
         }));
 
-        addRequiredString(CustomStringParser.customStringParser("Field", null, (context, lastString) -> {
+        addRequiredString(StringVariableValueParser.of("Field", null, (context, lastString) -> {
                     main.getUtilManager().sendFancyCommandCompletion(context.sender(), lastString.input().split(" "), "[Quest Name]", "[...]");
                     ArrayList<Suggestion> suggestions = new ArrayList<>();
                     suggestions.add(Suggestion.suggestion("<Enter field name>"));

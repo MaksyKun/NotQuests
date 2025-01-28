@@ -20,13 +20,14 @@ package rocks.gravili.notquests.paper.structs.variables;
 
 import lombok.Setter;
 import org.bukkit.Bukkit;
+import org.bukkit.command.CommandSender;
 import org.bukkit.inventory.ItemStack;
 import org.incendo.cloud.parser.flag.CommandFlag;
 import org.incendo.cloud.suggestion.Suggestion;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.arguments.variables.BooleanVariableValueParser;
-import rocks.gravili.notquests.paper.commands.arguments.variables.CustomStringParser;
-import rocks.gravili.notquests.paper.commands.arguments.variables.NumberVariableValue;
+import rocks.gravili.notquests.paper.commands.arguments.variables.NumberVariableValueParser;
+import rocks.gravili.notquests.paper.commands.arguments.variables.StringVariableValueParser;
 import rocks.gravili.notquests.paper.managers.expressions.NumberExpression;
 import rocks.gravili.notquests.paper.structs.ActiveObjective;
 import rocks.gravili.notquests.paper.structs.ActiveQuest;
@@ -42,9 +43,9 @@ import java.util.List;
 
 public abstract class Variable<T> {
     protected final NotQuests main;
-    private final ArrayList<CustomStringParser> requiredStrings;
-    private final ArrayList<NumberVariableValue> requiredNumbers;
-    private final ArrayList<BooleanVariableValueParser> requiredBooleans;
+    private final ArrayList<StringVariableValueParser<CommandSender>> requiredStrings;
+    private final ArrayList<NumberVariableValueParser<CommandSender>> requiredNumbers;
+    private final ArrayList<BooleanVariableValueParser<CommandSender>> requiredBooleans;
     private final ArrayList<org.incendo.cloud.parser.flag.CommandFlag<Void>> requiredBooleanFlags;
 
     private final ArrayList<String> setOnlyRequiredValues = new ArrayList<>(); //TODO: Implement
@@ -70,7 +71,7 @@ public abstract class Variable<T> {
         additionalBooleanArguments = new HashMap<>();
 
 
-        Class<T> typeOf = (Class<T>) ((ParameterizedType)getClass().getGenericSuperclass()).getActualTypeArguments()[0];
+        Class<T> typeOf = (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
         if(typeOf == String.class || typeOf == Character.class){
             variableDataType = VariableDataType.STRING;
         }else if(typeOf == Boolean.class){
@@ -123,15 +124,15 @@ public abstract class Variable<T> {
         this.canSetValue = canSetValue;
     }
 
-    protected void addRequiredString(final CustomStringParser stringArgument) {
+    protected void addRequiredString(final StringVariableValueParser<CommandSender> stringArgument) {
         requiredStrings.add(stringArgument);
     }
 
-    protected void addRequiredNumber(final NumberVariableValue numberVariableValueArgument){
+    protected void addRequiredNumber(final NumberVariableValueParser<CommandSender> numberVariableValueArgument){
         requiredNumbers.add(numberVariableValueArgument);
     }
 
-    protected void addRequiredBoolean(final BooleanVariableValueParser booleanArgument){
+    protected void addRequiredBoolean(final BooleanVariableValueParser<CommandSender> booleanArgument){
         requiredBooleans.add(booleanArgument);
     }
 
@@ -139,15 +140,15 @@ public abstract class Variable<T> {
         requiredBooleanFlags.add(commandFlag);
     }
 
-    public final ArrayList<CustomStringParser> getRequiredStrings(){
+    public final ArrayList<StringVariableValueParser<CommandSender>> getRequiredStrings(){
         return requiredStrings;
     }
 
-    public final ArrayList<NumberVariableValue> getRequiredNumbers(){
+    public final ArrayList<NumberVariableValueParser<CommandSender>> getRequiredNumbers(){
         return requiredNumbers;
     }
 
-    public final ArrayList<BooleanVariableValueParser> getRequiredBooleans(){
+    public final ArrayList<BooleanVariableValueParser<CommandSender>> getRequiredBooleans(){
         return requiredBooleans;
     }
 
@@ -285,6 +286,18 @@ public abstract class Variable<T> {
 
     public void addAdditionalStringArgument(final String key, final String value) {
         additionalStringArguments.put(key, value);
+    }
+
+    public void setAdditionalStringArguments(final HashMap<String, String> additionalStringArguments) {
+        this.additionalStringArguments = additionalStringArguments;
+    }
+
+    public void setAdditionalNumberArguments(final HashMap<String, NumberExpression> additionalNumberArguments) {
+        this.additionalNumberArguments = additionalNumberArguments;
+    }
+
+    public void setAdditionalBooleanArguments(final HashMap<String, NumberExpression> additionalBooleanArguments) {
+        this.additionalBooleanArguments = additionalBooleanArguments;
     }
 
 }

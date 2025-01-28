@@ -20,7 +20,7 @@ package rocks.gravili.notquests.paper.structs.variables;
 
 import org.incendo.cloud.suggestion.Suggestion;
 import rocks.gravili.notquests.paper.NotQuests;
-import rocks.gravili.notquests.paper.commands.arguments.variables.CustomStringParser;
+import rocks.gravili.notquests.paper.commands.arguments.variables.StringVariableValueParser;
 import rocks.gravili.notquests.paper.structs.ActiveObjective;
 import rocks.gravili.notquests.paper.structs.ActiveQuest;
 import rocks.gravili.notquests.paper.structs.Quest;
@@ -36,7 +36,7 @@ public class CompletedObjectiveIDsOfQuestVariable extends Variable<String[]> {
         super(main);
         setCanSetValue(true);
 
-        addRequiredString(CustomStringParser.customStringParser("QuestName", null, (context, lastString) -> {
+        addRequiredString(StringVariableValueParser.of("QuestName", null, (context, lastString) -> {
             main.getUtilManager().sendFancyCommandCompletion(context.sender(), lastString.input().split(" "), "[Quest Name]", "[...]");
             ArrayList<Suggestion> suggestions = new ArrayList<>();
             for (Quest quest : main.getQuestManager().getAllQuests()) {

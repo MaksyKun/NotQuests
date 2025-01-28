@@ -27,8 +27,8 @@ import org.bukkit.inventory.ItemStack;
 import org.incendo.cloud.description.Description;
 import org.incendo.cloud.suggestion.Suggestion;
 import rocks.gravili.notquests.paper.NotQuests;
-import rocks.gravili.notquests.paper.commands.arguments.variables.CustomStringParser;
-import rocks.gravili.notquests.paper.commands.arguments.variables.NumberVariableValue;
+import rocks.gravili.notquests.paper.commands.arguments.variables.NumberVariableValueParser;
+import rocks.gravili.notquests.paper.commands.arguments.variables.StringVariableValueParser;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 
 import java.util.ArrayList;
@@ -41,7 +41,7 @@ public class ContainerInventoryVariable extends Variable<ItemStack[]> {
         super(main);
         setCanSetValue(true);
 
-        addRequiredString(CustomStringParser.customStringParser("world", null, (context, input) -> {
+        addRequiredString(StringVariableValueParser.of("world", null, (context, input) -> {
             main.getUtilManager().sendFancyCommandCompletion(context.sender(), input.input().split(" "), "[World Name]", "[...]");
             ArrayList<Suggestion> suggestions = new ArrayList<>();
             for (World world : Bukkit.getWorlds()) {
@@ -50,9 +50,9 @@ public class ContainerInventoryVariable extends Variable<ItemStack[]> {
             return CompletableFuture.completedFuture(suggestions);
         }));
 
-        addRequiredNumber(NumberVariableValue.numberVariableValueParser("x", null, null));
-        addRequiredNumber(NumberVariableValue.numberVariableValueParser("y", null, null));
-        addRequiredNumber(NumberVariableValue.numberVariableValueParser("z", null, null));
+        addRequiredNumber(NumberVariableValueParser.of("x", null));
+        addRequiredNumber(NumberVariableValueParser.of("y", null));
+        addRequiredNumber(NumberVariableValueParser.of("z", null));
 
         addRequiredBooleanFlag(main.getCommandManager().getPaperCommandManager().flagBuilder("skipItemIfInventoryFull")
                 .withDescription(Description.of("Does not drop the item if inventory full if flag set")).build()
