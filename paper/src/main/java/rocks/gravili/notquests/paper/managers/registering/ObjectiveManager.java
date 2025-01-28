@@ -24,6 +24,7 @@ import org.bukkit.command.CommandSender;
 import org.incendo.cloud.Command;
 import org.incendo.cloud.context.CommandContext;
 import org.incendo.cloud.description.Description;
+import org.incendo.cloud.paper.LegacyPaperCommandManager;
 import org.incendo.cloud.paper.PaperCommandManager;
 import org.jetbrains.annotations.NotNull;
 import rocks.gravili.notquests.paper.NotQuests;
@@ -130,7 +131,7 @@ public class ObjectiveManager {
         objectives.put(identifier, objective);
 
         try {
-            Method commandHandler = objective.getMethod("handleCommands", main.getClass(), PaperCommandManager.class, Command.Builder.class, int.class);
+            Method commandHandler = objective.getMethod("handleCommands", main.getClass(), LegacyPaperCommandManager.class, Command.Builder.class, int.class);
 
             //Level 0
             final Command.Builder<CommandSender> objectivesBuilder = main.getCommandManager().getAdminEditCommandBuilder().literal("objectives", "o");
@@ -142,7 +143,7 @@ public class ObjectiveManager {
                     .flag(main.getCommandManager().taskDescription), 0);
 
             //Level 1
-            final String objectiveIDIdentifier = "Objective ID";
+            final String objectiveIDIdentifier = "objectiveId";
             final Command.Builder<CommandSender> objectivesBuilderLevel1 = objectivesBuilder.literal("edit").required(objectiveIDIdentifier, objectiveParser(main, 0), Description.of(objectiveIDIdentifier));
 
 
@@ -156,7 +157,7 @@ public class ObjectiveManager {
 
 
             final Command.Builder<CommandSender> objectivesBuilder2 = objectivesBuilderLevel1.literal("objectives", "");
-            final String objectiveIDIdentifier2 = "Objective ID 2";
+            final String objectiveIDIdentifier2 = "objectiveId2";
             final int level2 = 2;
             final Command.Builder<CommandSender> objectivesBuilderLevel2 = objectivesBuilder2
                     .literal("edit")

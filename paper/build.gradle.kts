@@ -205,17 +205,12 @@ dependencies {
     //Shaded
 
 
-    implementation("net.kyori:adventure-text-serializer-bungeecord:4.2.0") {
-        exclude(group = "net.kyori", module = "adventure-api")
-    }
+    implementation("net.kyori:adventure-api:4.18.0") {}
 
     //CloudCommands
-    implementation("org.incendo:cloud-paper:2.0.0-beta.10") {
-        exclude(group = "net.kyori", module = "adventure-api")
-    }
-    implementation("org.incendo:cloud-minecraft-extras:2.0.0-beta.10") {
-        exclude(group = "net.kyori", module = "adventure-api")
-    }
+    implementation("org.incendo:cloud-paper:2.0.0-beta.10")
+    implementation("org.incendo:cloud-minecraft-extras:2.0.0-beta.10")
+
     //Else it errors:
     implementation("io.leangen.geantyref:geantyref:1.3.13")
     //Interfaces
@@ -273,20 +268,15 @@ val shadowPath = "rocks.gravili.notquests.paper.shadow"
 tasks {
 
     shadowJar {
+        // DO NOT minimize the jar, since cloud doesnt like it
+        // Reference: https://discord.com/channels/766366162388123678/1170254709722984460/1242027222773006376
 
-        minimize()
-
-        //exclude('com.mojang:brigadier')
-
-        //relocate('io.papermc.lib', path.concat('.paper'))
         relocate("cloud.commandframework", "$shadowPath.cloud")
         relocate("cloud.commandframework.bukkit.internal", "$shadowPath.cloud.bukkit.internal")
         relocate("io.leangen.geantyref", "$shadowPath.geantyref")
         relocate("de.themoep", "$shadowPath.de.themoep")
 
         relocate("org.apache.commons.io", "$shadowPath.commons.io")
-        //relocate("org.apache.commons.text", path.concat('.commons.text'))
-        //relocate("org.apache.commons.lang3", path.concat('.commons.lang'))
 
         relocate("io.github.retrooper.packetevents", "$shadowPath.packetevents.bukkit")
         relocate("com.github.retrooper.packetevents", "$shadowPath.packetevents.api")

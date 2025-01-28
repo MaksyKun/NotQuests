@@ -33,7 +33,7 @@ subprojects {
 }
 
 group = "rocks.gravili.notquests"
-version = "5.19.0"
+version = "6.0.0"
 
 
 repositories {

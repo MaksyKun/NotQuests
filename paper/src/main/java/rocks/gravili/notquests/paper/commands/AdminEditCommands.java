@@ -361,7 +361,7 @@ public class AdminEditCommands {
         final Command.Builder<CommandSender> objectivesBuilder = editBuilder.literal("objectives", "o");
         //qa edit questname objectives
 
-        final String objectiveIDIdentifier = "Objective ID";
+        final String objectiveIDIdentifier = "objectiveId";
         //qa edit questname objectives edit <objectiveID> objectives
         final Command.Builder<CommandSender> objectivesBuilderLevel1 =
                 objectivesBuilder
@@ -372,7 +372,7 @@ public class AdminEditCommands {
                         .literal("objectives", "o");
 
 
-        final String objectiveIDIdentifier2 = "Objective ID 2";
+        final String objectiveIDIdentifier2 = "objectiveId2";
         final Command.Builder<CommandSender> objectivesBuilderLevel2 =
                 objectivesBuilderLevel1
                         .literal("edit")
@@ -843,13 +843,12 @@ public class AdminEditCommands {
                 }));
 
 
-        final String objectiveIDIdentifier = (level == 0 ? "Objective ID" : "Objective ID " + (level + 1));
+        final String objectiveIDIdentifier = (level == 0 ? "objectiveId" : "objectiveId" + (level + 1));
 
         //Builder: qa edit questname objectives edit <Objective ID> objectives
         //adminEditObjectivesBuilderWithLevels: qa edit questname objectives edit <Objective ID> objectives edit <Objective ID 2>
 
-        final Command.Builder<CommandSender> adminEditObjectivesBuilderWithLevels = builder.literal("edit")
-                .required("", objectiveParser(main, level), Description.of(objectiveIDIdentifier));
+        final Command.Builder<CommandSender> adminEditObjectivesBuilderWithLevels = builder.required("objective", objectiveParser(main, level), Description.of(objectiveIDIdentifier));
         handleEditObjectives(adminEditObjectivesBuilderWithLevels, level);
     }
 
@@ -857,9 +856,9 @@ public class AdminEditCommands {
 
         final String objectiveIDIdentifier;
         if (level == 0) {
-            objectiveIDIdentifier = "Objective ID";
+            objectiveIDIdentifier = "objectiveId";
         } else {
-            objectiveIDIdentifier = "Objective ID " + (level + 1);
+            objectiveIDIdentifier = "objectiveId" + (level + 1);
         }
 
         main.getLogManager().debug("Handling EDIT objectives for level <highlight>" + level + "</highlight>... objectiveIDIdentifier: " + objectiveIDIdentifier);

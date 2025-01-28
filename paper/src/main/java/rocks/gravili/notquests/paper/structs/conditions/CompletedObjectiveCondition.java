@@ -50,14 +50,14 @@ public class CompletedObjectiveCondition extends Condition {
             Command.Builder<CommandSender> builder,
             ConditionFor conditionFor) {
         if (conditionFor == ConditionFor.OBJECTIVEUNLOCK || conditionFor == ConditionFor.OBJECTIVEPROGRESS || conditionFor == ConditionFor.OBJECTIVECOMPLETE) {
-            manager.command(builder.required("Depending Objective ID", objectiveParser(main, 0), Description.of("Depending Objective ID"), (context, lastString) -> {
+            manager.command(builder.required("dependingObjectiveId", objectiveParser(main, 0), Description.of("Depending Objective ID"), (context, lastString) -> {
                         main.getUtilManager().sendFancyCommandCompletion(context.sender(), lastString.input().split(" "), "[Depending Objective ID]", "");
 
                         ArrayList<Suggestion> completions = new ArrayList<>();
 
                         final Quest quest = context.get("quest");
                         for (final Objective objective : quest.getObjectives()) {
-                            if (objective.getObjectiveID() != ((Objective) context.get("Objective ID")).getObjectiveID()) { //TODO: Support nested objectives
+                            if (objective.getObjectiveID() != ((Objective) context.get("objectiveId")).getObjectiveID()) { //TODO: Support nested objectives
                                 completions.add(Suggestion.suggestion("" + objective.getObjectiveID()));
                             }
                         }
@@ -67,9 +67,9 @@ public class CompletedObjectiveCondition extends Condition {
                             (context) -> {
                                 final Quest quest = context.get("quest");
 
-                                final Objective objective = context.get("Objective ID"); //TODO: Support nested objectives
+                                final Objective objective = context.get("objectiveId"); //TODO: Support nested objectives
 
-                                final int dependingObjectiveID = context.get("Depending Objective ID");
+                                final int dependingObjectiveID = context.get("dependingObjectiveId");
                                 final Objective dependingObjective = quest.getObjectiveFromID(dependingObjectiveID);
                                 assert dependingObjective != null; // Shouldn't be null
 

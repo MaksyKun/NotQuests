@@ -79,8 +79,8 @@ public class ObjectiveParser<C> implements ArgumentParser<C, Objective> {
     private ObjectiveHolder getObjectiveHolderForLevel(final @NotNull CommandContext<C> context, int level) {
         final ObjectiveHolder objectiveHolder;
         if (level == 0) objectiveHolder = context.get("quest");
-        else if (level == 1) objectiveHolder = context.get("Objective ID");
-        else objectiveHolder = context.get("Objective ID " + level);
+        else if (level == 1) objectiveHolder = context.get("objectiveId");
+        else objectiveHolder = context.get("objectiveId" + level);
         return objectiveHolder;
     }
 }

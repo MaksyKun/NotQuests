@@ -459,9 +459,9 @@ public class CommandManager {
         adminEditAddRequirementCommandBuilder = adminEditCommandBuilder.literal("requirements", "req").literal("add");
         adminEditAddRewardCommandBuilder = adminEditCommandBuilder.literal("rewards", "rew").literal("add");
         adminEditAddTriggerCommandBuilder = adminEditCommandBuilder.literal("triggers", "t")
-                .literal("add").required("action", null, Description.of("Action which will be executed when the Trigger triggers."));
+                .literal("add").required("action", actionParser(main), Description.of("Action which will be executed when the Trigger triggers."));
 
-        adminEditObjectivesBuilder = adminEditCommandBuilder.literal("objectives").literal("edit").required("Objective ID", objectiveParser(main, 0), Description.of("Objective ID"));
+        adminEditObjectivesBuilder = adminEditCommandBuilder.literal("objectives").literal("edit").required("objectiveId", objectiveParser(main, 0), Description.of("Objective-ID"));
         adminEditObjectiveAddUnlockConditionCommandBuilder = adminEditObjectivesBuilder.literal("conditions").literal("unlock").literal("add");
         adminEditObjectiveAddProgressConditionCommandBuilder = adminEditObjectivesBuilder.literal("conditions").literal("progress").literal("add");
         adminEditObjectiveAddCompleteConditionCommandBuilder = adminEditObjectivesBuilder.literal("conditions").literal("complete").literal("add");
@@ -755,19 +755,21 @@ public class CommandManager {
         if (level == 0) {
             objectiveHolder = context.get("quest");
         } else if (level == 1) {
-            objectiveHolder = context.get("Objective ID");
+            objectiveHolder = context.get("objectiveId");
         } else {
-            objectiveHolder = context.get("Objective ID " + level);
+            objectiveHolder = context.get("objectiveId" + level);
         }
         return objectiveHolder;
     }
 
     public final Objective getObjectiveFromContextAndLevel(final CommandContext<CommandSender> context, final int level) {
         final Objective objective;
+        main.getLogManager().debug(context.get("objectiveId"));
+        main.getLogManager().debug(context.get("objectiveId" + (level + 1)));
         if (level == 0) {
-            objective = context.get("Objective ID");
+            objective = context.get("objectiveId");
         } else {
-            objective = context.get("Objective ID " + (level + 1));
+            objective = context.get("objectiveId" + (level + 1));
         }
         return objective;
     }

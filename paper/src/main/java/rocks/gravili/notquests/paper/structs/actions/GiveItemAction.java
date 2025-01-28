@@ -25,6 +25,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.ItemStack;
 import org.incendo.cloud.Command;
 import org.incendo.cloud.description.Description;
+import org.incendo.cloud.paper.LegacyPaperCommandManager;
 import org.incendo.cloud.paper.PaperCommandManager;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.arguments.wrappers.ItemStackSelection;
@@ -48,7 +49,7 @@ public class GiveItemAction extends Action {
 
     public static void handleCommands(
             NotQuests main,
-            PaperCommandManager<CommandSender> manager,
+            LegacyPaperCommandManager<CommandSender> manager,
             Command.Builder<CommandSender> builder,
             ActionFor actionFor) {
         manager.command(builder.required("material", itemStackSelectionParser(main), Description.of("Material of the item which the player should receive. If you use 'hand', the item you are holding in your main hand will be used."))

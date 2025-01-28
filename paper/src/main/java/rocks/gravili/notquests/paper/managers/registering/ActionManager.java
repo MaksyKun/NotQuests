@@ -232,8 +232,8 @@ public class ActionManager {
     public void addAction(final Action action, final CommandContext<CommandSender> context, final ActionFor actionFor) {
         final Quest quest = context.getOrDefault("quest", null);
         Objective objectiveOfQuest = null;
-        if (quest != null && context.contains("Objective ID")) {
-            objectiveOfQuest = context.get("Objective ID"); //TODO: Support nested objectives
+        if (quest != null && context.contains("objectiveId")) {
+            objectiveOfQuest = context.get("objectiveId"); //TODO: Support nested objectives
         }
         final String actionIdentifier =
                 context.getOrDefault("Action Identifier", context.getOrDefault("action", ""));

@@ -158,7 +158,9 @@ tasks {
         dependsOn(shadowJar)
     }
     shadowJar {
-        minimize()
+        // DO NOT minimize the jar, since cloud doesnt like it
+        // Reference: https://discord.com/channels/766366162388123678/1170254709722984460/1242027222773006376
+
         archiveClassifier.set("")
 
         //relocate("rocks.gravili.notquests.spigot", "$shadowPath.spigot")

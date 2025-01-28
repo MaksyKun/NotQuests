@@ -105,20 +105,20 @@ public class ConditionsManager {
 
             if (condition == NumberCondition.class || condition == StringCondition.class || condition == BooleanCondition.class || condition == ListCondition.class || condition == ItemStackListCondition.class) {
                 commandHandler.invoke(condition, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminEditAddRequirementCommandBuilder().flag(main.getCommandManager().getPaperCommandManager().flagBuilder("negate").withDescription(Description.of("Negates this condition")))
-                        .commandDescription(Description.of("Creates a new " + identifier + " condition: " + ConditionFor.QUEST)));
+                        .commandDescription(Description.of("Creates a new " + identifier + " condition")), ConditionFor.QUEST);
 
 
                 commandHandler.invoke(condition, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminEditObjectiveAddUnlockConditionCommandBuilder().flag(main.getCommandManager().getPaperCommandManager().flagBuilder("negate").withDescription(Description.of("Negates this condition")))
-                        .commandDescription(Description.of("Creates a new " + identifier + " unlock condition: " + ConditionFor.OBJECTIVEUNLOCK)));
+                        .commandDescription(Description.of("Creates a new " + identifier + " unlock condition")), ConditionFor.OBJECTIVEUNLOCK);
 
                 commandHandler.invoke(condition, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminEditObjectiveAddProgressConditionCommandBuilder()
                         .flag(main.getCommandManager().getPaperCommandManager().flagBuilder("negate").withDescription(Description.of("Negates this condition")))
                         .flag(main.getCommandManager().getPaperCommandManager().flagBuilder("allowProgressDecreaseIfNotFulfilled").withDescription(Description.of("By default, if this condition is not fulfilled, the objective progress also wont be allowed to decrease. Setting this flag would allow it to decrease in any case, while only not allowing progress to be increased if the condition is not fulfilled")))
-                        .commandDescription(Description.of("Creates a new " + identifier + " progress condition: " + ConditionFor.OBJECTIVEPROGRESS)));
+                        .commandDescription(Description.of("Creates a new " + identifier + " progress condition")), ConditionFor.OBJECTIVEPROGRESS);
 
                 commandHandler.invoke(condition, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminEditObjectiveAddCompleteConditionCommandBuilder().flag(
                                 main.getCommandManager().getPaperCommandManager().flagBuilder("negate").withDescription(Description.of("Negates this condition")))
-                        .commandDescription(Description.of("Creates a new " + identifier + " complete condition: " + ConditionFor.OBJECTIVECOMPLETE)));
+                        .commandDescription(Description.of("Creates a new " + identifier + " complete condition")), ConditionFor.OBJECTIVECOMPLETE);
 
 
                 commandHandler.invoke(condition, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminAddConditionCommandBuilder().flag(main.getCommandManager().getPaperCommandManager().flagBuilder("negate").withDescription(Description.of("Negates this condition")))
@@ -136,24 +136,24 @@ public class ConditionsManager {
                         .flag(playerSelectorCommandFlag), ConditionFor.INLINE); //For inline /qa conditions check
             } else {
                 commandHandler.invoke(condition, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminEditAddRequirementCommandBuilder().literal(identifier).flag(main.getCommandManager().getPaperCommandManager().flagBuilder("negate").withDescription(Description.of("Negates this condition")))
-                        .commandDescription(Description.of("Creates a new " + identifier + " condition: " + ConditionFor.QUEST)));
+                        .commandDescription(Description.of("Creates a new " + identifier + " condition")), ConditionFor.QUEST);
 
 
                 commandHandler.invoke(condition, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminEditObjectiveAddUnlockConditionCommandBuilder().literal(identifier).flag(
                                 main.getCommandManager().getPaperCommandManager().flagBuilder("negate")
                                         .withDescription(Description.of("Negates this condition"))
                         )
-                        .commandDescription(Description.of("Creates a new " + identifier + " unlock condition: " + ConditionFor.OBJECTIVEUNLOCK)));
+                        .commandDescription(Description.of("Creates a new " + identifier + " unlock condition")), ConditionFor.OBJECTIVEUNLOCK);
 
                 commandHandler.invoke(condition, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminEditObjectiveAddProgressConditionCommandBuilder().literal(identifier).flag(main.getCommandManager().getPaperCommandManager().flagBuilder("negate").withDescription(Description.of("Negates this condition")))
                         .flag(main.getCommandManager().getPaperCommandManager().flagBuilder("allowProgressDecreaseIfNotFulfilled").withDescription(Description.of("By default, if this condition is not fulfilled, the objective progress also wont be allowed to decrease. Setting this flag would allow it to decrease in any case, while only not allowing progress to be increased if the condition is not fulfilled")))
-                        .commandDescription(Description.of("Creates a new " + identifier + " progress condition: " + ConditionFor.OBJECTIVEPROGRESS)));
+                        .commandDescription(Description.of("Creates a new " + identifier + " progress condition")),  ConditionFor.OBJECTIVEPROGRESS);
 
                 commandHandler.invoke(condition, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminEditObjectiveAddCompleteConditionCommandBuilder().literal(identifier).flag(main.getCommandManager().getPaperCommandManager().flagBuilder("negate").withDescription(Description.of("Negates this condition")))
-                        .commandDescription(Description.of("Creates a new " + identifier + " complete condition: " + ConditionFor.OBJECTIVECOMPLETE)));
+                        .commandDescription(Description.of("Creates a new " + identifier + " complete condition")), ConditionFor.OBJECTIVECOMPLETE);
 
                 commandHandler.invoke(condition, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminAddConditionCommandBuilder().literal(identifier).flag(main.getCommandManager().getPaperCommandManager().flagBuilder("negate").withDescription(Description.of("Negates this condition")))
-                        .commandDescription(Description.of("Creates a new " + identifier + " condition: " + ConditionFor.ConditionsYML))
+                        .commandDescription(Description.of("Creates a new " + identifier + " condition"))
                         .flag(main.getCommandManager().categoryFlag), ConditionFor.ConditionsYML); //For conditions.yml
 
                 commandHandler.invoke(condition, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminActionsAddConditionCommandBuilder().literal(identifier).flag(main.getCommandManager().getPaperCommandManager().flagBuilder("negate").withDescription(Description.of("Negates this condition")))
@@ -202,8 +202,8 @@ public class ConditionsManager {
 
         final Quest quest = context.getOrDefault("quest", null);
         Objective objectiveOfQuest = null;
-        if (quest != null && context.contains("Objective ID")) {
-            objectiveOfQuest = context.get("Objective ID"); //TODO: Support nested objectives
+        if (quest != null && context.contains("objectiveId")) {
+            objectiveOfQuest = context.get("objectiveId"); //TODO: Support nested objectives
         }
 
         final String conditionIdentifier = context.getOrDefault("Condition Identifier", "");
