@@ -23,7 +23,7 @@ public class QuestCreateCommand extends BaseCommand {
     @Override
     public void apply(CommandManager<CommandSender> commandManager) {
         commandManager.command(builder.literal("create", Description.of("Create a new quest."))
-                .required("questName", questParser(notQuests), Description.of("Quest Name"), (context, input) -> {
+                .required("questName", stringParser(), Description.of("Quest Name"), (context, input) -> {
                     notQuests.getUtilManager().sendFancyCommandCompletion(context.sender(), input.input().split(" "), "[New Quest Name]", "");
 
                     return CompletableFuture.completedFuture(List.of(Suggestion.suggestion("<Enter new Quest Name>")));

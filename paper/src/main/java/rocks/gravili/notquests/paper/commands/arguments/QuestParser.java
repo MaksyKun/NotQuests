@@ -58,29 +58,23 @@ public class QuestParser<C> implements ArgumentParser<C, Quest> {
 
     @Override
     public @NonNull ArgumentParseResult<@NonNull Quest> parse(@NonNull CommandContext<@NonNull C> commandContext, @NonNull CommandInput commandInput) {
-        if (commandInput.isEmpty()) {
+        Player player = (Player) commandContext.sender();
+        String rawInput = commandInput.peekString();
+        if (rawInput.isEmpty()) {
             return ArgumentParseResult.failure(new QuestParseException(commandContext));
         }
-        final Quest foundQuest = main.getQuestManager().getQuest(commandInput.input());
+        final Quest foundQuest = main.getQuestManager().getQuest(rawInput);
         if (foundQuest == null) {
-            if (commandContext.sender() instanceof Player player) {
-                return ArgumentParseResult.failure(new IllegalArgumentException(main.getLanguageManager().getString("chat.quest-does-not-exist", player).replace("%QUESTNAME%", commandInput.input())));
-            } else {
-                return ArgumentParseResult.failure(new IllegalArgumentException(main.getLanguageManager().getString("chat.quest-does-not-exist", (QuestPlayer) null).replace("%QUESTNAME%", commandInput.input())));
-            }
+            return ArgumentParseResult.failure(new IllegalArgumentException(main.getLanguageManager().getString("chat.quest-does-not-exist", player).replace("%QUESTNAME%", rawInput)));
         }
-        if (this.takeEnabledOnly && !foundQuest.isTakeEnabled() ) {
-            if (commandContext.sender() instanceof final Player player) {
-                if(main.getConfiguration().isQuestPreviewUseGUI()){
-                    return ArgumentParseResult.failure(new IllegalArgumentException(main.getLanguageManager().getString("chat.take-disabled", player, foundQuest)));
+        if (this.takeEnabledOnly && !foundQuest.isTakeEnabled()) {
+            if (main.getConfiguration().isQuestPreviewUseGUI()) {
+                return ArgumentParseResult.failure(new IllegalArgumentException(main.getLanguageManager().getString("chat.take-disabled", player, foundQuest)));
 
-                }else{
-                    if (!main.getQuestManager().isPlayerCloseToCitizenOrArmorstandWithQuest(main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId()), foundQuest)) {
-                        return ArgumentParseResult.failure(new IllegalArgumentException(main.getLanguageManager().getString("chat.take-disabled", player, foundQuest)));
-                    }
-                }
             } else {
-                return ArgumentParseResult.failure(new IllegalArgumentException(main.getLanguageManager().getString("chat.take-disabled", (QuestPlayer) null, foundQuest)));
+                if (!main.getQuestManager().isPlayerCloseToCitizenOrArmorstandWithQuest(main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId()), foundQuest)) {
+                    return ArgumentParseResult.failure(new IllegalArgumentException(main.getLanguageManager().getString("chat.take-disabled", player, foundQuest)));
+                }
             }
         }
         return ArgumentParseResult.success(foundQuest);
@@ -108,7 +102,7 @@ public class QuestParser<C> implements ArgumentParser<C, Quest> {
             super(cause, QuestParser.class, context, Caption.of(""), captionVariables);
         }
 
-        public QuestParseException(@NonNull CommandContext<?> context,  @NonNull CaptionVariable... captionVariables) {
+        public QuestParseException(@NonNull CommandContext<?> context, @NonNull CaptionVariable... captionVariables) {
             super(QuestParser.class, context, Caption.of(""), captionVariables);
         }
     }

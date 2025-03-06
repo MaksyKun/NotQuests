@@ -18,7 +18,7 @@
 
 package rocks.gravili.notquests.paper.commands.arguments;
 
-import org.bukkit.OfflinePlayer;
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.checkerframework.checker.nullness.qual.NonNull;
@@ -35,7 +35,6 @@ import org.incendo.cloud.suggestion.Suggestion;
 import org.incendo.cloud.suggestion.SuggestionProvider;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.structs.ActiveQuest;
-import rocks.gravili.notquests.paper.structs.QuestPlayer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,27 +53,20 @@ public class ActiveQuestParser<C> implements ArgumentParser<C, ActiveQuest> {
 
     @Override
     public @NonNull ArgumentParseResult<@NonNull ActiveQuest> parse(@NonNull CommandContext<@NonNull C> commandContext, @NonNull CommandInput commandInput) {
-        OfflinePlayer offlinePlayer = commandContext.get("player");
-        if (commandInput.isEmpty()) {
+        Player player = (Player) commandContext.sender();
+
+        String rawInput = commandInput.peekString();
+        if (rawInput.isEmpty()) {
             return ArgumentParseResult.failure(new QuestParseException(commandContext));
         }
-        final ActiveQuest activeQuest = main.getQuestPlayerManager().getActiveQuestPlayer(offlinePlayer.getUniqueId()).getActiveQuest(main.getQuestManager().getQuest(commandInput.input()));
+        final ActiveQuest activeQuest = main.getQuestPlayerManager().getActiveQuestPlayer(player.getUniqueId()).getActiveQuest(main.getQuestManager().getQuest(rawInput));
         if (activeQuest == null) {
-            if (commandContext.sender() instanceof Player player) {
-                return ArgumentParseResult.failure(new IllegalArgumentException(main.getLanguageManager().getString("chat.quest-does-not-exist", player).replace("%QUESTNAME%", commandInput.input())));
-            } else {
-                return ArgumentParseResult.failure(new IllegalArgumentException(main.getLanguageManager().getString("chat.quest-does-not-exist", (QuestPlayer) null).replace("%QUESTNAME%", commandInput.input())));
-            }
+            return ArgumentParseResult.failure(new IllegalArgumentException(main.getLanguageManager().getString("chat.quest-does-not-exist", player).replace("%QUESTNAME%", rawInput)));
         }
+        /*if (main.getConfiguration().isQuestPreviewUseGUI()) {
+            return ArgumentParseResult.failure(new IllegalArgumentException(main.getLanguageManager().getString("chat.take-disabled", player, activeQuest)));
+        }*/
 
-        if (commandContext.sender() instanceof final Player player) {
-            if (main.getConfiguration().isQuestPreviewUseGUI()) {
-                return ArgumentParseResult.failure(new IllegalArgumentException(main.getLanguageManager().getString("chat.take-disabled", player, activeQuest)));
-
-            }
-        } else {
-            return ArgumentParseResult.failure(new IllegalArgumentException(main.getLanguageManager().getString("chat.take-disabled", (QuestPlayer) null, activeQuest)));
-        }
         return ArgumentParseResult.success(activeQuest);
     }
 
@@ -82,9 +74,9 @@ public class ActiveQuestParser<C> implements ArgumentParser<C, ActiveQuest> {
     @Override
     public @NonNull SuggestionProvider<C> suggestionProvider() {
         return (context, input) -> {
-            OfflinePlayer offlinePlayer = context.get("player");
+            Player player = (Player) context.sender();
             List<Suggestion> questNames = new ArrayList<>();
-            for (ActiveQuest quest : main.getQuestPlayerManager().getActiveQuestPlayer(offlinePlayer.getUniqueId()).getActiveQuests()) {
+            for (ActiveQuest quest : main.getQuestPlayerManager().getActiveQuestPlayer(player.getUniqueId()).getActiveQuests()) {
                 questNames.add(Suggestion.suggestion(quest.getQuestIdentifier()));
             }
 

@@ -421,18 +421,6 @@ public class UserCommands {
                             main.getGuiManager().showActiveQuestsGUI(questPlayer);
                         }));
 
-        manager.command(builder.literal("abort")
-                .senderType(Player.class).commandDescription(Description.of("Aborts an active Quest."))
-                .handler((context) -> {
-                    final Player player = context.sender();
-                    final QuestPlayer questPlayer = main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId());
-                    if (questPlayer != null) {
-                        main.getGuiManager().showAbortQuestsGUI(questPlayer);
-                    } else {
-                        context.sender().sendMessage(main.parse(main.getLanguageManager().getString("chat.no-quests-accepted", player)));
-                    }
-                }));
-
         manager.command(builder.literal("preview")
                 .senderType(Player.class).commandDescription(Description.of("Shows a Preview for a Quest."))
                 .handler(
@@ -442,17 +430,25 @@ public class UserCommands {
                             main.getGuiManager().showTakeQuestsGUI(questPlayer);
                         }));
 
-        manager.command(builder.literal("abort")
-                .senderType(Player.class)
-                .required("Active Quest", activeQuestParser(main), Description.of("Name of the active Quest which should be aborted/failed")).commandDescription(Description.of("Aborts an active Quest"))
+        manager.command(builder.senderType(Player.class)
+                .literal("abort")
+                .optional("activeQuest", activeQuestParser(main), Description.of("Name of the active Quest which should be aborted/failed"))
+                .commandDescription(Description.of("Aborts an active Quest"))
                 .handler((context) -> {
                     final Player player = context.sender();
                     QuestPlayer questPlayer = main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId());
-                    final ActiveQuest activeQuest = context.get("Active Quest");
+                    NotQuests.getInstance().getLogManager().debug("aborting quest");
                     if (questPlayer != null && questPlayer.getActiveQuests().size() > 0) {
-                        main.getGuiManager().showAbortQuestGUI(questPlayer, activeQuest);
+                        if (context.contains("activeQuest")) {
+                            NotQuests.getInstance().getLogManager().debug("single one");
+                            final ActiveQuest activeQuest = context.get("activeQuest");
+                            main.getGuiManager().showAbortQuestGUI(questPlayer, activeQuest);
+                        } else {
+                            main.getGuiManager().showAbortQuestsGUI(questPlayer);
+                        }
                     } else {
                         context.sender().sendMessage(main.parse(main.getLanguageManager().getString("chat.no-quests-accepted", player)));
+
                     }
                 }));
 
@@ -467,7 +463,7 @@ public class UserCommands {
 
         manager.command(builder.literal("progress")
                         .senderType(Player.class)
-                        .required("Active Quest", activeQuestParser(main), Description.of("Name of the active Quest of which you want to see the progress"))
+                        .required("activeQuest", activeQuestParser(main), Description.of("Name of the active Quest of which you want to see the progress"))
                         .commandDescription(Description.of("Shows progress for an active Quest"))
                         //TODO: This does text stuff. Add better GUI later
                         .handler((context) -> {
@@ -475,7 +471,7 @@ public class UserCommands {
                             QuestPlayer questPlayer =
                                     main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId());
                             if (!questPlayer.getActiveQuests().isEmpty()) {
-                                final ActiveQuest activeQuest = context.get("Active Quest");
+                                final ActiveQuest activeQuest = context.get("activeQuest");
                                 context.sender().sendMessage(main.parse("<GREEN>Completed Objectives for Quest <highlight>" + activeQuest.getQuest().getDisplayNameOrIdentifier() + "<YELLOW>:"));
                                 main.getQuestManager().sendCompletedObjectivesAndProgress(questPlayer, activeQuest);
                                 context.sender().sendMessage(main.parse("<GREEN>Active Objectives for Quest <highlight>" + activeQuest.getQuest().getDisplayNameOrIdentifier() + "<YELLOW>:"));
@@ -490,7 +486,7 @@ public class UserCommands {
                   QuestPlayer questPlayer =
                       main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId());
                   if (!questPlayer.getActiveQuests().isEmpty()) {
-                    final ActiveQuest activeQuest = context.get("Active Quest");
+                    final ActiveQuest activeQuest = context.get("activeQuest");
 
                     main.getGuiManager().showQuestProgressGUI(questPlayer, activeQuest);
 
@@ -533,12 +529,12 @@ public class UserCommands {
                 })*/);
         manager.command(builder.literal("category")
                 .senderType(Player.class)
-                .required("Category", categoryParser(main), Description.of("Category Name"))
+                .required("category", categoryParser(main), Description.of("Category Name"))
                 .commandDescription(Description.of("Opens the category view"))
                 .handler((context) -> {
                     final Player player = context.sender();
                     final QuestPlayer questPlayer = main.getQuestPlayerManager().getOrCreateQuestPlayer((player.getUniqueId()));
-                    final Category category = context.get("Category");
+                    final Category category = context.get("category");
                     main.getGuiManager().showTakeQuestsGUIOfCategory(questPlayer, category);
                 }));
     }
@@ -597,27 +593,26 @@ public class UserCommands {
 
         manager.command(builder.literal("abort")
                 .senderType(Player.class)
-                .required("Active Quest", activeQuestParser(main), Description.of("Name of the active Quest which should be aborted/failed"))
+                .required("activeQuest", activeQuestParser(main), Description.of("Name of the active Quest which should be aborted/failed"))
                 .commandDescription(Description.of("Aborts an active Quest"))
-                .handler(
-                        (context) -> {
-                            final Player player = context.sender();
-                            QuestPlayer questPlayer = main.getQuestPlayerManager().getActiveQuestPlayer(player.getUniqueId());
-                            if (questPlayer != null && !questPlayer.getActiveQuests().isEmpty()) {
-                                final ActiveQuest activeQuest = context.get("Active Quest");
+                .handler((context) -> {
+                    final Player player = context.sender();
+                    QuestPlayer questPlayer = main.getQuestPlayerManager().getActiveQuestPlayer(player.getUniqueId());
+                    if (questPlayer != null && !questPlayer.getActiveQuests().isEmpty()) {
+                        final ActiveQuest activeQuest = context.get("activeQuest");
 
-                                if (!activeQuest.getQuest().isAbortEnabled()) {
-                                    main.sendMessage(context.sender(), main.getLanguageManager().getString("chat.abort-disabled", player, activeQuest));
-                                    return;
-                                }
+                        if (!activeQuest.getQuest().isAbortEnabled()) {
+                            main.sendMessage(context.sender(), main.getLanguageManager().getString("chat.abort-disabled", player, activeQuest));
+                            return;
+                        }
 
-                                questPlayer.failQuest(activeQuest);
-                                main.sendMessage(context.sender(), main.getLanguageManager().getString("chat.quest-aborted", player, activeQuest));
+                        questPlayer.failQuest(activeQuest);
+                        main.sendMessage(context.sender(), main.getLanguageManager().getString("chat.quest-aborted", player, activeQuest));
 
-                            } else {
-                                context.sender().sendMessage(main.parse(main.getLanguageManager().getString("chat.no-quests-accepted", player)));
-                            }
-                        }));
+                    } else {
+                        context.sender().sendMessage(main.parse(main.getLanguageManager().getString("chat.no-quests-accepted", player)));
+                    }
+                }));
 
         manager.command(builder.literal("preview")
                 .senderType(Player.class)

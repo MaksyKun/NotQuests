@@ -46,19 +46,18 @@ public class CategoryParser<C> implements ArgumentParser<C, Category> {
 
     @Override
     public @NonNull ArgumentParseResult<@NonNull Category> parse(@NonNull CommandContext<@NonNull C> commandContext, @NonNull CommandInput commandInput) {
-        if (commandInput.isEmpty()) {
-            return ArgumentParseResult.failure(new IllegalArgumentException("Invalid Category: " + commandContext));
+        String rawInput = commandInput.peekString();
+        if (rawInput.isEmpty()) {
+            return ArgumentParseResult.failure(new IllegalArgumentException("Invalid Category: " + rawInput));
         }
-        String rawInput = commandInput.input();
+        NotQuests.getInstance().getLogManager().debug(rawInput);
         List<Category> entries = main.getDataManager().getCategories();
-        Category foundCategory;
         for (Category category : entries) {
             if (category.getCategoryName().equalsIgnoreCase(rawInput)) {
-                foundCategory = category;
-                return ArgumentParseResult.success(foundCategory);
+                return ArgumentParseResult.success(category);
             }
         }
-        return ArgumentParseResult.failure(new IllegalArgumentException("No Category found: " + commandContext));
+        return ArgumentParseResult.failure(new IllegalArgumentException("No Category found: " + rawInput));
     }
 
 
@@ -69,7 +68,7 @@ public class CategoryParser<C> implements ArgumentParser<C, Category> {
             for (Category category : main.getDataManager().getCategories()) {
                 entries.add(Suggestion.suggestion(category.getCategoryName()));
             }
-            main.getUtilManager().sendFancyCommandCompletion((CommandSender) context.sender(), context.rawInput().input().split(" "), "[Player Name]", "[...]");
+            main.getUtilManager().sendFancyCommandCompletion((CommandSender) context.sender(), context.rawInput().input().split(" "), "[Category Name]", "[...]");
             return CompletableFuture.completedFuture(entries);
         };
     }
